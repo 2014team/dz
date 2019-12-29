@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.AdminCategoryDao">
+
+	<resultMap type="com.artcweb.baen.AdminCategory" id="result">
+		<result property="id" column="id" />
+		<result property="categoryId" column="category_id" />
+		<result property="categoryName" column="category_name" />
+	</resultMap>
+
+
+	<!--保存 -->
+	<insert id="save" parameterType="com.artcweb.baen.AdminCategory">
+		insert into
+		admin_right_category(category_id,category_name)
+		values(#{categoryId},#{categoryName})
+	</insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		admin_right_category
+		where id=#{id}
+	</delete>
+
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		admin_right_category
+		where FIND_IN_SET (id,#{id})
+	</delete>
+
+
+	<!-- 修改 -->
+	<update id="update" parameterType="com.artcweb.baen.AdminCategory">
+		update admin_right_category
+		set
+		category_id=#{categoryId}
+		,category_name=#{categoryName}
+		where id=#{id}
+	</update>
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		select
+		id,category_id,category_name from
+		admin_right_category
+		where id = #{id}
+		limit 1
+	</select>
+	
+	<!-- 查找 -->
+	<select id="select" parameterType="Map" resultMap="result">
+		select id,category_id,category_name from
+		admin_right_category
+		where 1 = 1
+		<if test="null != categoryId and '' != categoryId">
+			and category_id = #{categoryId}
+		</if>
+		<if test="null != categoryName and '' != categoryName">
+			and category_name = #{categoryName}
+		</if>
+		order by id desc
+	</select>
+	
+	
+	<!-- 更新唯一性验证 -->
+	<select id="checkUnique" parameterType="Map" resultMap="result">
+		select id,category_id,category_name from
+		admin_right_category
+		where 1 = 1
+		<if test="null != categoryId and '' != categoryId">
+			and category_id = #{categoryId}
+		</if>
+		<if test="null != categoryName and '' != categoryName">
+			and category_name = #{categoryName}
+		</if>
+		<if test="null != id and '' != id">
+			<![CDATA[and id <> #{id}]]>
+		</if>
+	</select>
+
+	<!-- 分页查找 -->
+	<select id="findByPage" parameterType="Map" resultMap="result">
+		select id, category_id,category_name from
+		admin_right_category
+		where 1=1
+		<if test="entity.categoryId != null and '' != entity.categoryId">
+			and category_id=#{entity.categoryId}
+		</if>
+		<if test="entity.categoryName != null and '' != entity.categoryName">
+			and category_name=#{entity.categoryName}
+		</if>
+		order by id desc limit ${page.begin},${page.limit} ;
+	</select>
+
+	<!-- 分页数量 -->
+	<select id="findByPageCount" parameterType="Map" resultType="int">
+		select count(1) category_name from
+		admin_right_category
+		where 1=1
+		<if test="entity.categoryId != null and '' != entity.categoryId">
+			and category_id=#{entity.categoryId}
+		</if>
+		<if test="entity.categoryName != null and '' != entity.categoryName">
+			and category_name=#{entity.categoryName}
+		</if>
+	</select>
+
+
+
+</mapper> 

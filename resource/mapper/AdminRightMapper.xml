@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.AdminRightDao">
+
+	<resultMap type="com.artcweb.baen.AdminRight" id="result">
+		<result property="id" column="id" />
+		<result property="rightRule" column="right_rule" />
+		<result property="rightName" column="right_name" />
+		<result property="rightCategoryId" column="right_category_id" />
+	</resultMap>
+
+
+	<!--保存 -->
+	<insert id="save" parameterType="com.artcweb.baen.AdminRight">
+		insert into
+		admin_right(right_rule,right_name,right_category_id)
+		values(#{rightRule},#{rightName},#{rightCategoryId})
+	</insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		admin_right
+		where id=#{id}
+	</delete>
+
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		admin_right
+		where FIND_IN_SET (id,#{id})
+	</delete>
+
+
+	<!-- 修改 -->
+	<update id="update" parameterType="com.artcweb.baen.AdminRight">
+		update admin_right
+		set
+		right_rule=#{rightRule}
+		,right_name=#{rightName}
+		,right_category_id=#{rightCategoryId}
+		where id=#{id}
+	</update>
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		select * from
+		admin_right
+		where id = #{id}
+		limit 1
+	</select>
+	
+	<!-- 查找 -->
+	<select id="select" parameterType="Map" resultMap="result">
+		select * from admin_right
+		where 1 = 1
+		<if test="null != rightRule and '' != rightRule">
+			and right_rule = #{rightRule}
+		</if>
+		<if test="null != rightName and '' != rightName">
+			and right_name = #{rightName}
+		</if>
+		<if test="null != rightCategoryId and '' != rightCategoryId">
+			and right_category_id = #{rightCategoryId}
+		</if>
+	</select>
+	
+	
+	<!-- 更新唯一性验证 -->
+	<select id="checkUnique" parameterType="Map" resultMap="result">
+		select *  from
+		admin_right
+		where 1 = 1
+		<if test="null != rightRule and '' != rightRule">
+			and right_rule = #{rightRule}
+		</if>
+		<if test="null != rightName and '' != rightName">
+			and right_name = #{rightName}
+		</if>
+		<if test="null != rightCategoryId and '' != rightCategoryId">
+			and right_category_id = #{rightCategoryId}
+		</if>
+		<if test="null != id and '' != id">
+			<![CDATA[and id <> #{id}]]>
+		</if>
+	</select>
+
+
+	<!-- 分页查找 -->
+	<select id="findByPage" parameterType="Map" resultMap="result">
+		select * 
+		from admin_right
+		where 1=1
+		<if test="null != rightRule and '' != rightRule">
+			and right_rule = #{rightRule}
+		</if>
+		<if test="null != rightName and '' != rightName">
+			and right_name = #{rightName}
+		</if>
+		<if test="null != rightCategoryId and '' != rightCategoryId">
+			and right_category_id = #{rightCategoryId}
+		</if>
+		 order by id desc limit ${page.begin},${page.limit};
+	</select>
+
+	<!-- 分页数量 -->
+	<select id="findByPageCount" parameterType="Map" resultType="int">
+		select count(1) admin_right from
+		admin_right
+		where 1=1
+		<if test="null != rightRule and '' != rightRule">
+			and right_rule = #{rightRule}
+		</if>
+		<if test="null != rightName and '' != rightName">
+			and right_name = #{rightName}
+		</if>
+		<if test="null != rightCategoryId and '' != rightCategoryId">
+			and right_category_id = #{rightCategoryId}
+		</if>
+	</select>
+
+
+
+</mapper> 
