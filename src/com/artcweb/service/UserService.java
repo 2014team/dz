@@ -73,4 +73,14 @@ public interface UserService extends BaseService<User, Integer> {
 	* @return
 	*/
 	public Integer updateUser(User entity);
+	
+	
+	/**
+	* @Title: getPackageName
+	* @Description: 获取图纸名称
+	* @param id
+	* @param user
+	* @return
+	*/
+	public String getPackageName(Integer id,User user);
 }

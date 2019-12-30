@@ -223,6 +223,11 @@ public class UserController {
 		paramMap.put("comeFrom", ComeFromConstant.TEMPLATE);
 		List<PicPackage> packageList = picPackageService.select(paramMap);
 		request.setAttribute("packageList", packageList);
+		
+		//获取图片名称
+		String packageName = userService.getPackageName(id,user);
+		request.setAttribute("packageName", packageName);
+		
 		return "/user/user_order_edit";
 	}
 

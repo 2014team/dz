@@ -71,5 +71,7 @@ public interface OrderDao extends BaseDao<Order, Integer> {
 	public List<Order> selectByMap(Map<String, Object> paramMap);
 
 	public Integer checkExistOreder(Map<String, Object> paramMap);
+	
+	public Order getPackageName(Map<String, Object> paramMap);
 
 }

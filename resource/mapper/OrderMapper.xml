@@ -222,5 +222,25 @@
 			<![CDATA[and o.id <> #{orderId} ]]>
 		</if>
 	</select>
+	
+	
+  <select id="getPackageName" parameterType="Map" resultType="com.artcweb.baen.Order">
+		<![CDATA[
+		SELECT u.id AS id,o.id AS orderId ,u.`user_name` AS userName,o.sort ,o.mobile,p.package_name
+		AS packageName,
+		p.image_url AS imageUrl ,p.min_image_url AS minImageUrl ,p.step ,o.current_step AS
+		currentStep,o.template AS template
+		FROM `order` o,`user` u,pic_package p
+		WHERE
+		o.user_id=u.id AND o.package_id = p.package_id
+		AND p.package_name LIKE '%-%']]>
+		<if test="userId!= null and '' != userId">
+			and u.id=#{userId}
+		</if>
+		<if test="id != null and '' != id">
+			and o.id=#{id}
+		</if>
+		ORDER BY o.id DESC LIMIT 1
+	</select>
 
 </mapper> 

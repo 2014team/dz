@@ -288,4 +288,37 @@ public class UserServiceImpl extends BaseServiceImpl<User, Integer> implements U
 		return result;
 	}
 
+	/**
+	* @Title: getPackageName
+	* @Description: 获取图纸名称
+	* @param id
+	* @param user
+	* @return
+	*/
+	@Override
+	public String getPackageName(Integer id,User user) {
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userId", id);
+		Order order = orderDao.getPackageName(paramMap);
+		String packageName = null;
+		String[] packageNameArr;
+		if(null != order ){
+			packageName = order.getPackageName();
+			if(StringUtils.isNotBlank(packageName) && (packageName.lastIndexOf("-")!= -1)){
+				packageNameArr =  packageName.split("-");
+				if(null != packageName && packageName.length() > 1){
+					packageName = packageNameArr[0] + "-"+(Integer.valueOf(packageNameArr[1])+1);
+				}
+				
+			}else{
+				packageName = packageName + "-1";
+			}
+		}else{
+			if(null != user){
+				packageName = user.getUserName()+ "-1";;
+			}
+		}
+		return packageName;
+	}
+
 }

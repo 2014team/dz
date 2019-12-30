@@ -94,7 +94,7 @@
 			</label>
 			<div class="layui-input-inline">
 				<input type="text" id="packageName" name="packageName"
-					value="${order.packageName }" lay-verify="required|packageName"
+					value="${empty order.packageName? ( empty packageName? '':packageName): order.packageName}" lay-verify="required|packageName"
 					autocomplete="off" class="layui-input">
 			</div>
 			<div class="layui-form-mid layui-word-aux">1到50个字符</div>
