@@ -282,7 +282,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 		paramMap.put("userId", entity.getUserId());
 		Integer result = orderDao.checkExistOreder(paramMap);
 		if (null != result && result > 0) {
-			return "买家用户已存在该订单!";
+			return "买家已存在该订单!";
 		}
 		return null;
 	}
