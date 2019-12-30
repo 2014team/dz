@@ -17,7 +17,7 @@
     </div>
     <div class="x-body">
       <div class="layui-row demoTable">
-           	模板名称：
+           	图纸名称：
           <div class="layui-inline">
 		    <input class="layui-input" name="packageName" id=packageName autocomplete="off">
 		  </div>
