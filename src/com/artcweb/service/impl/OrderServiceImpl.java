@@ -419,7 +419,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 			
 			
 			//更新订单
-			operator = update(entity);
+			operator = update(order);
 			
 			if(null != operator && operator > 0){
 				String sourceImageUrl = picPackage.getImageUrl();
