@@ -406,7 +406,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 			//获取模本信息
 			PicPackage picPackage = picPackageDao.get(packageId);
 			if(null == picPackage){
-				result.failure("模本信息已被删出!");
+				result.failure("模板信息已被删出!");
 				return result;
 			}
 			
