@@ -7,6 +7,15 @@
 <title>后台登录</title>
 <link rel="stylesheet" type="text/css" href="/css/login.css">
 <script src="/lib/layui/layui.js" charset="utf-8"></script>
+<script src="/js/jquery.min.js" charset="utf-8"></script>
+<script type="text/javascript">
+$(function(){
+	if (top.location.href != location.href) {
+         top.location.href ="/";
+     }
+})
+</script>
+
 </head>
 
 <body>
