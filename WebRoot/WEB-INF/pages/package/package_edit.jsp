@@ -91,16 +91,35 @@
 		  upload.render({
 		    elem: '#upload_image_Id'
 		    /* ,url: '/upload/' */
+		     ,size: 1024 //限制文件大小，单位 KB
 		    ,auto:false
 		    ,choose: function(obj){
 		      //预读本地文件示例，不支持ie8
 		     // console.log(obj)
-		      obj.preview(function(index, file, result){
+		     // obj.preview(function(index, file, result){
 		    
 		     // console.log(result,file)
-		      files = file
-		        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
-		      });
+		     // files = file
+		      //  $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
+		      //});
+		      
+		        var flag = true;
+                obj.preview(function(index, file, result){
+                    //console.log(file);            //file表示文件信息，result表示文件src地址
+                    var img = new Image();
+                    img.src = result;
+                    img.onload = function () { //初始化夹在完成后获取上传图片宽高，判断限制上传图片的大小。
+                        if(img.width ==500 || img.height ==500){
+                           $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
+                        }else{
+                            flag = false;
+                            layer.msg("您上传的小图大小必须是500*500尺寸！");
+                            return false;
+                        }
+                    }
+                    return flag;
+                });
+		      
 		    }
 		  });
 		  
