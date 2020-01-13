@@ -226,13 +226,15 @@
 		      	 var img = new Image();
                  img.src = result;
                  img.onload = function () { //初始化夹在完成后获取上传图片宽高，判断限制上传图片的大小。
-                     if(img.width ==500 || img.height ==500){
+                     /* if(img.width ==500 || img.height ==500){
                         $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
                      }else{
                          flag = false;
                          layer.msg("您上传的小图大小必须是500*500尺寸！");
                          return false;
-                     }
+                     } */
+                     
+                      $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
                  }
                  return flag;
                     
