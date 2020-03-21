@@ -606,4 +606,21 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 		}
 		return false;
 	}
+
+	@Override
+	public void stepFileDeal(Order entity, MultipartFile stepFile) {
+
+		if(null != stepFile){
+			try {
+				String step = new String(stepFile.getBytes(),"UTF-8");
+				entity.setStep(step);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				logger.error("OrderServiceImpl.stepFileDeal()步骤附件处理异常"+e.getMessage());
+			}
+			
+		}
+		
+	}
 }

@@ -127,10 +127,13 @@ public class OrderController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/save")
-	public LayUiResult save(Order entity, MultipartFile file, HttpServletRequest request) {
+	public LayUiResult save(Order entity, MultipartFile file,  MultipartFile stepFile,HttpServletRequest request) {
 
 		int template = entity.getTemplate();
 		LayUiResult result = null;
+		
+		orderService.stepFileDeal(entity,stepFile);
+		
 		// 选择模本
 		if (template == 1) {
 			entity.setComeFrom(ComeFromConstant.TEMPLATE);

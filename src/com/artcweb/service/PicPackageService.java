@@ -3,6 +3,8 @@ package com.artcweb.service;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.PicPackage;
 
@@ -56,6 +58,14 @@ public interface PicPackageService extends BaseService<PicPackage, Integer> {
 	* @return
 	*/
 	public int deletePicPackage(Integer packageId,HttpServletRequest request);
+
+	/**
+	* @Title: stepFileDeal
+	* @Description: 步骤附件处理
+	* @param entity
+	* @param stepFile
+	*/
+	public void stepFileDeal(PicPackage entity, MultipartFile stepFile);
 
 
 }

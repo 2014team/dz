@@ -1,6 +1,9 @@
 package com.artcweb.util;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
 
 import org.apache.ws.security.util.UUIDGenerator;
 
@@ -52,4 +55,24 @@ public class UploadUtil {
 	public static String getNewFileName(String fileExt){
 		return UUIDGenerator.getUUID() + fileExt;
 	}
+	
+	/**
+     * 获取图片宽度
+     * @param file  图片文件
+     * @return 宽度
+     */
+    public static int getImgWidth(File file) {
+        InputStream is = null;
+        BufferedImage src = null;
+        int ret = -1;
+        try {
+            is = new FileInputStream(file);
+            src = javax.imageio.ImageIO.read(is);
+            ret = src.getWidth(null); // 得到源图宽
+            is.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ret;
+    }	
 }

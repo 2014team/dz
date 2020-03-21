@@ -1,6 +1,8 @@
 
 package com.artcweb.service.impl;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +13,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.PicPackage;
@@ -193,6 +196,28 @@ public class PicPackageServiceImpl extends BaseServiceImpl<PicPackage, Integer> 
 			}
 		}
 		return result;
+	}
+
+	/**
+	* @Title: stepFileDeal
+	* @Description: 步骤附件处理
+	* @param entity
+	* @param stepFile
+	*/
+	@Override
+	public void stepFileDeal(PicPackage entity, MultipartFile stepFile) {
+		if(null != stepFile){
+			try {
+				String step = new String(stepFile.getBytes(),"UTF-8");
+				entity.setStep(step);
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+				logger.error("PicPackageServiceImpl.stepFileDeal()步骤附件处理异常"+e.getMessage());
+			}
+			
+		}
+		
 	}
 
 }

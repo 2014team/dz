@@ -1,14 +1,20 @@
 package com.artcweb.util;
 
+import java.awt.image.BufferedImage;
 import java.util.Arrays;
 
+import javax.imageio.ImageIO;
+
 import org.apache.commons.lang.StringUtils;
+import org.apache.log4j.Logger;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.constant.SiteConstant;
 import com.artcweb.constant.UploadConstant;
+import com.artcweb.service.impl.ImageServiceImpl;
 
 public class ImageUtil {
+	private static Logger logger = Logger.getLogger(ImageUtil.class);
 
 	/**
 	 * @Title: checkImage
@@ -64,5 +70,21 @@ public class ImageUtil {
 		
 	}
 
+	
+
+	public static String checkImgWidth(MultipartFile file) {
+		//2、图片内容宽高属性判断
+        BufferedImage bufferedImage = null;
+        try {
+        	
+            bufferedImage = ImageIO.read(file.getInputStream());
+            if (bufferedImage == null || bufferedImage.getWidth() > 500 || bufferedImage.getHeight() > 500) {  
+                return "请上传图片长宽500 x 500图片";
+            }  
+        } catch (Exception e) {
+            logger.error("======图片解析错误！====="+e.getMessage());;
+        }  
+        return null;
+	}
 
 }

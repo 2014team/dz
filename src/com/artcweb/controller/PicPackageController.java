@@ -84,10 +84,12 @@ public class PicPackageController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/save")
-	public LayUiResult save(PicPackage entity, MultipartFile file, HttpServletRequest request) {
+	public LayUiResult save(PicPackage entity, MultipartFile file,  MultipartFile stepFile,HttpServletRequest request) {
 
-		entity.setComeFrom(ComeFromConstant.TEMPLATE);
+		// 步骤附件处理
+		picPackageService.stepFileDeal(entity,stepFile);
 		
+		entity.setComeFrom(ComeFromConstant.TEMPLATE);
 		
 		LayUiResult result = new LayUiResult();
 

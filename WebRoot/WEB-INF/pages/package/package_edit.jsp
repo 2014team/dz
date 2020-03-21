@@ -38,7 +38,16 @@
           <div class="layui-form-item layui-form-text">
 		    <label class="layui-form-label"> <span class="x-red">*</span>执行步骤</label>
 		    <div class="layui-input-block">
-		      <textarea name="desc" placeholder="请输入内容" id="step" name="step" class="layui-textarea" lay-verify="required">${entity.step }</textarea>
+		      <button type="button" class="layui-btn" id="additional_id">选择文件</button>
+		      <label id="additional_label"  class="layui-form-label" style="float:none;display:inline-block;text-align:left;width:auto;"></label>
+		    </div>
+		  </div>
+		  
+          <div class="layui-form-item layui-form-text">
+		    <label class="layui-form-label">  <!-- <span class="x-red">*</span>执行步骤 --></label>
+		    <div class="layui-input-block">
+		      <textarea name="desc" placeholder="请输入内容" id="step" name="step" class="layui-textarea" >${entity.step }</textarea>
+			  <div class="layui-form-mid layui-word-aux">附件优先录入</div>
 		    </div>
 		  </div>
           
@@ -74,6 +83,7 @@
 	    });
     
  		var files;
+ 		var stepFile;
         layui.use(['form','layer','upload'], function(){
            $ = layui.jquery;
           var form = layui.form
@@ -95,32 +105,37 @@
 		    ,auto:false
 		    ,choose: function(obj){
 		      //预读本地文件示例，不支持ie8
-		     // console.log(obj)
-		     // obj.preview(function(index, file, result){
+		      console.log(obj)
+		      obj.preview(function(index, file, result){
 		    
-		     // console.log(result,file)
-		     // files = file
-		      //  $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
-		      //});
-		      
-		        var flag = true;
-                obj.preview(function(index, file, result){
-                    //console.log(file);            //file表示文件信息，result表示文件src地址
-                    var img = new Image();
-                    img.src = result;
-                    img.onload = function () { //初始化夹在完成后获取上传图片宽高，判断限制上传图片的大小。
-                        /* if(img.width ==500 || img.height ==500){
-                           $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
-                        }else{
-                            flag = false;
-                            layer.msg("您上传的小图大小必须是500*500尺寸！");
-                            return false;
-                        } */
-                         $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
-                    }
-                    return flag;
-                });
-		      
+		      console.log(result,file)
+		      files = file
+		        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
+		      });
+		    }
+		  });
+		  
+		  
+		  //选完文件后不自动上传
+		  upload.render({
+		    elem: '#additional_id'
+		    //,url: '/upload/'
+		    ,auto: false
+		    //,multiple: true
+			 ,accept: 'file'
+		    ,exts: 'txt' 
+		   // ,bindAction: '#test9'
+		    ,done: function(res){
+		      console.log(res)
+		    }
+		   ,choose: function(obj){
+		     obj.preview(function(index, file, result){
+		      	stepFile = file
+		      	if(stepFile){
+		      		$("#additional_label").html(stepFile.name);
+		      	}
+		      });
+		     
 		    }
 		  });
 		  
@@ -135,6 +150,7 @@
    				formData.append('step', $('#step').val());
    				formData.append('pins', $('#pins').val());
    				formData.append('file', files);
+   				formData.append('stepFile', stepFile);
    				
    				 // 等候加载
     	    	 x_admin_loading(true);

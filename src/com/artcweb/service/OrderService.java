@@ -129,4 +129,12 @@ public interface OrderService extends BaseService<Order, Integer> {
 	*/
 	public boolean deleteOrder(Integer id ,HttpServletRequest request);
 
+	/**
+	* @Title: stepFileDeal
+	* @Description: 步骤附件处理
+	* @param entity
+	* @param stepFile
+	*/
+	public void stepFileDeal(Order entity, MultipartFile stepFile);
+
 }

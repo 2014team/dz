@@ -20,8 +20,8 @@
 	<!--保存 -->
 	<insert id="save" parameterType="com.artcweb.baen.PicPackage" useGeneratedKeys="true" keyProperty="packageId">
 		insert into
-		pic_package(package_name,image_url,min_image_url,step,pins,come_from,create_date,update_date)
-		values(#{packageName},#{imageUrl},#{minImageUrl},#{step},#{pins},#{comeFrom},now(),now())
+		pic_package(package_name,image_url,min_image_url,step,pins,come_from)
+		values(#{packageName},#{imageUrl},#{minImageUrl},#{step},#{pins},#{comeFrom})
 	</insert>
 
 	<!--删除 -->
@@ -58,7 +58,6 @@
 		,step=#{step}
 		,pins=#{pins}
 		,come_from=#{comeFrom}
-		,update_date=now()
 		where package_id=#{packageId}
 	</update>
 
