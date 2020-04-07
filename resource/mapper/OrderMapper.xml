@@ -156,7 +156,7 @@
 	<select id="findPageByApi" parameterType="Map"
 		resultType="com.artcweb.baen.Order">
 		SELECT o.id AS orderId ,o.sort ,p.`come_from` AS comeFrom, p.package_name AS packageName,
-		p.image_url AS imageUrl
+		p.image_url AS imageUrl,p.step as step
 		FROM `order` o,`user` u,pic_package p
 		WHERE
 		o.user_id=u.id AND o.package_id = p.package_id
