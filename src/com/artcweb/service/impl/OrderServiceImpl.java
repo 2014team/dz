@@ -258,8 +258,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 	 */
 	@Override
 	public Order getByMap(Map<String, Object> paramMap) {
-
-		return orderDao.getByMap(paramMap);
+		Order order = orderDao.getByMap(paramMap);
+		return order;
 	}
 
 	/**
@@ -456,17 +456,6 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 		}// 保存
 		else {
 			
-			if(null == file){
-				result.failure("请选择图片!");
-				return result;
-			}
-
-			// 图片验证
-			String errorMsg = imageService.checkImage(file);
-			if (StringUtils.isNotBlank(errorMsg)) {
-				result.failure(errorMsg);
-				return result;
-			}
 
 			// 验证唯一性
 			String checkAddUnique = checkAddUnique(entity);
@@ -474,13 +463,26 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 				result.failure(checkAddUnique);
 				return result;
 			}
-			// 上传图片
-			imageUrl = imageService.uploadImage(request, file, UploadConstant.SAVE_UPLOAD_PATH);
-			minImageUrl = imageService.uploadMinImage(request, file, UploadConstant.SAVE_UPLOAD_PATH);
+
+			
+			if(null != file){
+				// 图片验证
+				String errorMsg = imageService.checkImage(file);
+				if (StringUtils.isNotBlank(errorMsg)) {
+					result.failure(errorMsg);
+					return result;
+				}
+				
+				// 上传图片
+				imageUrl = imageService.uploadImage(request, file, UploadConstant.SAVE_UPLOAD_PATH);
+				minImageUrl = imageService.uploadMinImage(request, file, UploadConstant.SAVE_UPLOAD_PATH);
+				
+				
+				entity.setMinImageUrl(minImageUrl);
+				entity.setImageUrl(imageUrl);
+			}
 			
 			
-			entity.setMinImageUrl(minImageUrl);
-			entity.setImageUrl(imageUrl);
 
 			// 保存套餐信息
 			PicPackage picPackage = new PicPackage();

@@ -169,30 +169,30 @@ public class PicPackageController {
 
 		}
 		else {// 保存
-
-			if (null == file) {
-				result.failure("图片不能为空!");
-				return result;
-			}
-
-			// 图片验证
-			String errorMsg = imageService.checkImage(file);
-			if (StringUtils.isNotBlank(errorMsg)) {
-				result.failure(errorMsg);
-				return result;
-			}
-
+			
+			
 			// 验证唯一性
 			String checkAddUnique = picPackageService.checkAddUnique(entity);
 			if (StringUtils.isNotBlank(checkAddUnique)) {
 				result.failure(checkAddUnique);
 				return result;
 			}
-			// 上传图片
-			imageUrl = imageService.uploadImage(request, file, UploadConstant.SAVE_UPLOAD_PATH);
-			minImageUrl = imageService.uploadMinImage(request, file, UploadConstant.SAVE_UPLOAD_PATH);
-			entity.setImageUrl(imageUrl);
-			entity.setMinImageUrl(minImageUrl);
+
+			if (null != file) {
+				// 图片验证
+				String errorMsg = imageService.checkImage(file);
+				if (StringUtils.isNotBlank(errorMsg)) {
+					result.failure(errorMsg);
+					return result;
+				}
+				
+				// 上传图片
+				imageUrl = imageService.uploadImage(request, file, UploadConstant.SAVE_UPLOAD_PATH);
+				minImageUrl = imageService.uploadMinImage(request, file, UploadConstant.SAVE_UPLOAD_PATH);
+				entity.setImageUrl(imageUrl);
+				entity.setMinImageUrl(minImageUrl);
+			}
+			
 			entity.setComeFrom(ComeFromConstant.TEMPLATE);
 			operator = picPackageService.save(entity);
 		}
