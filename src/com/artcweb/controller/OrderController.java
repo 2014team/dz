@@ -138,7 +138,7 @@ public class OrderController {
 		// 选择模本
 		if (template == 1) {
 			entity.setComeFrom(ComeFromConstant.TEMPLATE);
-			result = orderService.saveChooseTemplate(entity);
+			result = orderService.saveChooseTemplate(entity,request);
 		}
 		else {// 新建模板
 			entity.setComeFrom(ComeFromConstant.CUSTOM_MAKE);

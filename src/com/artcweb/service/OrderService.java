@@ -107,7 +107,7 @@ public interface OrderService extends BaseService<Order, Integer> {
 	 * @param entity
 	 * @return
 	 */
-	public LayUiResult saveChooseTemplate(Order entity);
+	public LayUiResult saveChooseTemplate(Order entity,HttpServletRequest request);
 
 	/**
 	 * @Title: saveNewTemplate
