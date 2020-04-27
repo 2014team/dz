@@ -42,14 +42,7 @@
 		      <label id="additional_label"  class="layui-form-label" style="float:none;display:inline-block;text-align:left;width:auto;"></label>
 		    </div>
 		  </div>
-		  
-          <div class="layui-form-item layui-form-text">
-		    <label class="layui-form-label">  <!-- <span class="x-red">*</span>执行步骤 --></label>
-		    <div class="layui-input-block">
-		      <textarea name="desc" placeholder="请输入内容" id="step" name="step" class="layui-textarea" >${entity.step }</textarea>
-			  <div class="layui-form-mid layui-word-aux">附件优先录入</div>
-		    </div>
-		  </div>
+	
           
           <div class="layui-form-item">
               <label for="L_repass" class="layui-form-label">
@@ -62,6 +55,11 @@
 				  <p>点击上传，或将文件拖拽到此处</p>
 				</div>
           </div>
+          
+          <input type="hidden" id="sort" name="sort" value="1"/>
+          
+          <input type="hidden" id="step" name="step"
+					class="layui-textarea" value="${entity.step }"></input>
              
           </div>
           <div class="layui-form-item">
@@ -186,7 +184,7 @@
 							}
     					},
     				error : function(e) {
-    					console.err(e);
+    					console.log(e);
     					layer.msg("系统异常，稍后再试!", {
     						icon : 2,
     						time : 1000

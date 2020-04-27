@@ -17,7 +17,7 @@
 				<div class="layui-input-inline">
 					<input type="text" id="userName" name="userName"
 						value="${user.userName }" lay-verify="required"
-						autocomplete="off" class="layui-input" disabled="disabled">
+						autocomplete="off" class="layui-input" ${idParam eq -1  ? '':"disabled" } >
 				</div>
 				<div class="layui-form-mid layui-word-aux"></div>
 			</div>
@@ -50,7 +50,7 @@
 				</label>
 				<div class="layui-input-inline">
 					<input type="text" id="mobile" name="mobile"
-						value="${ order.mobile }"
+						value="${order.mobile }"
 						lay-verify="required|number|phone" autocomplete="off"
 						class="layui-input">
 				</div>
@@ -60,7 +60,7 @@
 
 			
 
-			<div class="layui-form-item">
+			<%-- <div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label"> <span
 					class="x-red">*</span>排序号
 				</label>
@@ -71,9 +71,9 @@
 						class="layui-input">
 				</div>
 				<div class="layui-form-mid layui-word-aux">数字(越小越靠前)</div>
-			</div>
+			</div> --%>
 			
-			
+			<input type="hidden" id="sort" name="sort" value="1"/>
 
 
 			<div class="layui-form-item">
@@ -121,15 +121,9 @@
 		    </div>
 		  </div>
 		  
-		<div class="layui-form-item layui-form-text">
-			<label class="layui-form-label"> </label>
-			<div class="layui-input-block">
-				<textarea name="desc" placeholder="请输入内容" id="step" name="step"
-					class="layui-textarea" >${order.step }</textarea>
-					 <div class="layui-form-mid layui-word-aux">附件优先录入</div>
-			</div>
-		</div>
-
+		  <input type="hidden" id="step" name="step"
+					class="layui-textarea" value="${order.step }"></input>
+		  
 		<div class="layui-form-item">
 			<label for="L_repass" class="layui-form-label"> 
 			<!-- <span class="x-red">*</span> -->图片
@@ -148,7 +142,7 @@
 		<div class="layui-form-item">
 			<label class="layui-form-label"><span class="x-red">*</span>图纸名称</label>
 			<div class="layui-input-inline">
-				<select  lay-filter="rightCategoryId"  lay-verify="required" id="packageId" name="packageId"  lay-search>
+				<select  lay-verify="required" id="packageId" name="packageId"  lay-search>
 			      	<option value=""></option>
 			      	<c:forEach items="${packageList }" var="item">
 			      	
@@ -180,6 +174,28 @@
 	    	if(imageUrl){
 	    	 $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+imageUrl+'" width="200">'); //图片链接（base64）
 	    	}
+	    	
+	    	//买家名称显示图纸名称
+	    	 $("#userName").on("input",function(e){
+	    	 	$.ajax({
+    				url : '/admin/center/order/get/packageName.do',
+    				type : "POST",
+					cache : false,
+					data : {userName:e.delegateTarget.value},
+    				dataType : "json",
+    				success : function(data) {
+    					$("#packageName").val(data.data);
+    				},
+    				error : function(e) {
+    					console.log(e);
+    				}
+    			});
+			     
+			  });
+			  //电话号码去除空格
+	    	 $("#mobile").on("input",function(e){
+			     $("#mobile").val($("#mobile").val().replace(/\s+/g,""));
+			  });
 	    });
     	
     	
@@ -206,8 +222,6 @@
           table = layui.table;
           
           form.on('radio(template)', function(data){
-			 // console.log(data.elem); //得到radio原始DOM对象
-			 // console.log(data.value); //被点击的radio的value值
 			  
 			  $(".template-box").hide()
 			  $("body").append($(".template-box"));
@@ -226,27 +240,10 @@
 		     ,size: 1024 //限制文件大小，单位 KB
 		    ,choose: function(obj){
 		      //预读本地文件示例，不支持ie8
-		      //console.log(obj)
 		      obj.preview(function(index, file, result){
-		    
-		      //console.log(result,file)
 		      files = file
 		        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
 		      
-		      	 //var img = new Image();
-                // img.src = result;
-                // img.onload = function () { //初始化夹在完成后获取上传图片宽高，判断限制上传图片的大小。
-                     /* if(img.width ==500 || img.height ==500){
-                        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
-                     }else{
-                         flag = false;
-                         layer.msg("您上传的小图大小必须是500*500尺寸！");
-                         return false;
-                     } */
-                     
-                    //  $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
-                // }
-                /* return flag;*/
                     
 		      });
 		    }
@@ -256,10 +253,8 @@
 		   //选完文件后不自动上传
 		  upload.render({
 		    elem: '#additional_id'
-		    //,url: '/upload/'
 		    ,auto: false
-		    //,multiple: true
-			 ,accept: 'file'
+			,accept: 'file'
 		    ,exts: 'txt' 
 		    ,done: function(res){
 		      console.log(res)
@@ -296,7 +291,8 @@
 	   				formData.append('packageId', obj.packageId);
         		}
         		
-        		formData.append('userId', ${user.id});
+        		formData.append('idParam', ${idParam}+"");
+        		formData.append('userId', ${user.id}+"");
         		formData.append('step', $('#step').val());
         		formData.append('pins', $('#pins').val());
        			formData.append('packageName',obj.packageName);
@@ -305,6 +301,7 @@
    				formData.append('template', obj.template);
    				formData.append('file', files);
    				formData.append('stepFile', stepFile);
+   				formData.append('userName', $("#userName").val());
    				
     		
     		 // 等候加载
@@ -330,7 +327,7 @@
 									//关闭当前frame
 									parent.layer.close(index);
 									//刷新列表
-									window.parent.reloadTable(obj);
+									window.parent.reloadTable(obj,${idParam}+"");
 								});
 								
 							} else {

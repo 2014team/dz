@@ -102,7 +102,7 @@
 		(SELECT COUNT(1) FROM `order` o WHERE o.`package_id` = p.`package_id` ) AS useCount FROM pic_package p 
 		where 1=1
 		<if test="entity.packageName != null and '' != entity.packageName">
-			and package_name=#{entity.packageName}
+			and package_name like '%${entity.packageName}%'
 		</if>
 		<if test="entity.comeFrom != null">
 			and come_from=#{entity.comeFrom}
@@ -116,7 +116,7 @@
 		select count(1) from pic_package
 		where 1=1
 		<if test="entity.packageName != null and '' != entity.packageName">
-			and package_name=#{entity.packageName}
+			and package_name like '%${entity.packageName}%'
 		</if>
 		<if test="entity.comeFrom != null">
 			and come_from=#{entity.comeFrom}

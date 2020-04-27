@@ -246,14 +246,17 @@ public class UserController {
 		
 		// 获取订单信息
 		Map<String,Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("id", id);
-		Order order = orderService.getByMap(paramMap);
-		if(null != order){
-			// 获取用户信息
-			paramMap.clear();
-			paramMap.put("userName", order.getUserName());
-			User user = userService.getByMap(paramMap);
-			request.setAttribute("user", user);
+		Order order = null;
+		if(null != id && id > 0){
+			paramMap.put("id", id);
+			order = orderService.getByMap(paramMap);
+			if(null != order){
+				// 获取用户信息
+				paramMap.clear();
+				paramMap.put("userName", order.getUserName());
+				User user = userService.getByMap(paramMap);
+				request.setAttribute("user", user);
+			}
 		}
 		
 		//获取字典
@@ -262,6 +265,8 @@ public class UserController {
 		List<PicPackage> packageList = picPackageService.select(paramMap);
 		request.setAttribute("packageList", packageList);
 		request.setAttribute("order", order);
+		//为了区别点击增加买家
+		request.setAttribute("idParam", id);
 		return "/user/user_order_edit";
 	}
 

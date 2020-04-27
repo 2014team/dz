@@ -260,32 +260,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Integer> implements U
 	*/
 	@Override
 	public Integer updateUser(User entity) {
-		//获取用户信息
-		User user = get(entity.getId());
-		
-		List<Order> orderList = null;
-		if(null != user){
-			String userName = user.getUserName();
-			//查询订单修改手机号
-			Map<String,Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("userName", userName);
-			orderList = orderDao.selectByMap(paramMap);
-			
-		}
-		
-		Integer result = update(entity);
-		if(null != result && result > 0){
-			if(null != user){
-				//查询订单修改手机号
-				if(null != orderList && orderList.size() > 0){
-					for (Order order : orderList) {
-						order.setUserName(entity.getUserName());
-						 orderDao.update(order);
-					}
-			}
-		  }
-		}
-		return result;
+		return update(entity);
 	}
 
 	/**
@@ -311,7 +286,7 @@ public class UserServiceImpl extends BaseServiceImpl<User, Integer> implements U
 				}
 				
 			}else{
-				packageName = packageName + "-1";
+				packageName = order.getUserName() + "-1";
 			}
 		}else{
 			if(null != user){

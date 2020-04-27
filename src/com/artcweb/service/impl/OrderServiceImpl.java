@@ -16,12 +16,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.Order;
 import com.artcweb.baen.PicPackage;
+import com.artcweb.baen.User;
 import com.artcweb.constant.ComeFromConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.dao.OrderDao;
 import com.artcweb.dao.PicPackageDao;
+import com.artcweb.dao.UserDao;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.OrderService;
+import com.artcweb.service.UserService;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.ImageUtil;
 
@@ -36,6 +39,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 
 	@Autowired
 	private ImageService imageService;
+	
+	@Autowired
+	private UserDao userDao;
 
 	/**
 	 * @Title: deleteByBatch
@@ -367,6 +373,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 			result.failure(checkResult);
 			return result;
 		}
+		
 
 		Integer operator = null;
 		String imageUrl = null;
@@ -456,6 +463,45 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 		}// 保存
 		else {
 			
+			//点击增加买家操作，创建用户
+			String idParam = request.getParameter("idParam");
+			if(StringUtils.isNotBlank(idParam) && "-1".equals(idParam)){
+				Map<String,Object> paramMap = new HashMap<String, Object>();
+				paramMap.put("userName", entity.getUserName());
+				User user = userDao.getByMap(paramMap);
+				if(null == user){
+					user = new User();
+					user.setSort(1);
+					user.setUserName(entity.getUserName());
+					Integer save = userDao.save(user);
+					if(null != save && save > 0){
+						entity.setUserId(String.valueOf(user.getId()));
+					}
+				}else{
+					//packageName处理
+					paramMap.clear();
+					paramMap.put("userId", user.getId());
+					Order order = orderDao.getPackageName(paramMap);
+					String packageName = null;
+					String[] packageNameArr;
+					if(null != order ){
+						packageName = order.getPackageName();
+						if(StringUtils.isNotBlank(packageName) && (packageName.lastIndexOf("-")!= -1)){
+							packageNameArr =  packageName.split("-");
+							if(null != packageName && packageName.length() > 1){
+								packageName = packageNameArr[0] + "-"+(Integer.valueOf(packageNameArr[1])+1);
+							}
+							
+						}else{
+							packageName = order.getUserName() + "-1";
+						}
+					
+					}
+					entity.setUserId(order.getId()+"");
+					entity.setPackageName(packageName);
+				
+				}
+			}
 
 			// 验证唯一性
 			String checkAddUnique = checkAddUnique(entity);
@@ -625,4 +671,37 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 		}
 		
 	}
+
+	@Override
+	public String getPackageName(String userName) {
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userName", userName);
+		User user = userDao.getByMap(paramMap);
+		if(null == user){
+			return userName + "-1";
+		}else{
+			//packageName处理
+			paramMap.clear();
+			paramMap.put("userId", user.getId());
+			Order order = orderDao.getPackageName(paramMap);
+			String packageName = null;
+			String[] packageNameArr;
+			if(null != order ){
+				packageName = order.getPackageName();
+				if(StringUtils.isNotBlank(packageName) && (packageName.lastIndexOf("-")!= -1)){
+					packageNameArr =  packageName.split("-");
+					if(null != packageName && packageName.length() > 1){
+						packageName = packageNameArr[0] + "-"+(Integer.valueOf(packageNameArr[1])+1);
+					}
+					
+				}else{
+					packageName = order.getUserName() + "-1";
+				}
+			}
+			return packageName;
+		
+		}
+	}
+	
+	
 }

@@ -30,7 +30,7 @@ function crup_delete(obj, url,delId) {
 				}
 			},
 			error : function(e) {
-				console.err(e);
+				console.log(e);
 				layer.msg("系统异常，稍后再试!", {
 					icon : 2,
 					time : 1000

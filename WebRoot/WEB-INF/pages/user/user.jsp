@@ -33,7 +33,7 @@
 		<!-- 头部工具条 -->
 		<script type="text/html" id="toolbar">
   		<div class="layui-btn-container">
-			<button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/user/add.do',600,260)"><i class="layui-icon"></i>增加买家</button>  		
+			<button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/user/order/edit/-1.do')"><i class="layui-icon"></i>增加买家</button>  		
    			 <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="crup_delAll('rendReloadId','/admin/center/user/delete/batch.do')">批量删除</button>
 	</div>
 	</script>
@@ -176,6 +176,27 @@
 		      }, 'data');
       
         }); 
+        
+        
+        $("#userName").bind("keydown",function(e){
+		　　// 兼容FF和IE和Opera
+		　　var theEvent = e || window.event;
+		　　var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+		　　 if (code == 13) {
+			　　var userName = $('#userName').val();
+			      //执行重载
+			      table.reload( 'rendReloadId',{
+			      	method:"post",
+			        page: {
+			          curr: 1 //重新从第 1 页开始
+			        }
+			        ,where: {
+			            "userName": userName
+			        }
+			      }, 'data');
+			　　}
+		});
+		
 		
 		//监听行工具条
 		table.on('tool(table_list)', function(obj) {
@@ -263,8 +284,16 @@
 	
 	
 	//刷新
-	function reloadTable(obj){
-		if(obj.orderId){
+	function reloadTable(obj,idParam){
+		if(idParam && -1 ==idParam){
+		 layui.table.reload('rendReloadId', {
+		  page: {
+		    curr: 1 //重新从第 1 页开始
+		  }
+		}); //只重载数据
+		
+		}else{
+			if(obj.orderId){
 			$.ajax({
 				url : '/admin/center/order/get/'+obj.orderId+'.do',
 				type : "GET",
@@ -305,7 +334,10 @@
 				}, 
 				
 			});
+		  }
 		}
+	
+		
 	}
 	
 </script>

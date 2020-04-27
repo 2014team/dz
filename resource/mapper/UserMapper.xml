@@ -14,7 +14,7 @@
 
 
 	<!--保存 -->
-	<insert id="save" parameterType="com.artcweb.baen.User">
+	<insert id="save" parameterType="com.artcweb.baen.User" useGeneratedKeys="true" keyProperty="id">
 		insert into
 		user(user_name,sort,create_date,update_date)
 		values(#{userName},#{sort},now(),now())
@@ -96,10 +96,11 @@
 	<select id="findByPage" parameterType="Map" resultMap="result">
 		select * 
 		from user
-		where 1=1
-		<if test="null != entity.userName and '' != entity.userName">
-			and user_name = #{entity.userName}
-		</if>
+		<where>
+			<if test="null != entity.userName and '' != entity.userName">
+				 user_name  like '%${entity.userName}%'
+			</if>
+		</where>
 		 order by sort ,update_date desc limit ${page.begin},${page.limit};
 	</select>
 
@@ -107,10 +108,11 @@
 	<select id="findByPageCount" parameterType="Map" resultType="int">
 		select count(1) user from
 		user
-		where 1=1
-		<if test="null != entity.userName and '' != entity.userName">
-			and user_name = #{entity.userName}
-		</if>
+		<where>
+			<if test="null != entity.userName and '' != entity.userName">
+				 user_name  like '%${entity.userName}%'
+			</if>
+		</where>
 	</select>
 
 

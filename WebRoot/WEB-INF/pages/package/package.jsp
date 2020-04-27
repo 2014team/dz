@@ -19,7 +19,7 @@
       <div class="layui-row demoTable">
            	图纸名称：
           <div class="layui-inline">
-		    <input class="layui-input" name="packageName" id=packageName autocomplete="off">
+		    <input class="layui-input" name="packageName" id="packageName" autocomplete="off">
 		  </div>
           <button class="layui-btn" type="button" id="search_id">搜索</button>
            <button class="layui-btn" type="button" id="clean_search_input">置空搜索框</button>
@@ -49,11 +49,6 @@
 <script type="text/html" id="minImageUrl">
   <img alt="{{d.minImageUrl}}" src="{{d.minImageUrl}}" >
 </script>
-<!-- 序号模板 -->
-<script type="text/html" id="indexTpl">
-   {{d.LAY_TABLE_INDEX+1}}
-</script>
-
 
 <script type="text/javascript">
      var editRowObj;
@@ -86,7 +81,7 @@
 				{
 					field : 'indexId', 
 					title : '序号',
-					templet: '#indexTpl',
+					type: 'numbers',
 					width:75,
 					sort : true,					
 				}
@@ -119,7 +114,7 @@
 		
 		
 		/* 搜索 */
-		$('#search_id').on('click', function(){
+		$('#packageName').on('click', function(){
            var searchPackageName = $('#packageName').val();
 		      //执行重载
 		      table.reload( 'rendReloadId',{
@@ -133,6 +128,26 @@
 		      }, 'data');
       
         }); 
+        
+        
+        $("#packageName").bind("keydown",function(e){
+		　　// 兼容FF和IE和Opera
+		　　var theEvent = e || window.event;
+		　　var code = theEvent.keyCode || theEvent.which || theEvent.charCode;
+		　　 if (code == 13) {
+			　　var packageName = $('#packageName').val();
+			      //执行重载
+			      table.reload( 'rendReloadId',{
+			      	method:"post",
+			        page: {
+			          curr: 1 //重新从第 1 页开始
+			        }
+			        ,where: {
+			            "packageName": packageName
+			        }
+			      }, 'data');
+			　　}
+		});
 		
 		//监听行工具条
 		table.on('tool(table_list)', function(obj) {
