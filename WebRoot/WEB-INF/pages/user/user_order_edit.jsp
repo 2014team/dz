@@ -177,6 +177,10 @@
 	    	
 	    	//买家名称显示图纸名称
 	    	 $("#userName").on("input",function(e){
+		    	 if(!e.delegateTarget.value){
+		    	 $("#packageName").val('');
+		    	 	return ;
+		    	 }
 	    	 	$.ajax({
     				url : '/admin/center/order/get/packageName.do',
     				type : "POST",
