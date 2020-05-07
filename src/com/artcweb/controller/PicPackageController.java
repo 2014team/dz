@@ -162,6 +162,9 @@ public class PicPackageController {
 					picPackage.setPackageName(entity.getPackageName());
 					picPackage.setStep(entity.getStep());
 					picPackage.setPins(entity.getPins());
+					if(StringUtils.isNotBlank(entity.getStepName())){
+						picPackage.setStepName(entity.getStepName());
+					}
 				}
 
 				operator = picPackageService.update(picPackage);

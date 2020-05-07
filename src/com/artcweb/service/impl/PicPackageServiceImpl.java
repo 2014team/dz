@@ -209,7 +209,9 @@ public class PicPackageServiceImpl extends BaseServiceImpl<PicPackage, Integer> 
 		if(null != stepFile){
 			try {
 				String step = new String(stepFile.getBytes(),"UTF-8");
+				String originalFilename = stepFile.getOriginalFilename();
 				entity.setStep(step);
+				entity.setStepName(originalFilename);
 			}
 			catch (Exception e) {
 				e.printStackTrace();
