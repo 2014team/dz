@@ -24,7 +24,6 @@ import com.artcweb.dao.PicPackageDao;
 import com.artcweb.dao.UserDao;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.OrderService;
-import com.artcweb.service.UserService;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.ImageUtil;
 
@@ -481,6 +480,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 				picPackage.setPackageName(entity.getPackageName());
 				picPackage.setPins(entity.getPins());
 				picPackage.setStep(entity.getStep());
+				if(StringUtils.isNotBlank(entity.getStepName())){
+					picPackage.setStepName(entity.getStepName());
+				}
 				//更新模本
 				Integer picPackageResult = picPackageDao.update(picPackage);
 				
@@ -578,6 +580,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 			picPackage.setMinImageUrl(entity.getMinImageUrl());
 			picPackage.setImageUrl(entity.getImageUrl());
 			picPackage.setStep(entity.getStep());
+			picPackage.setStepName(entity.getStepName());
 			picPackage.setPins(entity.getPins());
 			picPackage.setComeFrom(entity.getComeFrom());
 			operator = picPackageDao.save(picPackage);
@@ -703,7 +706,9 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 		if(null != stepFile){
 			try {
 				String step = new String(stepFile.getBytes(),"UTF-8");
+				String originalFilename = stepFile.getOriginalFilename();
 				entity.setStep(step);
+				entity.setStepName(originalFilename);
 			}
 			catch (Exception e) {
 				e.printStackTrace();

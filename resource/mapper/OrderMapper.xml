@@ -79,7 +79,7 @@
 		AS packageName,p.package_id AS  packageId, o.template AS template,p.come_from AS comeFrom,
 		p.image_url AS imageUrl ,p.min_image_url AS minImageUrl ,p.step ,o.current_step AS
 		currentStep,p.pins AS
-		pins
+		pins,p.step_name AS stepName
 		FROM `order` o,`user` u,pic_package p
 		WHERE
 		o.user_id=u.id AND o.package_id = p.package_id

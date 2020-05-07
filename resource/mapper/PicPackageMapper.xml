@@ -10,6 +10,7 @@
 		<result property="imageUrl" column="image_url" />
 		<result property="minImageUrl" column="min_image_url" />
 		<result property="step" column="step" />
+		<result property="stepName" column="step_name" />
 		<result property="pins" column="pins" />
 		<result property="comeFrom" column="come_from" />
 		<result property="createDate" column="create_date" />
@@ -20,8 +21,8 @@
 	<!--保存 -->
 	<insert id="save" parameterType="com.artcweb.baen.PicPackage" useGeneratedKeys="true" keyProperty="packageId">
 		insert into
-		pic_package(package_name,image_url,min_image_url,step,pins,come_from)
-		values(#{packageName},#{imageUrl},#{minImageUrl},#{step},#{pins},#{comeFrom})
+		pic_package(package_name,image_url,min_image_url,step,step_name,pins,come_from)
+		values(#{packageName},#{imageUrl},#{minImageUrl},#{step},#{stepName},#{pins},#{comeFrom})
 	</insert>
 
 	<!--删除 -->
@@ -56,6 +57,7 @@
 		,image_url=#{imageUrl}
 		,min_image_url=#{minImageUrl}
 		,step=#{step}
+		,step_name=#{stepName}
 		,pins=#{pins}
 		,come_from=#{comeFrom}
 		where package_id=#{packageId}

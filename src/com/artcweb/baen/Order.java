@@ -74,6 +74,11 @@ public class Order extends BaseBean {
 	 */
 
 	private int comeFrom;
+	
+	/**
+	* 上传步骤文件名称
+	*/
+	private String stepName;
 
 	public Integer getOrderId() {
 
@@ -203,6 +208,18 @@ public class Order extends BaseBean {
 
 	public void setUserId(String userId) {
 		this.userId = userId;
+	}
+
+	
+	public String getStepName() {
+	
+		return stepName;
+	}
+
+	
+	public void setStepName(String stepName) {
+	
+		this.stepName = stepName;
 	}
 	
 

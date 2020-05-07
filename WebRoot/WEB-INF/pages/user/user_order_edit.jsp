@@ -117,7 +117,7 @@
 		    <label class="layui-form-label"> <span class="x-red">*</span>执行步骤</label>
 		    <div class="layui-input-block">
 		      <button type="button" class="layui-btn" id="additional_id">选择文件</button>
-		      <label id="additional_label" class="layui-form-label" style="float:none;display:inline-block;text-align:left;width:auto;"></label>
+		      <label id="additional_label" class="layui-form-label" style="float:none;display:inline-block;text-align:left;width:auto;">${order.stepName }</label>
 		    </div>
 		  </div>
 		  

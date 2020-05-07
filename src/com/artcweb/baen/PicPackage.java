@@ -29,6 +29,7 @@ public class PicPackage extends BaseBean {
 	 * 执行步骤
 	 */
 	private String step;
+
 	/**
 	 * 钉子数量
 	 */
@@ -40,9 +41,14 @@ public class PicPackage extends BaseBean {
 	private Integer useCount;
 
 	/**
-	 * 来源 0：定制   1：模板
+	 * 来源 0：定制 1：模板
 	 */
 	private Integer comeFrom;
+
+	/**
+	 * 上传步骤文件名称
+	 */
+	private String stepName;
 
 	public Integer getPackageId() {
 
@@ -85,10 +91,12 @@ public class PicPackage extends BaseBean {
 	}
 
 	public Integer getPins() {
+
 		return pins;
 	}
 
 	public void setPins(Integer pins) {
+
 		this.pins = pins;
 	}
 
@@ -103,19 +111,33 @@ public class PicPackage extends BaseBean {
 	}
 
 	public String getMinImageUrl() {
+
 		return minImageUrl;
 	}
 
 	public void setMinImageUrl(String minImageUrl) {
+
 		this.minImageUrl = minImageUrl;
 	}
 
 	public Integer getComeFrom() {
+
 		return comeFrom;
 	}
 
 	public void setComeFrom(Integer comeFrom) {
+
 		this.comeFrom = comeFrom;
+	}
+
+	public String getStepName() {
+
+		return stepName;
+	}
+
+	public void setStepName(String stepName) {
+
+		this.stepName = stepName;
 	}
 
 }
