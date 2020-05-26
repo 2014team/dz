@@ -79,6 +79,20 @@ public class Order extends BaseBean {
 	* 上传步骤文件名称
 	*/
 	private String stepName;
+	
+	private Integer apiFlag ;
+	
+	
+	public Integer getApiFlag() {
+	
+		return apiFlag;
+	}
+
+	
+	public void setApiFlag(Integer apiFlag) {
+	
+		this.apiFlag = apiFlag;
+	}
 
 	public Integer getOrderId() {
 

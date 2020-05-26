@@ -336,7 +336,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 			
 			//点击增加买家操作，创建用户
 			String idParam = request.getParameter("idParam");
-			if(StringUtils.isNotBlank(idParam) && "-1".equals(idParam)){
+			Integer apiFlag = entity.getApiFlag();
+			if(StringUtils.isNotBlank(idParam) && "-1".equals(idParam) ||(null != apiFlag && apiFlag ==1)){
 				Map<String,Object> paramMap = new HashMap<String, Object>();
 				paramMap.put("userName", entity.getUserName());
 				User user = userDao.getByMap(paramMap);
@@ -353,7 +354,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 					paramMap.clear();
 					paramMap.put("userId", user.getId());
 					Order order = orderDao.getPackageName(paramMap);
-					String packageName = null;
+					String packageName = user.getUserName()+"-1";
+					entity.setUserId(user.getId()+"");
 					String[] packageNameArr;
 					if(null != order ){
 						packageName = order.getPackageName();
@@ -367,8 +369,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 							packageName = order.getUserName() + "-1";
 						}
 					
+						entity.setUserId(order.getId()+"");
 					}
-					entity.setUserId(order.getId()+"");
 					entity.setPackageName(packageName);
 				
 				}
@@ -526,7 +528,8 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 					paramMap.clear();
 					paramMap.put("userId", user.getId());
 					Order order = orderDao.getPackageName(paramMap);
-					String packageName = null;
+					String packageName = user.getUserName() + "-1";
+					entity.setUserId(user.getId()+"");
 					String[] packageNameArr;
 					if(null != order ){
 						packageName = order.getPackageName();
@@ -541,7 +544,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 						}
 					
 					}
-					entity.setUserId(order.getId()+"");
+					entity.setUserId(user.getId()+"");
 					entity.setPackageName(packageName);
 				
 				}
@@ -749,6 +752,179 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 		
 		}
 	}
-	
+
+	@Override
+	public LayUiResult saveApiNewTemplate(Order entity, MultipartFile file, HttpServletRequest request) {
+
+		LayUiResult result = new LayUiResult();
+		// 参数验证
+		String checkResult = chekNewTemplateParam(entity);
+		if (StringUtils.isNotBlank(checkResult)) {
+			result.failure(checkResult);
+			return result;
+		}
+
+		Integer operator = null;
+		String imageUrl = null;
+		String minImageUrl = null;
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userName", entity.getUserName());
+		User user = userDao.getByMap(paramMap);
+		if (null == user) {
+			user = new User();
+			user.setSort(1);
+			user.setUserName(entity.getUserName());
+			Integer save = userDao.save(user);
+			if (null != save && save > 0) {
+				entity.setUserId(String.valueOf(user.getId()));
+			}
+		}
+		else {
+			// packageName处理
+			paramMap.clear();
+			paramMap.put("userId", user.getId());
+			Order order = orderDao.getPackageName(paramMap);
+			String packageName = user.getUserName()+"-1";
+			String[] packageNameArr;
+			if (null != order) {
+				packageName = order.getPackageName();
+				if (StringUtils.isNotBlank(packageName) && (packageName.lastIndexOf("-") != -1)) {
+					packageNameArr = packageName.split("-");
+					if (null != packageName && packageName.length() > 1) {
+						packageName = packageNameArr[0] + "-" + (Integer.valueOf(packageNameArr[1]) + 1);
+					}
+
+				}
+				else {
+					packageName = order.getUserName() + "-1";
+				}
+
+			}
+			entity.setUserId(user.getId() + "");
+			entity.setPackageName(packageName);
+
+		}
+
+		// 验证唯一性
+		String checkAddUnique = checkAddUnique(entity);
+		if (StringUtils.isNotBlank(checkAddUnique)) {
+			result.failure(checkAddUnique);
+			return result;
+		}
+
+		if (null != file && !file.isEmpty()) {
+			// 图片验证
+			String errorMsg = imageService.checkImage(file);
+			if (StringUtils.isNotBlank(errorMsg)) {
+				result.failure(errorMsg);
+				return result;
+			}
+
+			// 上传图片
+			imageUrl = imageService.uploadImage(request, file, UploadConstant.SAVE_UPLOAD_PATH);
+			minImageUrl = imageService.uploadMinImage(request, file, UploadConstant.SAVE_UPLOAD_PATH);
+
+			entity.setMinImageUrl(minImageUrl);
+			entity.setImageUrl(imageUrl);
+		}
+
+		// 保存套餐信息
+		PicPackage picPackage = new PicPackage();
+		picPackage.setPackageName(entity.getPackageName());
+		picPackage.setMinImageUrl(entity.getMinImageUrl());
+		picPackage.setImageUrl(entity.getImageUrl());
+		picPackage.setStep(entity.getStep());
+		picPackage.setStepName(entity.getStepName());
+		picPackage.setPins(entity.getPins());
+		picPackage.setComeFrom(entity.getComeFrom());
+		operator = picPackageDao.save(picPackage);
+		if (null != operator && operator > 0) {
+			// 保存订单信息
+			defaultValueDeal(entity);// 默认值处理
+			entity.setPackageId(picPackage.getPackageId());
+			operator = orderDao.save(entity);
+		}
+
+		if (null != operator && operator > 0) {
+			result.success();
+			return result;
+		}
+		result.failure();
+		return result;
+
+	}
+
+	@Override
+	public LayUiResult saveApiChooseTemplate(Order entity, HttpServletRequest request) {
+
+		LayUiResult result = new LayUiResult();
+
+		// 参数验证
+		String checkResult = checkSaveParam(entity);
+		if (StringUtils.isNotBlank(checkResult)) {
+			result.failure(checkResult);
+			return result;
+		}
+		//
+		Integer operator = null;
+
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userName", entity.getUserName());
+		User user = userDao.getByMap(paramMap);
+		if (null == user) {
+			user = new User();
+			user.setSort(1);
+			user.setUserName(entity.getUserName());
+			Integer save = userDao.save(user);
+			if (null != save && save > 0) {
+				entity.setUserId(String.valueOf(user.getId()));
+			}
+		}
+		else {
+			// packageName处理
+			paramMap.clear();
+			paramMap.put("userId", user.getId());
+			Order order = orderDao.getPackageName(paramMap);
+			String packageName = user.getUserName() + "-1";
+			entity.setUserId(user.getId() + "");
+			String[] packageNameArr;
+			if (null != order) {
+				packageName = order.getPackageName();
+				if (StringUtils.isNotBlank(packageName) && (packageName.lastIndexOf("-") != -1)) {
+					packageNameArr = packageName.split("-");
+					if (null != packageName && packageName.length() > 1) {
+						packageName = packageNameArr[0] + "-" + (Integer.valueOf(packageNameArr[1]) + 1);
+					}
+
+				}
+				else {
+					packageName = order.getUserName() + "-1";
+				}
+
+				entity.setUserId(user.getId() + "");
+			}
+			entity.setPackageName(packageName);
+
+		}
+
+		// 验证唯一性
+		String checkAddUnique = checkAddUnique(entity);
+		if (StringUtils.isNotBlank(checkAddUnique)) {
+			result.failure(checkAddUnique);
+			return result;
+		}
+		// 默认值处理
+		defaultValueDeal(entity);
+		operator = orderDao.save(entity);
+
+		if (null != operator && operator > 0) {
+			result.success();
+			return result;
+		}
+
+		result.failure();
+		return result;
+	}
 	
 }

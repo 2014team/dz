@@ -139,5 +139,24 @@ public interface OrderService extends BaseService<Order, Integer> {
 	
 	
 	public String getPackageName(String userName);
+	
+	/**
+	* @Title: saveApiNewTemplate
+	* @Description: API自定义模板保存
+	* @param entity
+	* @param file
+	* @param request
+	* @return
+	*/
+	public LayUiResult saveApiNewTemplate(Order entity, MultipartFile file, HttpServletRequest request);
+
+	/**
+	* @Title: saveApiChooseTemplate
+	* @Description: API选择模板保存
+	* @param entity
+	* @param request
+	* @return
+	*/
+	public LayUiResult saveApiChooseTemplate(Order entity, HttpServletRequest request);
 
 }
