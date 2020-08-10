@@ -90,6 +90,7 @@
 					title : '图纸名称'
 				}
 				, {
+					sort : true,
 					field : 'useCount',
 					title : '用户数'
 				}

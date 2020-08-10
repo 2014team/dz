@@ -109,7 +109,7 @@
 		<if test="entity.comeFrom != null">
 			and come_from=#{entity.comeFrom}
 		</if>
-		order by package_id desc ,update_date desc  limit ${page.begin},${page.limit} ;
+		order by useCount desc,package_id desc ,update_date desc  limit ${page.begin},${page.limit} ;
 	</select>
 	
 	
