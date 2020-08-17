@@ -46,10 +46,10 @@
 	</jsp-config>
 
 	<!-- web root 目录 -->
-	<context-param>
+	<!-- <context-param>
 		<param-name>webAppRootKey</param-name>
 		<param-value>web.root</param-value>
-	</context-param>
+	</context-param> -->
 	<context-param>
 		<param-name>contextConfigLocation</param-name>
 		<param-value>classpath:config/application-context.xml</param-value>

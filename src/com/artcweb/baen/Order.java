@@ -14,11 +14,12 @@ public class Order extends BaseBean {
 	 * 手机号码
 	 */
 	private String mobile;
-	
+
 	/**
 	 * 用户ID
 	 */
 	private String userId;
+
 	/**
 	 * 用户名称
 	 */
@@ -74,23 +75,26 @@ public class Order extends BaseBean {
 	 */
 
 	private int comeFrom;
-	
+
 	/**
-	* 上传步骤文件名称
-	*/
+	 * 上传步骤文件名称
+	 */
 	private String stepName;
-	
-	private Integer apiFlag ;
-	
-	
+
+	private Integer apiFlag;
+
+	/**
+	 * 秘钥 null,0:未使用,1:已使用
+	 */
+	private Integer status;
+
 	public Integer getApiFlag() {
-	
+
 		return apiFlag;
 	}
 
-	
 	public void setApiFlag(Integer apiFlag) {
-	
+
 		this.apiFlag = apiFlag;
 	}
 
@@ -224,17 +228,22 @@ public class Order extends BaseBean {
 		this.userId = userId;
 	}
 
-	
 	public String getStepName() {
-	
+
 		return stepName;
 	}
 
-	
 	public void setStepName(String stepName) {
-	
+
 		this.stepName = stepName;
 	}
-	
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
 
 }

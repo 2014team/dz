@@ -1,6 +1,7 @@
 
 package com.artcweb.controller;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -13,7 +14,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.Order;
+import com.artcweb.baen.Secret;
 import com.artcweb.service.OrderService;
+import com.artcweb.service.SecretService;
+import com.artcweb.util.DataUtil;
+import com.artcweb.vo.OrderVo;
 
 @Controller
 @RequestMapping("/api/order")
@@ -21,6 +26,8 @@ public class ApiOrderController {
 
 	@Autowired
 	private OrderService orderService;
+	@Autowired
+	private SecretService secretService;
 
 	/**
 	 * @Title: list
@@ -57,7 +64,7 @@ public class ApiOrderController {
 	@ResponseBody
 	@RequestMapping(value = "/get", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult get(Order entity, LayUiResult result) {
+	public LayUiResult get(OrderVo entity, LayUiResult result) {
 
 		Integer orderId = entity.getOrderId();
 		if (null == orderId) {
@@ -69,7 +76,70 @@ public class ApiOrderController {
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("orderId", orderId);
 		Order order = orderService.getOrderDetailByApi(paramMap);
-		result.success(order);
+		if(null != order){
+			
+			//判断是否2020年8月16以后订单，之前不需要秘钥
+			Date createDate = order.getCreateDate();
+			String dateStr = "2020-08-21 00:00:00";
+			try {
+				Date startDate = DataUtil.parse(dateStr, DataUtil.DATE_YYYY_MM_DD_HH_MM_SS);
+				
+				//时间比较
+				boolean dateCompare = DataUtil.compareToLte(createDate, startDate);
+				//false证明是以前的订单
+				if(!dateCompare){
+					result.success(order);
+					return result;
+				}
+			}
+			catch (Exception e) {
+				e.printStackTrace();
+			}
+			
+			//判断是否输入过秘钥
+			Integer status = order.getStatus();
+			if(null == status || !status.equals(1)){
+				//秘钥验证
+				String secretKey = entity.getSecretKey();
+				if(StringUtils.isEmpty(secretKey)){
+					result.failure("请输入秘钥");
+					return result;
+				}
+				
+				//验证秘钥是否系统生成
+				paramMap.clear();
+				paramMap.put("secretKey", secretKey);
+				Secret secret = secretService.getByMap(paramMap);
+				if(null == secret){
+					result.failure("秘钥不是系统生成，请输入正确秘钥");
+					return result;
+				}
+				
+				//验证秘钥是否已经被使用
+				if(null != secret.getStatus() && secret.getStatus().equals(1)){
+					result.failure("秘钥已经被使用，请联系工作人员");
+					return result;
+				}
+				
+				//更新秘钥
+				secret.setStatus(1);
+				secret.setOrderId(orderId);
+				Integer updateResult = secretService.update(secret);
+				if(null != updateResult && updateResult > 0){
+					order.setStatus(1);
+					result.success(order);
+				}else{
+					result.failure("更新秘钥状态失败");
+				}
+			}else if(null != status && status.equals(1)){
+				//证明已经验证通过
+				result.success(order);
+				return result;
+			}
+			
+		}else{
+			result.failure("订单不存在");
+		}
 		return result;
 	}
 

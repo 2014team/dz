@@ -11,5 +11,6 @@
 <script src="/lib/layui/layui.js" charset="utf-8"></script>
 <script type="text/javascript" src="/js/xadmin.js?t=<%=new java.util.Date().getTime() %>"></script>
 <script type="text/javascript" src="/js/crud.js?t=<%=new java.util.Date().getTime() %>"></script>
+<script type="text/javascript" src="/js/date_util.js?t=<%=new java.util.Date().getTime() %>"></script>
 <link rel="stylesheet" type="text/css" href="/lib/layui/css/layui.css">
 <%@include file="/WEB-INF/pages/common/jsp_jstl.jsp"%>

@@ -13,7 +13,7 @@
           <cite>列表</cite></a>
       </span>
       <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
-        <i class="layui-icon" style="line-height:38px">ဂ</i></a>
+        <i class="layui-icon" style="line-height:38px">&#xe669;</i></a>
     </div>
     <div class="x-body">
       <div class="layui-row demoTable">
@@ -62,7 +62,7 @@
 		  table.render({
 			elem : '#table_list',
 			url : '/admin/center/account/list.do',
-			/* toolbar: '#toolbar', */
+			 toolbar: '#toolbar', 
 		    defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
 		      title: '提示'
 		      ,layEvent: 'LAYTABLE_TIPS'

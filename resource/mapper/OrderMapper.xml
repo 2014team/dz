@@ -155,15 +155,18 @@
 	<!-- API分页查找 -->
 	<select id="findPageByApi" parameterType="Map"
 		resultType="com.artcweb.baen.Order">
-		SELECT o.id AS orderId ,o.sort ,p.`come_from` AS comeFrom, p.package_name AS packageName,
-		p.image_url AS imageUrl,p.`step` as step,p.`pins` AS pins
-		FROM `order` o,`user` u,pic_package p
-		WHERE
-		o.user_id=u.id AND o.package_id = p.package_id
-		<if test="entity.mobile!= null and '' != entity.mobile">
-			and o.mobile=#{entity.mobile}
-		</if>
-		ORDER BY o.sort ,o.`update_date` DESC limit  ${page.begin},${page.limit} ;
+			select t.*,ts.`status` from 
+			(
+			SELECT o.id AS orderId ,o.sort ,p.`come_from` AS comeFrom, p.package_name AS packageName,
+			p.image_url AS imageUrl,p.`step` as step,p.`pins` AS pins
+			FROM `order` o,`user` u,pic_package p
+			WHERE
+			o.user_id=u.id AND o.package_id = p.package_id
+			<if test="entity.mobile!= null and '' != entity.mobile">
+				and o.mobile=#{entity.mobile}
+			</if>
+			ORDER BY o.sort ,o.`update_date` DESC limit  ${page.begin},${page.limit} 
+			) t LEFT JOIN `t_secret` ts ON t.orderId = ts.`order_id`
 	</select>
 
 	<!-- API分页数量 -->
@@ -179,20 +182,24 @@
 	<!-- 获取订单详情 -->
 	<select id="getOrderDetail" parameterType="Map"
 		resultType="com.artcweb.baen.Order">
-		SELECT u.id AS id,o.id AS orderId ,o.`mobile`,o.sort ,p.package_name AS packageName,
-		p.`come_from` AS comeFrom,
-		p.image_url AS imageUrl ,p.step ,o.current_step AS
-		currentStep,p.pins AS pins
-		FROM `order` o,`user` u,pic_package p
-		WHERE
-		o.user_id=u.id AND o.package_id = p.package_id
-		<if test="mobile != null and '' != mobile">
-			and o.mobile=#{mobile}
-		</if>
-		<if test="orderId !=null and '' != orderId">
-			and o.id=#{orderId}
-		</if>
-		LIMIT 1
+		SELECT t.*,ts.`status` FROM 
+		(
+			SELECT u.id AS id,o.id AS orderId ,o.`mobile`,o.sort ,p.package_name AS packageName,
+			p.`come_from` AS comeFrom,
+			p.image_url AS imageUrl ,p.step ,o.current_step AS
+			currentStep,p.pins AS pins,
+			o.`create_date` AS createDate
+			FROM `order` o,`user` u,pic_package p
+			WHERE
+			o.user_id=u.id AND o.package_id = p.package_id
+			<if test="mobile != null and '' != mobile">
+				and o.mobile=#{mobile}
+			</if>
+			<if test="orderId !=null and '' != orderId">
+				and o.id=#{orderId}
+			</if>
+			LIMIT 1
+	) t LEFT JOIN `t_secret` ts  ON t.orderId= ts.`order_id` 
 	</select>
 	
 	<!-- 更新当前执行步骤 -->

@@ -13,7 +13,7 @@
           <cite>模板列表</cite></a>
       </span>
       <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
-        <i class="layui-icon" style="line-height:38px">ဂ</i></a>
+        <i class="layui-icon" style="line-height:38px">&#xe669;</i></a>
     </div>
     <div class="x-body">
       <div class="layui-row demoTable">
