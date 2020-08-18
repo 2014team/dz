@@ -61,13 +61,10 @@ public class SecretServiceImpl extends BaseServiceImpl<Secret, Integer> implemen
 		
 		//秘钥长度
 		Integer secretDigit = secretVo.getSecretDigit();
-		List<Secret> list = new ArrayList<Secret>();
+		List<String> list = new ArrayList<String>();
 		for (int i = 0; i < secretNumber; i++) {
-			String secretKey = getSecretKey(secretDigit);
-			Secret secret = new Secret();
-			org.springframework.beans.BeanUtils.copyProperties(secretVo, secret);
-			secret.setSecretKey(secretKey);
-			list.add(secret);
+			String secretKey = getSecretKey(list,secretDigit);
+			list.add(secretKey);
 		}
 		
 		//保存
@@ -81,16 +78,18 @@ public class SecretServiceImpl extends BaseServiceImpl<Secret, Integer> implemen
 		
 	}
 	
-	private String getSecretKey(Integer secretDigit){
+	private String getSecretKey(List<String> list,Integer secretDigit){
 		Map<String,Object> paramMap  = new HashMap<String, Object>();
 		//检查是否已经在数据库存在
 		String secretKey  = SecretUtil.getGenerateWord(secretDigit);
 		paramMap.put("secretKey", secretKey);
 		Integer result =  secretDao.checkExit(paramMap);
 		if(null == result || result < 1){
-			return secretKey;
+			if(!list.contains(secretKey)){
+				return secretKey;
+			}
 		}
-		return getSecretKey(secretDigit);
+		return getSecretKey(list,secretDigit);
 	}
 
 	@Override

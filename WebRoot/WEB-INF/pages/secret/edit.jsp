@@ -43,10 +43,10 @@
 				</label>
 				<div class="layui-input-inline">
 					<input type="text" id="secretDigit" name="secretDigit"
-						value="10"   lay-verify="required|number"
+						value="6"   lay-verify="required|number"
 						autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-form-mid layui-word-aux">数字范围(6-32),默认10</div>
+				<div class="layui-form-mid layui-word-aux">数字范围(6-32),默认6</div>
 				
 			</div>
 		  

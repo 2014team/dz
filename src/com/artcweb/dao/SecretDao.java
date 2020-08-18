@@ -16,7 +16,7 @@ public interface SecretDao extends BaseDao<Secret, Integer> {
 	
 	Integer checkExit(Map<String,Object> paramMap);
 	
-	Integer saveBatch(List<Secret> secretList);
+	Integer saveBatch(List<String> secretList);
 	
 	Secret getByMap(Map<String,Object> paramMap);
 	
