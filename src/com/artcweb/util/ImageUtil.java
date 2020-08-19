@@ -6,15 +6,14 @@ import java.util.Arrays;
 import javax.imageio.ImageIO;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.constant.SiteConstant;
 import com.artcweb.constant.UploadConstant;
-import com.artcweb.service.impl.ImageServiceImpl;
 
 public class ImageUtil {
-	private static Logger logger = Logger.getLogger(ImageUtil.class);
+	private static org.slf4j.Logger logger = LoggerFactory.getLogger(ImageUtil.class);
 
 	/**
 	 * @Title: checkImage

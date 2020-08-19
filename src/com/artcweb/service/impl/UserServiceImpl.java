@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +26,8 @@ import com.artcweb.util.ImageUtil;
 @Service
 public class UserServiceImpl extends BaseServiceImpl<User, Integer> implements UserService {
 
-	
-	private Logger logger = Logger.getLogger(UserServiceImpl.class);
+	private static org.slf4j.Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
+
 	@Autowired
 	private UserDao userDao;
 

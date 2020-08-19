@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -23,6 +25,8 @@ import com.artcweb.vo.OrderVo;
 @Controller
 @RequestMapping("/api/order")
 public class ApiOrderController {
+	
+	private static Logger logger = LoggerFactory.getLogger(ApiOrderController.class);
 
 	@Autowired
 	private OrderService orderService;
@@ -65,7 +69,6 @@ public class ApiOrderController {
 	@RequestMapping(value = "/get", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
 	public LayUiResult get(OrderVo entity, LayUiResult result) {
-
 		Integer orderId = entity.getOrderId();
 		if (null == orderId) {
 			result.failure("参数[orderId]不能为空!");

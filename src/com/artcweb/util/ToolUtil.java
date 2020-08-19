@@ -6,10 +6,12 @@ import java.net.URLEncoder;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ToolUtil {
-	private static Logger logger = Logger.getLogger(ToolUtil.class);
+	
+	private static org.slf4j.Logger logger = LoggerFactory.getLogger(ToolUtil.class);
+
 	/**
 	 * 获取请求的url完整地址
 	 * 

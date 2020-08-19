@@ -1,8 +1,6 @@
 
 package com.artcweb.service.impl;
 
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -24,8 +23,8 @@ import com.artcweb.util.ImageUtil;
 
 @Service
 public class PicPackageServiceImpl extends BaseServiceImpl<PicPackage, Integer> implements PicPackageService {
+	private static org.slf4j.Logger logger = LoggerFactory.getLogger(PicPackageServiceImpl.class);
 
-	private static Logger logger = Logger.getLogger(PicPackageServiceImpl.class);
 	@Autowired
 	private PicPackageDao picPackageDao;
 

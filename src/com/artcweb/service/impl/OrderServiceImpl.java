@@ -8,7 +8,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -29,7 +29,8 @@ import com.artcweb.util.ImageUtil;
 
 @Service
 public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements OrderService {
-	private static Logger logger = Logger.getLogger(OrderServiceImpl.class);
+	private static org.slf4j.Logger logger = LoggerFactory.getLogger(OrderServiceImpl.class);
+
 	@Autowired
 	private OrderDao orderDao;
 

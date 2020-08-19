@@ -11,7 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -25,7 +26,7 @@ import net.coobird.thumbnailator.Thumbnails;
 @Service
 public class ImageServiceImpl implements ImageService {
 
-	private static Logger logger = Logger.getLogger(ImageServiceImpl.class);
+	private static Logger logger = LoggerFactory.getLogger(ImageServiceImpl.class);
 
 	/**
 	 * @Title: checkImage
