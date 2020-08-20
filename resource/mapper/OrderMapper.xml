@@ -155,7 +155,7 @@
 	<!-- API分页查找 -->
 	<select id="findPageByApi" parameterType="Map"
 		resultType="com.artcweb.baen.Order">
-			<![CDATA[ select t.*,CASE WHEN t.createDate  <= '2020-08-21 00:00:00' THEN 1 ELSE IFNULL(ts.`status`,0) END AS `status` from 
+			<![CDATA[ select t.*,CASE WHEN t.createDate  <= '2020-08-25 00:00:00' THEN 1 ELSE IFNULL(ts.`status`,0) END AS `status` from 
 			(
 			SELECT o.id AS orderId ,o.sort ,p.`come_from` AS comeFrom, p.package_name AS packageName,
 			p.image_url AS imageUrl,p.`step` as step,p.`pins` AS pins,
