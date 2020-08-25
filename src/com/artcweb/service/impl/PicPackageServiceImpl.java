@@ -41,6 +41,10 @@ public class PicPackageServiceImpl extends BaseServiceImpl<PicPackage, Integer> 
 		if (StringUtils.isBlank(packageName)) {
 			return "图纸名称不能为空!";
 		}
+		
+		if(packageName.contains("-")){
+			return "图纸名称不能包含-符号";
+		}
 		//
 		String step = entity.getStep();
 		if (StringUtils.isBlank(step)) {
