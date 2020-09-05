@@ -83,7 +83,7 @@ public class ApiOrderController {
 			
 			//判断是否2020年8月16以后订单，之前不需要秘钥
 			Date createDate = order.getCreateDate();
-			String dateStr = "2020-08-25 00:00:00";
+			String dateStr = "2020-09-05 17:00:00";
 			try {
 				Date startDate = DataUtil.parse(dateStr, DataUtil.DATE_YYYY_MM_DD_HH_MM_SS);
 				
