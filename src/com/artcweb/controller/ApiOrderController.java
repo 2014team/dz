@@ -92,6 +92,7 @@ public class ApiOrderController {
 			whileParamMap.put("mobile",order.getMobile());
 			List<While> whileList = whileService.select(whileParamMap);
 			if(null != whileList && whileList.size() > 0){
+				order.setStatus(1);
 				result.success(order);
 				return result;
 			}
