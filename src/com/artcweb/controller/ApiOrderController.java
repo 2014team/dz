@@ -3,6 +3,7 @@ package com.artcweb.controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
@@ -17,8 +18,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.Order;
 import com.artcweb.baen.Secret;
+import com.artcweb.baen.While;
 import com.artcweb.service.OrderService;
 import com.artcweb.service.SecretService;
+import com.artcweb.service.WhileService;
 import com.artcweb.util.DataUtil;
 import com.artcweb.vo.OrderVo;
 
@@ -32,6 +35,8 @@ public class ApiOrderController {
 	private OrderService orderService;
 	@Autowired
 	private SecretService secretService;
+	@Autowired
+	private WhileService whileService;
 
 	/**
 	 * @Title: list
@@ -80,6 +85,17 @@ public class ApiOrderController {
 		paramMap.put("orderId", orderId);
 		Order order = orderService.getOrderDetailByApi(paramMap);
 		if(null != order){
+			
+			
+			//检查是否白名单
+			Map<String,Object> whileParamMap = new HashMap<String, Object>();
+			whileParamMap.put("mobile",order.getMobile());
+			List<While> whileList = whileService.select(whileParamMap);
+			if(null != whileList && whileList.size() > 0){
+				result.success(order);
+				return result;
+			}
+			
 			
 			//判断是否2020年8月16以后订单，之前不需要秘钥
 			Date createDate = order.getCreateDate();
