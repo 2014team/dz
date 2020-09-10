@@ -13,6 +13,7 @@ import com.artcweb.baen.PicPackage;
 
 public interface PicPackageService extends BaseService<PicPackage, Integer> {
 
+	
 	/**
 	* @Title: checkSaveParam
 	* @Description: 参数验证

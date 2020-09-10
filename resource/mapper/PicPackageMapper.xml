@@ -141,6 +141,7 @@
 		order by package_id desc ,update_date desc 
 	</select>
 	
+	
 	<select id="selectByMap" parameterType="Map" resultMap="result">
 		select package_id,package_name from pic_package
 		<where>

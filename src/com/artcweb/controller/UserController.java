@@ -224,6 +224,7 @@ public class UserController {
 		List<PicPackage> packageList = picPackageService.selectByMap(paramMap);
 		request.setAttribute("packageList", packageList);
 		
+		
 		//获取图片名称
 		String packageName = userService.getPackageName(id,user);
 		request.setAttribute("packageName", packageName);
@@ -263,7 +264,8 @@ public class UserController {
 		paramMap.clear();
 		paramMap.put("comeFrom", ComeFromConstant.TEMPLATE);
 		List<PicPackage>  packageList = picPackageService.selectByMap(paramMap);
-						
+				
+		
 						
 		request.setAttribute("packageList", packageList);
 		request.setAttribute("order", order);

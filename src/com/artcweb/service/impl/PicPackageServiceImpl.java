@@ -225,6 +225,7 @@ public class PicPackageServiceImpl extends BaseServiceImpl<PicPackage, Integer> 
 		
 	}
 
+	
 	@Override
 	public List<PicPackage> selectByMap(Map<String, Object> paramMap) {
 		return picPackageDao.selectByMap(paramMap);
