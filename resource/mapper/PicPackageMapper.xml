@@ -129,13 +129,29 @@
 	<!-- 查找 -->
 	<select id="select" parameterType="Map" resultMap="result">
 		select * from pic_package
-		where 1=1
-		<if test="packageName != null and '' != packageName">
-			and package_name=#{packageName}
-		</if>
-		<if test="comeFrom != null">
-			and come_from=#{comeFrom}
-		</if>
+		<where>
+			<if test="packageName != null and '' != packageName">
+				 package_name=#{packageName}
+			</if>
+			<if test="comeFrom != null">
+				and come_from=#{comeFrom}
+			</if>
+		
+		</where>
+		order by package_id desc ,update_date desc 
+	</select>
+	
+	<select id="selectByMap" parameterType="Map" resultMap="result">
+		select package_id,package_name from pic_package
+		<where>
+			<if test="packageName != null and '' != packageName">
+				 package_name=#{packageName}
+			</if>
+			<if test="comeFrom != null">
+				and come_from=#{comeFrom}
+			</if>
+		
+		</where>
 		order by package_id desc ,update_date desc 
 	</select>
 

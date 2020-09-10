@@ -16,6 +16,8 @@ public interface PicPackageDao extends BaseDao<PicPackage, Integer> {
 	public int deleteByBatch(String array);
 	
 	public List<PicPackage> selectByBatch(String array);
+	
+	public List<PicPackage> selectByMap(Map<String, Object> paramMap);
 
 	
 }

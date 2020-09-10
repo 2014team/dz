@@ -221,7 +221,7 @@ public class UserController {
 		// 获取套餐信息
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("comeFrom", ComeFromConstant.TEMPLATE);
-		List<PicPackage> packageList = picPackageService.select(paramMap);
+		List<PicPackage> packageList = picPackageService.selectByMap(paramMap);
 		request.setAttribute("packageList", packageList);
 		
 		//获取图片名称
@@ -262,7 +262,9 @@ public class UserController {
 		//获取字典
 		paramMap.clear();
 		paramMap.put("comeFrom", ComeFromConstant.TEMPLATE);
-		List<PicPackage> packageList = picPackageService.select(paramMap);
+		List<PicPackage>  packageList = picPackageService.selectByMap(paramMap);
+						
+						
 		request.setAttribute("packageList", packageList);
 		request.setAttribute("order", order);
 		//为了区别点击增加买家

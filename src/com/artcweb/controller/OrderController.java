@@ -63,7 +63,7 @@ public class OrderController {
 		request.setAttribute("userList", userList);
 
 		// 获取套餐信息
-		List<PicPackage> packageList = picPackageService.select(paramMap);
+		List<PicPackage> packageList = picPackageService.selectByMap(paramMap);
 		request.setAttribute("packageList", packageList);
 		return "/order/order_edit";
 	}

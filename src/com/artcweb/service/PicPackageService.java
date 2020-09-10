@@ -1,6 +1,9 @@
 
 package com.artcweb.service;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -66,6 +69,8 @@ public interface PicPackageService extends BaseService<PicPackage, Integer> {
 	* @param stepFile
 	*/
 	public void stepFileDeal(PicPackage entity, MultipartFile stepFile);
+	
+	public List<PicPackage> selectByMap(Map<String, Object> paramMap);
 
 
 }
