@@ -32,7 +32,7 @@
 		  </div>
 		  
 		  <div class="layui-inline">
-					<label class="layui-form-label">创建时间</label>
+					<label class="layui-form-label">创建时间：</label>
 					<div class="layui-input-inline">
 						<input type="text" name="createDateStr" id="createDateStr" placeholder="请选择开始时间 - 结束时间"
 							autocomplete="off" class="layui-input" readonly="readonly" style="width: 360px;">
@@ -149,6 +149,12 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					title : '创建时间' ,
 					templet : function(d) {
 					return date.toDateString(d.createDate, 'yyyy-MM-dd HH:mm:ss');
+				}, 
+				}, {
+					field : 'updateDate' ,
+					title : '更新时间' ,
+					templet : function(d) {
+					return date.toDateString(d.updateDate, 'yyyy-MM-dd HH:mm:ss');
 				}, 
 				}, {
 					align:'left', toolbar: '#rowBar',

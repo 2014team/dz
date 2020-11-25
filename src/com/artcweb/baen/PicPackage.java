@@ -1,6 +1,7 @@
 
 package com.artcweb.baen;
 
+
 public class PicPackage extends BaseBean {
 
 	private static final long serialVersionUID = 1L;
@@ -49,6 +50,17 @@ public class PicPackage extends BaseBean {
 	 * 上传步骤文件名称
 	 */
 	private String stepName;
+	
+	
+	/**
+	* 分类Id
+	*/
+	private Integer categoryId;
+	
+	/**
+	* 分类名称
+	*/
+	private String categoryName;
 
 	public Integer getPackageId() {
 
@@ -140,4 +152,24 @@ public class PicPackage extends BaseBean {
 		this.stepName = stepName;
 	}
 
+	
+	public Integer getCategoryId() {
+		return categoryId;
+	}
+
+	
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
+
+	
+	public String getCategoryName() {
+		return categoryName;
+	}
+
+	
+	public void setCategoryName(String categoryName) {
+		this.categoryName = categoryName;
+	}
+	
 }

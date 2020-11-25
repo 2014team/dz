@@ -7,6 +7,7 @@ import java.util.Map;
 import org.springframework.stereotype.Repository;
 
 import com.artcweb.baen.PicPackage;
+import com.artcweb.dto.PicPackageDto;
 
 @Repository
 public interface PicPackageDao extends BaseDao<PicPackage, Integer> {
@@ -18,6 +19,9 @@ public interface PicPackageDao extends BaseDao<PicPackage, Integer> {
 	public List<PicPackage> selectByBatch(String array);
 	
 	public List<PicPackage> selectByMap(Map<String, Object> paramMap);
+	
+	
+	public List<PicPackageDto> selectByApiIndex(Map<String, Object> paramMap);
 
 	
 }

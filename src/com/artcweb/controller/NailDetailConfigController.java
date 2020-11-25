@@ -1,33 +1,29 @@
 
 package com.artcweb.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.artcweb.baen.NailDetailConfig;
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.Order;
-import com.artcweb.service.SecretService;
-import com.artcweb.vo.SecretVo;
+import com.artcweb.service.NailDetailConfigService;
+import com.artcweb.vo.NailDetailConfigVo;
 
-/**
- * @ClassName: SecretController
- * @Description: 秘钥controller
- */
+
 @Controller
-@RequestMapping("/admin/center/secret")
-public class SecretController {
+@RequestMapping("/admin/center/naildetailconfig")
+public class NailDetailConfigController {
 
 	@Autowired
-	private SecretService secretService;
+	private NailDetailConfigService naildetailconfigService;
 
 	/**
 	 * @Title: toList
@@ -37,7 +33,7 @@ public class SecretController {
 	@RequestMapping(value = "/list/ui")
 	public String toList() {
 
-		return "/secret/list";
+		return "/naildetailconfig/list";
 	}
 
 	/**
@@ -48,7 +44,21 @@ public class SecretController {
 	@RequestMapping(value = "/add")
 	public String toAdd(HttpServletRequest request) {
 
-		return "/secret/edit";
+		return "/naildetailconfig/edit";
+	}
+	
+	/**
+	 * @Title: toEdit
+	 * @Description: 到编辑UI
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/edit/{id}")
+	public String toEdit(@PathVariable Integer id, HttpServletRequest request) {
+		NailDetailConfig entity = naildetailconfigService.get(id);
+		request.setAttribute("entity", entity);
+		return "/naildetailconfig/edit";
 	}
 
 	/**
@@ -60,24 +70,38 @@ public class SecretController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/save")
-	public LayUiResult save(SecretVo entity, HttpServletRequest request) {
+	public LayUiResult save(NailDetailConfigVo entity, HttpServletRequest request) {
 		LayUiResult layUiResult = new LayUiResult();
 
 		// 参数验证
-		Integer secretNumber = entity.getSecretNumber();
-		if (null == secretNumber || secretNumber < 1) {
-			layUiResult.failure("生成秘钥数量不能为空");
+		String rgb = entity.getRgb();
+		if (StringUtils.isEmpty(rgb)) {
+			layUiResult.failure("rgb不能为空");
 			return layUiResult;
 		}
-		Integer secretDigit = entity.getSecretDigit();
-		if (null == secretDigit || secretDigit < 1) {
-			layUiResult.failure("秘钥长度不能为空");
+		String newSerialNumber = entity.getNewSerialNumber();
+		if (StringUtils.isEmpty(newSerialNumber)) {
+			layUiResult.failure("新编号不能为空");
 			return layUiResult;
 		}
-
-		// 保存秘钥
-		boolean result = secretService.saveSecret(entity);
-		if (result) {
+		String oldSerialNumber = entity.getOldSerialNumber();
+		if (StringUtils.isEmpty(oldSerialNumber)) {
+			layUiResult.failure("旧编号不能为空");
+			return layUiResult;
+		}
+		String nailSmallWeight = entity.getNailSmallWeight();
+		if (StringUtils.isEmpty(nailSmallWeight)) {
+			layUiResult.failure("（小钉）每包克数 不能为空");
+			return layUiResult;
+		}
+		String nailBigWeight = entity.getNailBigWeight();
+		if (StringUtils.isEmpty(nailBigWeight)) {
+			layUiResult.failure("（大钉）每包克数 不能为空");
+			return layUiResult;
+		}
+	
+		Integer result = naildetailconfigService.saveOrUpdate(entity);
+		if (null != result && result > 0) {
 			layUiResult.success();
 		}
 		else {
@@ -96,13 +120,13 @@ public class SecretController {
 	@ResponseBody
 	@RequestMapping(value = "/list", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult list(SecretVo entity, HttpServletRequest request) {
+	public LayUiResult list(NailDetailConfigVo entity, HttpServletRequest request) {
 
 		// 获取参数
 		Integer page = Integer.valueOf(request.getParameter("page"));
 		Integer limit = Integer.valueOf(request.getParameter("limit"));
 		LayUiResult result = new LayUiResult(page, limit);
-		result = secretService.findByPage(entity, result);
+		result = naildetailconfigService.findByPage(entity, result);
 		return result;
 	}
 
@@ -125,7 +149,7 @@ public class SecretController {
 			return result;
 		}
 
-		Integer delResult = secretService.delete(id);
+		Integer delResult = naildetailconfigService.delete(id);
 		if (null != delResult && delResult > 0) {
 			result.success();
 			return result;
@@ -154,7 +178,7 @@ public class SecretController {
 
 		array = array.replace("[", "").replace("]", "");
 
-		boolean deleteResult = secretService.deleteByBatch(array);
+		boolean deleteResult = naildetailconfigService.deleteByBatch(array);
 		if (deleteResult) {
 			result.success();
 			return result;
@@ -163,5 +187,4 @@ public class SecretController {
 		return result;
 	}
 	
-
 }

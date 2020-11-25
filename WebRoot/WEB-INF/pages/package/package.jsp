@@ -95,6 +95,11 @@
 					title : '用户数'
 				}
 				, {
+					sort : true,
+					field : 'categoryName',
+					title : '类别'
+				}
+				, {
 					field : 'step',
 					title : '执行步骤'
 				}
@@ -259,6 +264,7 @@
 					editRowObj.update({
 						 packageName: data.packageName
 						 ,useCount: data.useCount
+						 ,categoryName: data.categoryName
 						 ,step: data.step
 						 ,minImageUrl: data.minImageUrl
 						 });

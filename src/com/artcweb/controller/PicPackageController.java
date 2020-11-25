@@ -1,6 +1,9 @@
 
 package com.artcweb.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,10 +17,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.artcweb.baen.Category;
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.PicPackage;
 import com.artcweb.constant.ComeFromConstant;
 import com.artcweb.constant.UploadConstant;
+import com.artcweb.service.CategoryService;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.PicPackageService;
 import com.artcweb.util.FileUtil;
@@ -34,6 +39,9 @@ public class PicPackageController {
 
 	@Autowired
 	private PicPackageService picPackageService;
+	
+	@Autowired
+	private CategoryService categoryService;
 
 	/**
 	 * @Title: toList
@@ -52,8 +60,12 @@ public class PicPackageController {
 	 * @return
 	 */
 	@RequestMapping(value = "/add")
-	public String toAdd() {
-
+	public String toAdd(HttpServletRequest request) {
+		// 获取分类类别
+		Map<String ,Object > paramMap = null;
+		List<Category> categoryList = categoryService.select(paramMap);
+		
+		request.setAttribute("categoryList", categoryList);
 		return "/package/package_edit";
 	}
 
@@ -73,6 +85,12 @@ public class PicPackageController {
 		}
 
 		request.setAttribute("entity", entity);
+		
+		// 获取分类类别
+		Map<String ,Object > paramMap = null;
+		List<Category> categoryList = categoryService.select(paramMap);
+		
+		request.setAttribute("categoryList", categoryList);
 		return "/package/package_edit";
 	}
 
@@ -163,6 +181,7 @@ public class PicPackageController {
 					picPackage.setPackageName(entity.getPackageName());
 					picPackage.setStep(entity.getStep());
 					picPackage.setPins(entity.getPins());
+					picPackage.setCategoryId(entity.getCategoryId());
 					if(StringUtils.isNotBlank(entity.getStepName())){
 						picPackage.setStepName(entity.getStepName());
 					}

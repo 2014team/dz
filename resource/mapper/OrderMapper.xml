@@ -6,6 +6,7 @@
 
 	<resultMap type="com.artcweb.baen.Order" id="result">
 		<result property="id" column="id" />
+		<result property="userId" column="user_id" />
 		<result property="mobile" column="mobile" />
 		<result property="userName" column="user_name" />
 		<result property="packageId" column="package_id" />
@@ -123,6 +124,19 @@
 		</if>
 		ORDER BY o.sort, o.`update_date` desc
 	</select>
+	
+	<select id="selectOne" parameterType="Map" resultMap="result">
+		SELECT * FROM `order` o 
+		WHERE
+		1 = 1
+		<if test="mobile!= null and '' != mobile">
+			and o.mobile=#{mobile}
+		</if>
+		<if test="id != null and '' != id">
+			and o.id=#{id}
+		</if>
+		ORDER BY o.sort, o.`update_date` desc limit 1
+	</select>
 
 
 	<!-- 分页查找 -->
@@ -166,6 +180,12 @@
 			<if test="entity.mobile!= null and '' != entity.mobile">
 				and o.mobile=#{entity.mobile}
 			</if>
+			<if test="entity.pins!= null and '' != entity.pins">
+				and p.`pins`=#{entity.pins}
+			</if>
+			<if test="entity.comeFrom!= null">
+				and p.`come_from`=#{entity.comeFrom}
+			</if>
 				ORDER BY o.sort ,o.`update_date` DESC limit  ${page.begin},${page.limit} 
 				) t LEFT JOIN `t_secret` ts ON t.orderId = ts.`order_id`
 				LEFT JOIN  `t_while`  w ON w.mobile = t.mobile
@@ -179,6 +199,12 @@
 		<if test="entity.mobile!= null and '' != entity.mobile">
 			and o.mobile=#{entity.mobile}
 		</if>
+		<if test="entity.pins!= null and '' != entity.pins">
+				and p.`pins`=#{entity.pins}
+			</if>
+			<if test="entity.comeFrom!= null">
+				and p.`come_from`=#{entity.comeFrom}
+			</if>
 	</select>
 
 	<!-- 获取订单详情 -->

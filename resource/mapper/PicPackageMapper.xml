@@ -13,6 +13,8 @@
 		<result property="stepName" column="step_name" />
 		<result property="pins" column="pins" />
 		<result property="comeFrom" column="come_from" />
+		<result property="categoryId" column="category_id" />
+		<result property="categoryName" column="category_name" />
 		<result property="createDate" column="create_date" />
 		<result property="updateDate" column="update_date" />
 	</resultMap>
@@ -21,8 +23,8 @@
 	<!--保存 -->
 	<insert id="save" parameterType="com.artcweb.baen.PicPackage" useGeneratedKeys="true" keyProperty="packageId">
 		insert into
-		pic_package(package_name,image_url,min_image_url,step,step_name,pins,come_from)
-		values(#{packageName},#{imageUrl},#{minImageUrl},#{step},#{stepName},#{pins},#{comeFrom})
+		pic_package(package_name,image_url,min_image_url,step,step_name,pins,come_from,category_id)
+		values(#{packageName},#{imageUrl},#{minImageUrl},#{step},#{stepName},#{pins},#{comeFrom},#{categoryId})
 	</insert>
 
 	<!--删除 -->
@@ -59,6 +61,7 @@
 		,step=#{step}
 		,step_name=#{stepName}
 		,pins=#{pins}
+		,category_id=#{categoryId}
 		,come_from=#{comeFrom}
 		where package_id=#{packageId}
 	</update>
@@ -101,7 +104,9 @@
 		p.come_from as comeFrom,
 		p.create_date as createDate,
 		p.update_date as updateDate,
-		(SELECT COUNT(1) FROM `order` o WHERE o.`package_id` = p.`package_id` ) AS useCount FROM pic_package p 
+		(SELECT COUNT(1) FROM `order` o WHERE o.`package_id` = p.`package_id` ) AS useCount,
+		(SELECT c.`category_name` AS categoryName FROM t_category c WHERE c.id = p.category_id) AS  categoryName
+		 FROM pic_package p 
 		where 1=1
 		<if test="entity.packageName != null and '' != entity.packageName">
 			and package_name like '%${entity.packageName}%'
@@ -154,6 +159,31 @@
 		
 		</where>
 		order by package_id desc ,update_date desc 
+	</select>
+	
+	<select id="selectByApiIndex" parameterType="Map" resultType="com.artcweb.dto.PicPackageDto">
+		SELECT 
+		p.package_id AS packageId,
+		p.package_name AS packageName,
+		p.image_url AS imageUrl,
+		p.min_image_url AS minImageUrl,
+		p.step AS step,
+		p.pins AS pins,
+		p.come_from AS comeFrom,
+		p.category_id AS categoryId,
+		t.category_name AS categoryName,
+		p.create_date AS createDate,
+		p.update_date AS updateDate,
+		(SELECT COUNT(1) FROM `order` o WHERE o.`package_id` = p.`package_id` ) AS useCount
+		 FROM pic_package p LEFT JOIN `t_category` t ON p.category_id= t.id
+		WHERE p.come_from = 1
+		<if test="null != pins and '' != pins">
+			and p.pins = #{pins}
+		</if>
+		<if test="null != categoryId and '' != categoryId">
+			and p.category_id = #{categoryId}
+		</if>
+		ORDER BY useCount DESC,package_id DESC ;
 	</select>
 
 </mapper> 

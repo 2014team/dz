@@ -293,19 +293,25 @@ xblock{
     cursor: pointer;
 }
 .left-nav{
-    position: absolute;
-    top: 51px;
-    bottom: 0px;
-    left: 0;
+    position: fixed;
+    left: 0px;
     z-index: 2;
+    top:50px;
     padding-top: 10px;
     background-color: #222324;
     width: 220px;
     max-width: 220px;
     overflow: hidden;
     border-right: 1px solid #131e26;
-
+	overflow-y: hidden;
     /*width: 0px;*/
+    height:calc(100% - 50px);
+}
+.left-nav #side-nav {
+	position: relative;
+	height: 100%;
+	overflow-y:scroll;
+	width:240px;
 }
 .left-nav #nav > li{
 	line-height:30px;
@@ -563,13 +569,5 @@ table th, table td {
     }
 }
 
-/* 自定义css*/
-td .laytable-cell-1-imageUrl{height:50px !important;line-height:50px !important;}
-.laytable-cell-1-imageUrl img{width:100%;}
-td[data-field="minImageUrl"] div{height:50px !important;line-height:50px !important;}
-td[data-field="minImageUrl"] div img{width:100%;}
 
-/* loading */
-.easemobim-prompt-wrapper{display:none;z-index:16777271;position:fixed;width:30px;height:30px;padding:10px;top:0;bottom:0;margin:auto;left:0;right:0;color:#fff;background-color:#000;text-align:center;border-radius:4px;-webkit-transition:all .5s;-moz-transition:all .5s;transition:all .5s;opacity:.7;-moz-box-sizing:content-box;box-sizing:content-box}.easemobim-prompt-wrapper>.loading{position:relative;width:30px;height:30px;display:inline-block;overflow:hidden;margin:0;padding:0;-webkit-animation:easemobim-loading-frame 1s linear infinite;-moz-animation:easemobim-loading-frame 1s linear infinite;animation:easemobim-loading-frame 1s linear infinite}@-webkit-keyframes easemobim-loading-frame{0%{-webkit-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(1turn);transform:rotate(1turn)}}@-moz-keyframes easemobim-loading-frame{0%{-moz-transform:rotate(0);transform:rotate(0)}to{-moz-transform:rotate(1turn);transform:rotate(1turn)}}@keyframes easemobim-loading-frame{0%{-webkit-transform:rotate(0);-moz-transform:rotate(0);transform:rotate(0)}to{-webkit-transform:rotate(1turn);-moz-transform:rotate(1turn);transform:rotate(1turn)}}
-.easemobim-pc-img-view{display:none;position:fixed;top:0;left:0;width:100%;height:100%;z-index:16777270}.easemobim-pc-img-view>.shadow{position:fixed;top:0;left:0;width:100%;height:100%;background-color:#000}.easemobim-pc-img-view>img{max-width:100%;max-height:100%;position:absolute;margin:auto;top:0;right:0;bottom:0;left:0}
 

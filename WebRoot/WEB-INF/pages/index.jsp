@@ -83,6 +83,7 @@
                     <li><a _href="/admin/center/user/list/ui.do"><i class="iconfont">&#xe6a7;</i><cite>用户列表</cite></a></li>
                     <li><a _href="/admin/center/secret/list/ui.do"><i class="iconfont">&#xe6a7;</i><cite>秘钥列表</cite></a></li>
                    <li><a _href="/admin/center/while/list/ui.do"><i class="iconfont">&#xe6a7;</i><cite>白名单列表</cite></a></li>
+                   <li><a _href="/admin/center/category/list/ui.do"><i class="iconfont">&#xe6a7;</i><cite>类别列表</cite></a></li>
                    <!--  <li><a _href="html/carousel.html"><i class="iconfont">&#xe6a7;</i><cite>轮播图</cite></a></li>
                     <li><a _href="html/city.html"><i class="iconfont">&#xe6a7;</i><cite>城市三级联动</cite></a></li> -->
                 </ul>
@@ -148,54 +149,30 @@
                     </li > -->
                 </ul>
             </li>            
-<!--             <li>
+            <li>
                 <a href="javascript:;">
-                    <i class="iconfont">&#xe6b8;</i>
-                    <cite>用户管理</cite>
+                    <i class="iconfont">&#xe735;</i>
+                    <cite>钉子画管理</cite>
                     <i class="iconfont nav_right">&#xe6a7;</i>
                 </a>
                 <ul class="sub-menu">
                     <li>
-                        <a _href="html/member-list.html">
+                        <a _href="/admin/center/nailconfig/list/ui.do">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>会员列表</cite>
+                            <cite>数量配置</cite>
                             
                         </a>
                     </li >
                     <li>
-                        <a _href="html/member-del.html">
+                        <a _href="/admin/center/naildetailconfig/list/ui.do">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>会员删除</cite>
+                            <cite>详细配置</cite>
                             
                         </a>
-                    </li>
-                    <li>
-                        <a href="javascript:;">
-                            <i class="iconfont">&#xe70b;</i>
-                            <cite>会员管理</cite>
-                            <i class="iconfont nav_right">&#xe6a7;</i>
-                        </a>
-                        <ul class="sub-menu">
-                            <li>
-                                <a _href="html/member-del.html">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>会员列表</cite>
-                                    
-                                </a>
-                            </li >
-                            <li>
-                                <a _href="html/member-del.html">
-                                    <i class="iconfont">&#xe6a7;</i>
-                                    <cite>会员删除</cite>
-                                    
-                                </a>
-                            </li>
-                            
-                        </ul>
                     </li>
                     
                 </ul>
-            </li> -->             
+            </li>              
 
 <!-- <li>
                 <a href="javascript:;">

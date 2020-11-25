@@ -10,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.PicPackage;
+import com.artcweb.dto.PicPackageDto;
 
 public interface PicPackageService extends BaseService<PicPackage, Integer> {
 
@@ -72,6 +73,14 @@ public interface PicPackageService extends BaseService<PicPackage, Integer> {
 	public void stepFileDeal(PicPackage entity, MultipartFile stepFile);
 	
 	public List<PicPackage> selectByMap(Map<String, Object> paramMap);
+	
+	/**
+	* @Title: selectByApiIndex
+	* @Description: 小程序-首页
+	* @param paramMap
+	* @return
+	*/
+	public List<PicPackageDto> selectByApiIndex(Map<String, Object> paramMap);
 
 
 }

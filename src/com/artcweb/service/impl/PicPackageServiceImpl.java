@@ -17,6 +17,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.PicPackage;
 import com.artcweb.dao.PicPackageDao;
+import com.artcweb.dto.PicPackageDto;
 import com.artcweb.service.PicPackageService;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.ImageUtil;
@@ -229,6 +230,17 @@ public class PicPackageServiceImpl extends BaseServiceImpl<PicPackage, Integer> 
 	@Override
 	public List<PicPackage> selectByMap(Map<String, Object> paramMap) {
 		return picPackageDao.selectByMap(paramMap);
+	}
+
+	/**
+	* @Title: selectByApiIndex
+	* @Description: 小程序-首页
+	* @param paramMap
+	* @return
+	*/
+	@Override
+	public List<PicPackageDto> selectByApiIndex(Map<String, Object> paramMap) {
+		return picPackageDao.selectByApiIndex(paramMap);
 	}
 
 }

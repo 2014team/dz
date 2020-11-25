@@ -62,6 +62,30 @@
 					class="layui-textarea" value="${entity.step }"></input>
              
           </div>
+          
+          
+          
+		<div class="layui-form-item">
+			<label class="layui-form-label">类别名称</label>
+			<div class="layui-input-inline">
+				<select  id="categoryId" name="categoryId"  lay-search>
+			      	<option value=""></option>
+			      	<c:forEach items="${categoryList }" var="item">
+			      		<c:choose>
+			      			<c:when test="${entity.categoryId eq item.id}">
+			      				<option value="${item.id }" selected="selected">${item.categoryName }</option>
+			      			</c:when>
+			      			<c:otherwise>
+			      				<option value="${item.id }">${item.categoryName }</option>
+			      			</c:otherwise>
+			      		</c:choose>
+			      	</c:forEach>
+		      </select>
+			</div>
+		</div>
+		
+          
+          
           <div class="layui-form-item">
               <label for="L_repass" class="layui-form-label">
               </label>
@@ -140,6 +164,7 @@
         //保存
         form.on('submit(save)', function(obj) {
   			    var  packageName = obj.field.packageName;
+  			    var categoryId = obj.field.categoryId;
   			    var packageId = $('#packageId').val()
         		var formData = new FormData() 
         		//上传图片
@@ -149,6 +174,7 @@
    				formData.append('pins', $('#pins').val());
    				formData.append('file', files);
    				formData.append('stepFile', stepFile);
+   				formData.append('categoryId', categoryId);
    				
    				 // 等候加载
     	    	 x_admin_loading(true);

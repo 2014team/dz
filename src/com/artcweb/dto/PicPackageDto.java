@@ -3,7 +3,9 @@ package com.artcweb.dto;
 
 import java.io.Serializable;
 
-public class PicPackageDto implements Serializable {
+import com.artcweb.baen.PicPackage;
+
+public class PicPackageDto extends PicPackage{
 
 	private static final long serialVersionUID = 1L;
 
