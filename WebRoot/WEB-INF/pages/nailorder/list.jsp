@@ -28,7 +28,7 @@
 		  
 		     来源：
           <div class="layui-inline">
-		   		 <select id="comfrom" name="comfrom" lay-search>
+		   		 <select id="comefrom" name="comefrom" lay-search>
 	                <option value="">全部</option>
                   	<option value="0" >后台</option>
                   	<option value="1" >H5</option>
@@ -121,8 +121,23 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				, {
 					field : 'mobile' ,
 					title : '手机号码' ,
+				}, {
+					field : 'comefrom' ,
+					title : '来源' ,
+					templet : function(d) {
+					if(d.comefrom==0 ){
+						return "后台";
+					}else if(d.comefrom==1){
+						return "H5";
+					}else{
+						return ""
+					}
+				}, 
 				}
 				, {
+					field : 'nailType' ,
+					title : '图钉类型' , 
+				}, {
 					field : 'createDate' ,
 					title : '创建时间' ,
 					templet : function(d) {

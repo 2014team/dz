@@ -24,6 +24,5 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 
 	void nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity);
 
-	
-
+	NailOrder getById(Integer id);
 }

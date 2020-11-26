@@ -139,7 +139,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			String uploadPath = ImageUtil.getUploadPath(request, image,file, uploadDirpath);
 			
 			// 设置高和宽
-			entity.setHight(String.valueOf(ih));
+			entity.setHeight(String.valueOf(ih));
 			entity.setWidth(String.valueOf(iw));
 			// 设置执行步骤
 			entity.setStep(GsonUtil.toJsonAll(stepList));
@@ -210,6 +210,11 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		// 钉子统计详情
 		String nailCountDetail = GsonUtil.toJsonAll(nailCountMap);
 		entity.setNailCountDetail(nailCountDetail);
+	}
+
+	@Override
+	public NailOrder getById(Integer id) {
+		return nailOrderDao.getById(id);
 	}
 	
 	

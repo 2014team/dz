@@ -20,14 +20,16 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.NailConfig;
-import com.artcweb.baen.NailCount;
 import com.artcweb.baen.NailOrder;
 import com.artcweb.baen.Order;
+import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
-import com.artcweb.service.NailDetailConfigService;
 import com.artcweb.service.NailOrderService;
+import com.artcweb.util.FileUtil;
+import com.artcweb.util.GsonUtil;
+import com.artcweb.util.UploadUtil;
 import com.artcweb.vo.NailOrderVo;
 
 
@@ -77,8 +79,14 @@ public class NailOrderController {
 	 */
 	@RequestMapping(value = "/edit/{id}")
 	public String toEdit(@PathVariable Integer id, HttpServletRequest request) {
-		NailOrder entity = nailOrderService.get(id);
+		NailOrder entity = nailOrderService.getById(id);
 		request.setAttribute("entity", entity);
+		
+		// 获取图片类型
+		Map<String ,Object> paramMap = null;
+		List<NailConfig> nailconfigList = nailconfigService.select(paramMap);
+		request.setAttribute("nailconfigList", nailconfigList);
+				
 		return "/nailorder/edit";
 	}
 	
@@ -114,9 +122,14 @@ public class NailOrderController {
 		}
 		
 		
-		String username = file.getOriginalFilename();
+		String username = UploadUtil.getFileName(file);
 		logger.info("username = "+username);
+		// 买家名称
 		entity.setUsername(username);
+		// 来源设置
+		entity.setComefrom(String.valueOf(NailOrderComeFromConstant.BACKSTAGE));
+		entity.setCurrentStep("");
+		
 		
 		// 上传图片
 		if(null != file && !file.isEmpty()){
@@ -145,6 +158,97 @@ public class NailOrderController {
 		}
 		return layUiResult;
 	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/update")
+	public LayUiResult update(NailOrderVo entity, MultipartFile file,HttpServletRequest request) throws IOException {
+		LayUiResult layUiResult = new LayUiResult();
+		// 参数验证
+		Integer id = entity.getId();
+		if (null ==id || id < 1) {
+			layUiResult.failure("id不能为空");
+			return layUiResult;
+		}
+		
+		String nailConfigId = entity.getNailConfigId();
+		if (StringUtils.isEmpty(nailConfigId)) {
+			layUiResult.failure("图片类型不能为空");
+			return layUiResult;
+		}
+		String mobile = entity.getMobile();
+		if (StringUtils.isEmpty(mobile)) {
+			layUiResult.failure("手机号不能为空");
+			return layUiResult;
+		}
+		
+		String imageUrl = entity.getImageUrl();
+		if((null == file || file.isEmpty()) && StringUtils.isEmpty(imageUrl) ){
+			layUiResult.failure("图片不能为空");
+			return layUiResult;
+		}
+		
+		
+		NailOrder nailOrder = nailOrderService.get(id);
+		if(null == nailOrder){
+			layUiResult.failure("数据不存在");
+			return layUiResult;
+		}
+		
+		nailOrder.setNailConfigId(nailConfigId);
+		nailOrder.setMobile(mobile);
+		
+		
+		String sourceImageUrl = nailOrder.getImageUrl();
+		
+		// 上传图片
+		if(null != file && !file.isEmpty()){
+			
+			
+			// 图片验证
+			String errorMsg = imageService.checkImage(file);
+			if (StringUtils.isNotBlank(errorMsg)) {
+				layUiResult.failure(errorMsg);
+				return layUiResult;
+			}
+			// 图片颜色统计
+			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+			// 钉子统计
+			nailOrderService.nailCount(nailColorMap,entity);
+			
+			
+			
+			String username = UploadUtil.getFileName(file);
+			logger.info("username = "+username);
+			// 买家名称
+			entity.setUsername(username);
+			// 设置高和宽
+			nailOrder.setHeight(entity.getHeight());
+			nailOrder.setWidth(entity.getWidth());
+			// 设置执行步骤
+			nailOrder.setStep(entity.getStep());
+			// 设置上传图片
+			nailOrder.setImageUrl(entity.getImageUrl());
+			nailOrder.setNailCountDetail(entity.getNailCountDetail());
+		
+		}
+		
+		
+		// 保存
+		Integer result = nailOrderService.update(nailOrder);
+		if (null != result && result > 0) {
+			if(StringUtils.isNotBlank(sourceImageUrl)){
+				boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
+				logger.info("物理删除图片结果 = "+deleteResult);
+			}
+			layUiResult.success();
+		}
+		else {
+			layUiResult.failure();
+		}
+		return layUiResult;
+	}
+
 
 	/**
 	 * @Title: list

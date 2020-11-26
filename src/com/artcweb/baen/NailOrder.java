@@ -1,3 +1,4 @@
+
 package com.artcweb.baen;
 
 public class NailOrder extends BaseBean {
@@ -6,26 +7,33 @@ public class NailOrder extends BaseBean {
 
 	// 买家名称
 	private String username;
+
 	// 手机号码
 	private String mobile;
+
 	// 执行步骤
 	private String step;
+
 	// 当前步骤
 	private String currentStep;
+
 	// 图片路径
 	private String imageUrl;
+
 	// 来源 0:后台1:H5
-	private String comfrom;
+	private String comefrom;
+
 	// 图片类型Id
 	private String nailConfigId;
-	
+
 	// 宽
 	private String width;
+
 	// 高
-	private String hight;
+	private String height;
+
 	// 钉子统计详情
 	private String nailCountDetail;
-	
 
 	public String getUsername() {
 		return username;
@@ -67,12 +75,12 @@ public class NailOrder extends BaseBean {
 		this.imageUrl = imageUrl;
 	}
 
-	public String getComfrom() {
-		return comfrom;
+	public String getComefrom() {
+		return comefrom;
 	}
 
-	public void setComfrom(String comfrom) {
-		this.comfrom = comfrom;
+	public void setComefrom(String comefrom) {
+		this.comefrom = comefrom;
 	}
 
 	public String getNailConfigId() {
@@ -91,12 +99,12 @@ public class NailOrder extends BaseBean {
 		this.width = width;
 	}
 
-	public String getHight() {
-		return hight;
+	public String getHeight() {
+		return height;
 	}
 
-	public void setHight(String hight) {
-		this.hight = hight;
+	public void setHeight(String height) {
+		this.height = height;
 	}
 
 	public String getNailCountDetail() {
@@ -106,6 +114,5 @@ public class NailOrder extends BaseBean {
 	public void setNailCountDetail(String nailCountDetail) {
 		this.nailCountDetail = nailCountDetail;
 	}
-
 
 }

@@ -9,7 +9,7 @@
 		<form class="layui-form">
 			<input type="hidden" id="id" name="id" value="${entity.id }" />
 		  
-		  <div class="layui-form-item">
+		  <%-- <div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label"> <span
 					class="x-red">*</span>买家名称
 				</label>
@@ -19,7 +19,7 @@
 						autocomplete="off" class="layui-input" maxlength="10">
 				</div>
 				<div class="layui-form-mid layui-word-aux">建议50字符以内</div>
-			</div>
+			</div> --%>
 	
 		
 		<div class="layui-form-item">
@@ -64,9 +64,7 @@
 				</div>
           </div>
           
-          <input type="hidden" id="step" name="step"
-					class="layui-textarea" value="${entity.step }"></input>
-             
+          <input type="hidden" id="imageUrl" name="imageUrl" value="${entity.imageUrl }"></input>
           </div>
 			
 
@@ -78,6 +76,13 @@
 		</form>
 	</div>
 	<script>
+	
+	 $(function(){
+	    	var imageUrl = '${entity.imageUrl}';
+	    	if(imageUrl){
+	    	 $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+imageUrl+'">'); //图片链接（base64）
+	    	}
+	    });
     
  	    
  	    var files;
@@ -126,7 +131,7 @@
 		      obj.preview(function(index, file, result){
 		      console.log(result,file)
 		      files = file
-		        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
+		        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'">'); //图片链接（base64）
 		      });
 		    }
 		  });
@@ -138,19 +143,40 @@
           	data = JSON.parse(JSON.stringify(obj.field));
           	var formData = new FormData() 
    			formData.append('id', $('#id').val());
-   			formData.append('username', data.username);
+   			//formData.append('username', data.username);
    			formData.append('nailConfigId',data.nailConfigId);
    			formData.append('mobile', data.mobile);
+   			formData.append('imageUrl', data.imageUrl);
    			formData.append('step', data.step);
    			formData.append('file', files);
    				
           	
              //加载动画
-				var loading = layer.load(0, {
+				/* var loading = layer.load(0, {
 		            shade: false,
-		        });
+		        }); */
+		        
+	        	//加载动画
+		   		var loading = layer.load(2, { //icon支持传入0-2
+		   		    shade: [0.5, 'gray'], //0.5透明度的灰色背景
+		   		    content: '保存并下载中,请稍等操作...',
+		   		    success: function (layero) {
+		   		        layero.find('.layui-layer-content').css({
+		   		            'padding-top': '39px',
+		   		            'width': '60px'
+		   		        });
+		   		    }
+		   		});
+		   		
+		   		var url = '/admin/center/nailorder/save.do';
+   		
+   				if($('#id').val() && $('#id').val() > 0){
+   					url = '/admin/center/nailorder/update.do';
+   				}
+   				
+   		
     			$.ajax({
-    				url : '/admin/center/nailorder/save.do',
+    				url : url,
     				type : "POST",
     				data :formData,
     				processData : false, // 使数据不做处理

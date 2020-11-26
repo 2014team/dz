@@ -4,22 +4,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.artcweb.dao.NailOrderDao">
 
-	<resultMap type="com.artcweb.baen.NailConfig" id="result">
+	<resultMap type="com.artcweb.baen.NailOrder" id="result">
 		<result property="id" column="id" />
 		<result property="username" column="username" />
 		<result property="mobile" column="mobile" />
-		<result property="step" column="step" />
 		<result property="currentStep" column="current_step" />
 		<result property="imageUrl" column="image_url" />
-		<result property="comfrom" column="comfrom" />
+		<result property="comefrom" column="comefrom" />
 		<result property="nailConfigId" column="nail_config_id" />
+		<result property="width" column="width" />
+		<result property="height" column="height" />
+		<result property="step" column="step" />
+		<result property="nailCountDetail" column="nail_count_detail" />
 		<result property="createDate" column="create_date" />
 		<result property="updateDate" column="update_date" />
 	</resultMap>
 	
 	<insert id="save" parameterType="com.artcweb.baen.NailOrder" useGeneratedKeys="true" keyProperty="id">
-      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,comfrom,nail_config_id,create_date,update_date)
-      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{comfrom},#{nailConfigId},now(),now())
+      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,comefrom,nail_config_id,nail_count_detail,width,height,create_date,update_date)
+      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},now(),now())
      </insert>
 
 	<!--删除 -->
@@ -46,8 +49,11 @@
 		step=#{step},
 		current_step=#{currentStep},
 		image_url=#{imageUrl},
-		comfrom=#{comfrom},
+		comefrom=#{comefrom},
 		nail_config_id=#{nailConfigId},
+		nail_count_detail=#{nailCountDetail},
+		height=#{height},
+		width=#{width},
 		update_date = now()
 		where
 		id=#{id}
@@ -55,7 +61,40 @@
 
 	<!-- 查找 -->
 	<select id="get" parameterType="Integer" resultMap="result">
-		select * from
+		select id as id
+		,username as username
+		,mobile as mobile
+		,step as step
+		,current_step as currentStep
+		,image_url as imageUrl
+		,comefrom as comefrom
+		,nail_config_id as nailConfigId
+		,nail_count_detail as nailCountDetail
+		,height as height
+		,width as width
+		,create_date as createDate
+		,update_date as updateDate
+		 from
+		`t_nail_order`
+		where id = #{id}
+		order by id limit 1
+	</select>
+	
+	<select id="getById" parameterType="Integer" resultMap="result">
+		select id as id
+		,username as username
+		,mobile as mobile
+		<!-- ,step as step -->
+		,current_step as currentStep
+		,image_url as imageUrl
+		,comefrom as comefrom
+		,nail_config_id as nailConfigId
+		<!-- ,nail_count_detail as nailCountDetail -->
+		,height as height
+		,width as width
+		,create_date as createDate
+		,update_date as updateDate
+		 from
 		`t_nail_order`
 		where id = #{id}
 		order by id limit 1
@@ -72,23 +111,27 @@
 		SELECT t.id as id,
 		t.username as username,
 		t.mobile as mobile,
-		t.step as step,
-		t.current_step as currentStep,
+		<!--t.step as step,
+		 t.current_step as currentStep,  -->
 		t.image_url as imageUrl,
-		t.comfrom as comfrom,
+		t.comefrom as comefrom,
 		t.nail_config_id as nailConfigId,
+		<!-- t.nail_count_detail as nailCountDetail,
+		t.width as width,
+		t.height as height, -->
+		nf.nail_type as nailType,
 		t.create_date as createDate,
 		t.update_date as updateDate
-		 FROM t_nail_order t
+		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
 		<where>
 			<if test="null != entity and  null != entity.username and '' != entity.username">
-					t.username = #{entity.username}
+					t.username  like '%${entity.username}%'
 			</if>
 			<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
-					and t.mobile = #{entity.mobile}
+					and t.mobile like '%${entity.mobile}%'
 			</if>
-			<if test="null != entity and  null != entity.comfrom and '' != entity.comfrom">
-					and t.comfrom = #{entity.comfrom}
+			<if test="null != entity and  null != entity.comefrom and '' != entity.comefrom">
+					and t.comefrom = #{entity.comefrom}
 			</if>
 			<if test="null != entity and  null != entity.nailConfigId and '' != entity.nailConfigId">
 					and t.nail_config_id = #{entity.nailConfigId}
@@ -101,13 +144,13 @@
 		SELECT count(1) FROM `t_nail_order` t
 		<where>
 			<if test="null != entity and  null != entity.username and '' != entity.username">
-					t.username = #{entity.username}
+					t.username  like '%${entity.username}%'
 			</if>
 			<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
-					and t.mobile = #{entity.mobile}
+					and t.mobile like '%${entity.mobile}%'
 			</if>
-			<if test="null != entity and  null != entity.comfrom and '' != entity.comfrom">
-					and t.comfrom = #{entity.comfrom}
+			<if test="null != entity and  null != entity.comefrom and '' != entity.comefrom">
+					and t.comefrom = #{entity.comefrom}
 			</if>
 			<if test="null != entity and  null != entity.nailConfigId and '' != entity.nailConfigId">
 					and t.nail_config_id = #{entity.nailConfigId}

@@ -16,5 +16,7 @@ public interface NailOrderDao extends BaseDao<NailOrder, Integer> {
 
 	Integer deleteByBatch(String array);
 	
+	NailOrder getById(Integer id);
+	
 
 }

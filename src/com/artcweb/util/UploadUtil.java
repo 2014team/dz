@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.InputStream;
 
 import org.apache.ws.security.util.UUIDGenerator;
+import org.springframework.web.multipart.MultipartFile;
 
 public class UploadUtil {
 
@@ -20,6 +21,19 @@ public class UploadUtil {
 	
 	public static String getFileExt1(String fileName) {
 		return fileName.substring(fileName.lastIndexOf(".")+1);
+	}
+	
+	public static String getFileName(MultipartFile file) {
+		String result  = "";
+		if(null == file || file.isEmpty()){
+			return result;
+		}
+		result = file.getOriginalFilename();
+		if(result.indexOf(".") != -1){
+			result = result.substring(0,result.lastIndexOf("."));
+		}
+		
+		return result;
 	}
 
 	/**
