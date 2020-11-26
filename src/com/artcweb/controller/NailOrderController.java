@@ -221,7 +221,7 @@ public class NailOrderController {
 			String username = UploadUtil.getFileName(file);
 			logger.info("username = "+username);
 			// 买家名称
-			entity.setUsername(username);
+			nailOrder.setUsername(username);
 			// 设置高和宽
 			nailOrder.setHeight(entity.getHeight());
 			nailOrder.setWidth(entity.getWidth());
