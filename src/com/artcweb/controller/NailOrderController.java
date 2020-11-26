@@ -1,31 +1,46 @@
 
 package com.artcweb.controller;
 
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.artcweb.baen.NailDetailConfig;
 import com.artcweb.baen.LayUiResult;
+import com.artcweb.baen.NailConfig;
+import com.artcweb.baen.NailCount;
+import com.artcweb.baen.NailOrder;
 import com.artcweb.baen.Order;
+import com.artcweb.constant.UploadConstant;
+import com.artcweb.service.ImageService;
+import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailDetailConfigService;
-import com.artcweb.vo.NailDetailConfigVo;
+import com.artcweb.service.NailOrderService;
+import com.artcweb.vo.NailOrderVo;
 
 
 @Controller
-@RequestMapping("/admin/center/naildetailconfig")
-public class NailDetailConfigController {
-
+@RequestMapping("/admin/center/nailorder")
+public class NailOrderController {
+	private static org.slf4j.Logger logger = LoggerFactory.getLogger(NailOrderController.class);
 	@Autowired
-	private NailDetailConfigService naildetailconfigService;
-	
-	
+	private NailOrderService nailOrderService;
+	@Autowired
+	private NailConfigService nailconfigService;
+	@Autowired
+	private ImageService imageService;
 
 	/**
 	 * @Title: toList
@@ -33,9 +48,8 @@ public class NailDetailConfigController {
 	 * @return
 	 */
 	@RequestMapping(value = "/list/ui")
-	public String toList() {
-
-		return "/naildetailconfig/list";
+	public String toList(HttpServletRequest request) {
+		return "/nailorder/list";
 	}
 
 	/**
@@ -46,7 +60,12 @@ public class NailDetailConfigController {
 	@RequestMapping(value = "/add")
 	public String toAdd(HttpServletRequest request) {
 
-		return "/naildetailconfig/edit";
+		// 获取图片类型
+		Map<String ,Object> paramMap = null;
+		List<NailConfig> nailconfigList = nailconfigService.select(paramMap);
+		request.setAttribute("nailconfigList", nailconfigList);
+		
+		return "/nailorder/edit";
 	}
 	
 	/**
@@ -58,10 +77,11 @@ public class NailDetailConfigController {
 	 */
 	@RequestMapping(value = "/edit/{id}")
 	public String toEdit(@PathVariable Integer id, HttpServletRequest request) {
-		NailDetailConfig entity = naildetailconfigService.get(id);
+		NailOrder entity = nailOrderService.get(id);
 		request.setAttribute("entity", entity);
-		return "/naildetailconfig/edit";
+		return "/nailorder/edit";
 	}
+	
 
 	/**
 	 * @Title: save
@@ -69,41 +89,55 @@ public class NailDetailConfigController {
 	 * @param adminCate
 	 * @param operator
 	 * @return
+	 * @throws IOException 
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/save")
-	public LayUiResult save(NailDetailConfigVo entity, HttpServletRequest request) {
+	public LayUiResult save(NailOrderVo entity, MultipartFile file,HttpServletRequest request) throws IOException {
 		LayUiResult layUiResult = new LayUiResult();
-
 		// 参数验证
-		String rgb = entity.getRgb();
-		if (StringUtils.isEmpty(rgb)) {
-			layUiResult.failure("rgb不能为空");
+		
+		String nailconfigId = entity.getNailConfigId();
+		if (StringUtils.isEmpty(nailconfigId)) {
+			layUiResult.failure("图片类型不能为空");
 			return layUiResult;
 		}
-		String newSerialNumber = entity.getNewSerialNumber();
-		if (StringUtils.isEmpty(newSerialNumber)) {
-			layUiResult.failure("新编号不能为空");
+		String mobile = entity.getMobile();
+		if (StringUtils.isEmpty(mobile)) {
+			layUiResult.failure("手机号不能为空");
 			return layUiResult;
 		}
-		String oldSerialNumber = entity.getOldSerialNumber();
-		if (StringUtils.isEmpty(oldSerialNumber)) {
-			layUiResult.failure("旧编号不能为空");
+		
+		if(null == file || file.isEmpty() ){
+			layUiResult.failure("图片不能为空");
 			return layUiResult;
 		}
-		String nailSmallWeight = entity.getNailSmallWeight();
-		if (StringUtils.isEmpty(nailSmallWeight)) {
-			layUiResult.failure("（小钉）每包克数 不能为空");
-			return layUiResult;
-		}
-		String nailBigWeight = entity.getNailBigWeight();
-		if (StringUtils.isEmpty(nailBigWeight)) {
-			layUiResult.failure("（大钉）每包克数 不能为空");
-			return layUiResult;
-		}
+		
+		
+		String username = file.getOriginalFilename();
+		logger.info("username = "+username);
+		entity.setUsername(username);
+		
+		// 上传图片
+		if(null != file && !file.isEmpty()){
+			// 图片验证
+			String errorMsg = imageService.checkImage(file);
+			if (StringUtils.isNotBlank(errorMsg)) {
+				layUiResult.failure(errorMsg);
+				return layUiResult;
+			}
+			// 图片颜色统计
+			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
 	
-		Integer result = naildetailconfigService.saveOrUpdate(entity);
-		if (null != result && result > 0) {
+			// 钉子统计
+			nailOrderService.nailCount(nailColorMap,entity);
+		
+		}
+		
+		
+		// 保存
+		boolean result = nailOrderService.saveNailOrder(entity);
+		if (result) {
 			layUiResult.success();
 		}
 		else {
@@ -122,13 +156,13 @@ public class NailDetailConfigController {
 	@ResponseBody
 	@RequestMapping(value = "/list", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult list(NailDetailConfigVo entity, HttpServletRequest request) {
+	public LayUiResult list(NailOrderVo entity, HttpServletRequest request) {
 
 		// 获取参数
 		Integer page = Integer.valueOf(request.getParameter("page"));
 		Integer limit = Integer.valueOf(request.getParameter("limit"));
 		LayUiResult result = new LayUiResult(page, limit);
-		result = naildetailconfigService.findByPage(entity, result);
+		result = nailOrderService.findByPage(entity, result);
 		return result;
 	}
 
@@ -151,7 +185,7 @@ public class NailDetailConfigController {
 			return result;
 		}
 
-		Integer delResult = naildetailconfigService.delete(id);
+		Integer delResult = nailOrderService.delete(id);
 		if (null != delResult && delResult > 0) {
 			result.success();
 			return result;
@@ -180,7 +214,7 @@ public class NailDetailConfigController {
 
 		array = array.replace("[", "").replace("]", "");
 
-		boolean deleteResult = naildetailconfigService.deleteByBatch(array);
+		boolean deleteResult = nailOrderService.deleteByBatch(array);
 		if (deleteResult) {
 			result.success();
 			return result;

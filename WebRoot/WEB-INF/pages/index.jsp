@@ -170,6 +170,13 @@
                             
                         </a>
                     </li>
+                    <li>
+                        <a _href="/admin/center/nailorder/list/ui.do">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>订单列表</cite>
+                            
+                        </a>
+                    </li>
                     
                 </ul>
             </li>              

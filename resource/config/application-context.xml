@@ -53,6 +53,7 @@
 		<tx:attributes>
 			<tx:method name="get*" read-only="true" />
 			<tx:method name="find*" read-only="true" />
+			<tx:method name="upload*" propagation="REQUIRED" rollback-for="Exception" />
 			<tx:method name="save*" propagation="REQUIRED" rollback-for="Exception" />
 			<tx:method name="update*" propagation="REQUIRED" rollback-for="Exception" />
 			<tx:method name="merge*" propagation="REQUIRED" rollback-for="Exception" />

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.NailOrderDao">
+
+	<resultMap type="com.artcweb.baen.NailConfig" id="result">
+		<result property="id" column="id" />
+		<result property="username" column="username" />
+		<result property="mobile" column="mobile" />
+		<result property="step" column="step" />
+		<result property="currentStep" column="current_step" />
+		<result property="imageUrl" column="image_url" />
+		<result property="comfrom" column="comfrom" />
+		<result property="nailConfigId" column="nail_config_id" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+	
+	<insert id="save" parameterType="com.artcweb.baen.NailOrder" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,comfrom,nail_config_id,create_date,update_date)
+      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{comfrom},#{nailConfigId},now(),now())
+     </insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		`t_nail_order`
+		where id=#{id}
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		`t_nail_order`
+		where
+		FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="com.artcweb.baen.NailOrder">
+		update `t_nail_order`
+		set
+		username=#{username},
+		mobile=#{mobile},
+		step=#{step},
+		current_step=#{currentStep},
+		image_url=#{imageUrl},
+		comfrom=#{comfrom},
+		nail_config_id=#{nailConfigId},
+		update_date = now()
+		where
+		id=#{id}
+	</update>
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		select * from
+		`t_nail_order`
+		where id = #{id}
+		order by id limit 1
+	</select>
+	
+	
+	<select id="select" parameterType="Map" resultMap="result">
+		SELECT * FROM t_nail_order t
+		ORDER by id desc
+	</select>
+	
+	<!-- 查询 -->
+	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.NailOrderDto">
+		SELECT t.id as id,
+		t.username as username,
+		t.mobile as mobile,
+		t.step as step,
+		t.current_step as currentStep,
+		t.image_url as imageUrl,
+		t.comfrom as comfrom,
+		t.nail_config_id as nailConfigId,
+		t.create_date as createDate,
+		t.update_date as updateDate
+		 FROM t_nail_order t
+		<where>
+			<if test="null != entity and  null != entity.username and '' != entity.username">
+					t.username = #{entity.username}
+			</if>
+			<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
+					and t.mobile = #{entity.mobile}
+			</if>
+			<if test="null != entity and  null != entity.comfrom and '' != entity.comfrom">
+					and t.comfrom = #{entity.comfrom}
+			</if>
+			<if test="null != entity and  null != entity.nailConfigId and '' != entity.nailConfigId">
+					and t.nail_config_id = #{entity.nailConfigId}
+			</if>
+		</where>
+		ORDER by t.id desc limit ${page.begin},${page.limit} 
+	</select>
+	
+	<select id="findByPageCount" parameterType="Map" resultType="int">
+		SELECT count(1) FROM `t_nail_order` t
+		<where>
+			<if test="null != entity and  null != entity.username and '' != entity.username">
+					t.username = #{entity.username}
+			</if>
+			<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
+					and t.mobile = #{entity.mobile}
+			</if>
+			<if test="null != entity and  null != entity.comfrom and '' != entity.comfrom">
+					and t.comfrom = #{entity.comfrom}
+			</if>
+			<if test="null != entity and  null != entity.nailConfigId and '' != entity.nailConfigId">
+					and t.nail_config_id = #{entity.nailConfigId}
+			</if>
+		</where>
+	</select>
+	
+	
+
+</mapper> 

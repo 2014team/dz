@@ -10,5 +10,8 @@ public class UploadConstant {
 	
 	//保存路径
 	public static final String SAVE_UPLOAD_PATH = "/upload/packge/";
+	
+	//钉子画路径
+	public static final String SAVE_UPLOAD_NAIL_PATH = "/upload/nail/";
 
 }

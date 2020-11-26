@@ -1,0 +1,111 @@
+package com.artcweb.baen;
+
+public class NailOrder extends BaseBean {
+
+	private static final long serialVersionUID = 1L;
+
+	// 买家名称
+	private String username;
+	// 手机号码
+	private String mobile;
+	// 执行步骤
+	private String step;
+	// 当前步骤
+	private String currentStep;
+	// 图片路径
+	private String imageUrl;
+	// 来源 0:后台1:H5
+	private String comfrom;
+	// 图片类型Id
+	private String nailConfigId;
+	
+	// 宽
+	private String width;
+	// 高
+	private String hight;
+	// 钉子统计详情
+	private String nailCountDetail;
+	
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getMobile() {
+		return mobile;
+	}
+
+	public void setMobile(String mobile) {
+		this.mobile = mobile;
+	}
+
+	public String getStep() {
+		return step;
+	}
+
+	public void setStep(String step) {
+		this.step = step;
+	}
+
+	public String getCurrentStep() {
+		return currentStep;
+	}
+
+	public void setCurrentStep(String currentStep) {
+		this.currentStep = currentStep;
+	}
+
+	public String getImageUrl() {
+		return imageUrl;
+	}
+
+	public void setImageUrl(String imageUrl) {
+		this.imageUrl = imageUrl;
+	}
+
+	public String getComfrom() {
+		return comfrom;
+	}
+
+	public void setComfrom(String comfrom) {
+		this.comfrom = comfrom;
+	}
+
+	public String getNailConfigId() {
+		return nailConfigId;
+	}
+
+	public void setNailConfigId(String nailConfigId) {
+		this.nailConfigId = nailConfigId;
+	}
+
+	public String getWidth() {
+		return width;
+	}
+
+	public void setWidth(String width) {
+		this.width = width;
+	}
+
+	public String getHight() {
+		return hight;
+	}
+
+	public void setHight(String hight) {
+		this.hight = hight;
+	}
+
+	public String getNailCountDetail() {
+		return nailCountDetail;
+	}
+
+	public void setNailCountDetail(String nailCountDetail) {
+		this.nailCountDetail = nailCountDetail;
+	}
+
+
+}

@@ -17,6 +17,10 @@ public class UploadUtil {
 	public static String getFileExt(String fileName) {
 		return fileName.substring(fileName.lastIndexOf("."));
 	}
+	
+	public static String getFileExt1(String fileName) {
+		return fileName.substring(fileName.lastIndexOf(".")+1);
+	}
 
 	/**
 	 * 文件类型判断

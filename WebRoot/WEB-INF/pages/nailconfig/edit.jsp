@@ -26,7 +26,7 @@
 					class="x-red">*</span>钉子数（每公斤颗数）
 				</label>
 				<div class="layui-input-inline">
-					<input type="text" id=nailNumber name="nailNumber"
+					<input type="text" id="nailNumber" name="nailNumber"
 						value="${empty entity.nailNumber ?'' : entity.nailNumber}"   lay-verify="required|number"
 						autocomplete="off" class="layui-input" maxlength="10">
 				</div>

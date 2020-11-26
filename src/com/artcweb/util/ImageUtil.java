@@ -1,9 +1,12 @@
 package com.artcweb.util;
 
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.Arrays;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -68,6 +71,53 @@ public class ImageUtil {
 		return SiteConstant.HTTP_DOMAIN + image;
 		
 	}
+	
+	/**
+	* @Title: getUploadPath
+	* @Description: 获取上传路径
+	* @param request
+	* @param file
+	* @param uploadPath
+	* @return
+	 */
+	public static String getUploadPath(HttpServletRequest request,BufferedImage image,MultipartFile file,String uploadPath) {
+		// 新文件名称
+		String newFileName = file.getOriginalFilename();//UploadUtil.getNewFileName(ext);
+
+		String year = String.valueOf(DataUtil.getYear(new Date()));
+		String month = String.valueOf(DataUtil.getMonth(new Date()));
+		String folder = year + "/" + month + "/";
+		uploadPath = uploadPath + folder;
+		
+		
+		String realPath = request.getSession().getServletContext().getRealPath(uploadPath);
+		// 创建目录
+		UploadUtil.mkdirs(realPath);
+		
+		String filePathAndName = null;
+		if (realPath.endsWith(File.separator)) {
+			filePathAndName = realPath + newFileName;
+		} else {
+			filePathAndName = realPath + File.separator + newFileName;
+		}
+		
+		try {
+			// 获取文件后缀名称
+			String ext = UploadUtil.getFileExt1(file.getOriginalFilename());
+			if(StringUtils.isNotEmpty(uploadPath) && StringUtils.isNotEmpty(ext)){
+				boolean writeResult = ImageIO.write(image, ext, new File(filePathAndName));
+				logger.info("writeResult="+writeResult);
+			}else{
+				logger.error("获取图片上传路径为空！！");
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return uploadPath+newFileName;
+				
+	}
+	
+	
 
 	
 

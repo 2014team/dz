@@ -60,7 +60,7 @@
 	
 	<select id="select" parameterType="Map" resultMap="result">
 		SELECT * FROM t_nail_detail_config t
-		ORDER by id desc
+		ORDER by id
 	</select>
 	
 	<!-- 查询 -->

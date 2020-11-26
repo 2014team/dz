@@ -10,20 +10,29 @@
         <a href="">首页</a>
         <a href="">钉子画管理</a>
         <a>
-          <cite>数量配置</cite></a>
+          <cite>订单列表</cite></a>
       </span>
       <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:38px">&#xe669;</i></a>
     </div>
     <div class="x-body">
       <div class="layui-form layui-row demoTable">
-           	类型名称：
+           	买家名称：
           <div class="layui-inline">
-		    <input class="layui-input" name="nailType" id="nailType" autocomplete="off">
+		    <input class="layui-input" name="username" id="username" autocomplete="off">
 		  </div>
-           	钉子数量：
+           	手机号码：
           <div class="layui-inline">
-		    <input class="layui-input" name="nailNumber" id="nailNumber" autocomplete="off">
+		    <input class="layui-input" name="mobile" id="mobile" autocomplete="off">
+		  </div>
+		  
+		     来源：
+          <div class="layui-inline">
+		   		 <select id="comfrom" name="comfrom" lay-search>
+	                <option value="">全部</option>
+                  	<option value="0" >后台</option>
+                  	<option value="1" >H5</option>
+	            </select>
 		  </div>
 				
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
@@ -36,8 +45,8 @@
        <!-- 头部工具条 -->
 	<script type="text/html" id="toolbar">
   		<div class="layui-btn-container">
-   			    <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/nailconfig/delete/batch.do')">批量删除</button>
-   			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailconfig/add.do')"><i class="layui-icon"></i>增加</button>
+   			    <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/nailorder/delete/batch.do')">批量删除</button>
+   			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailorder/add.do')"><i class="layui-icon"></i>增加</button>
   		</div>
 	</script>
      
@@ -76,7 +85,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 
 		  table.render({
 			elem : '#table_list',
-			url : '/admin/center/nailconfig/list.do',
+			url : '/admin/center/nailorder/list.do',
 			toolbar: '#toolbar',
 		    defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
 		      title: '提示'
@@ -106,12 +115,12 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}
 				
 				, {
-					field : 'nailType' ,
-					title : '类型名称' ,
+					field : 'username' ,
+					title : '买家名称' ,
 				}
 				, {
-					field : 'nailNumber' ,
-					title : '数量(每公斤颗数)' ,
+					field : 'mobile' ,
+					title : '手机号码' ,
 				}
 				, {
 					field : 'createDate' ,
@@ -153,10 +162,10 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 			 var data = obj.data;
 			 switch(obj.event){
 			  case 'del': //删除
-				orderd_delete(obj,'/admin/center/nailconfig/delete.do');
+				orderd_delete(obj,'/admin/center/nailorder/delete.do');
 		      break;
 		      case 'edit':// 编辑
-				x_admin_show('编辑','/admin/center/nailconfig/edit/'+obj.data.id+'.do');
+				x_admin_show('编辑','/admin/center/nailorder/edit/'+obj.data.id+'.do');
 		      break;
 			 }
 		});

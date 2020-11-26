@@ -1,0 +1,193 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<head>
+<%@include file="/WEB-INF/pages/common/head_layui.jsp"%>
+</head>
+
+<body>
+	<div class="x-body">
+		<form class="layui-form">
+			<input type="hidden" id="id" name="id" value="${entity.id }" />
+		  
+		  <div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label"> <span
+					class="x-red">*</span>买家名称
+				</label>
+				<div class="layui-input-inline">
+					<input type="text" id="username" name="username"
+						value="${entity.username}"   lay-verify="required"
+						autocomplete="off" class="layui-input" maxlength="10">
+				</div>
+				<div class="layui-form-mid layui-word-aux">建议50字符以内</div>
+			</div>
+	
+		
+		<div class="layui-form-item">
+				<label class="layui-form-label"><span class="x-red">*</span>图钉类型</label>
+				<div class="layui-input-block">
+					<c:forEach items="${nailconfigList }" var="item">
+					<c:choose>
+						<c:when test="${not empty entity and entity.nailConfigId eq item.id}">
+							<input type="radio"  name="nailConfigId" value="${item.id}" title="${item.nailType}" lay-verify="nailConfigId_verify" checked>	
+						</c:when>
+						<c:otherwise>
+							<input type="radio" name="nailConfigId" value="${item.id}" title="${item.nailType}" lay-verify="nailConfigId_verify"> 
+						</c:otherwise>
+					</c:choose>
+					</c:forEach>
+					
+				</div>
+			</div>	
+		
+		  
+		  <div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label"> <span
+					class="x-red">*</span>手机号码
+				</label>
+				<div class="layui-input-inline">
+					<input type="text" id="mobile" name="mobile"
+						value="${empty entity.mobile ?'' : entity.mobile}"   lay-verify="required|number|phone"
+						autocomplete="off" class="layui-input" maxlength="11">
+				</div>
+			</div>
+			
+			
+			<div class="layui-form-item">
+              <label for="L_repass" class="layui-form-label">
+                <span class="x-red">*</span> 图片
+              </label>
+              <div class="layui-input-inline">
+                 <div class="layui-upload-drag" id="upload_image_Id">
+				  <i class="layui-icon">
+				  </i>
+				  <p>点击上传，或将文件拖拽到此处</p>
+				</div>
+          </div>
+          
+          <input type="hidden" id="step" name="step"
+					class="layui-textarea" value="${entity.step }"></input>
+             
+          </div>
+			
+
+			<div class="layui-form-item">
+				<label for="L_repass" class="layui-form-label"> </label>
+				<button class="layui-btn" lay-filter="save" lay-submit="">保存并下载</button>
+			</div>
+			
+		</form>
+	</div>
+	<script>
+    
+ 	    
+ 	    var files;
+        layui.use(['form','layer','upload'], function(){
+           $ = layui.jquery;
+          var form = layui.form
+          ,layer = layui.layer
+          ,upload = layui.upload;
+          
+           //自定义验证规则
+		  form.verify({
+		 	 nailConfigId_verify: function(value, item){ //value：表单的值、item：表单的DOM对象
+		  		var verifyName = $(item).attr('name'),
+                        verifyType = $(item).attr('type'),
+                        formElem = $(item).parents('.layui-form'),
+                        verifyElem = formElem.find('input[name=' + verifyName +']'),
+                        isTrue = verifyElem.is(':checked'),
+                        focusElem = verifyElem.next().find('i.layui-icon');
+                    if (!isTrue || !value) {
+                        focusElem.css(verifyType == 'radio' ? {
+                            "color": "#FF5722"} : {"border-color": "#FF5722"});
+                        //对非输入框设置焦点
+                        focusElem.first().attr("tabIndex", "1").css("outline", "0")
+                            .blur(function () {
+                                focusElem.css(verifyType == 'radio' ? {
+                                    "color": ""
+                                } : {
+                                    "border-color": ""
+                                });
+                            }).focus();
+                        return '必填项不能为空';
+                    }
+		  	}
+		  
+		}); 
+          
+           //拖拽上传
+		  upload.render({
+		    elem: '#upload_image_Id'
+		    /* ,url: '/upload/' */
+		     ,size: 1024 //限制文件大小，单位 KB
+		    ,auto:false
+		    ,choose: function(obj){
+		      //预读本地文件示例，不支持ie8
+		      console.log(obj)
+		      obj.preview(function(index, file, result){
+		      console.log(result,file)
+		      files = file
+		        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'" width="200">'); //图片链接（base64）
+		      });
+		    }
+		  });
+		  
+		  
+        
+          // 保存
+          form.on('submit(save)', function(obj) {
+          	data = JSON.parse(JSON.stringify(obj.field));
+          	var formData = new FormData() 
+   			formData.append('id', $('#id').val());
+   			formData.append('username', data.username);
+   			formData.append('nailConfigId',data.nailConfigId);
+   			formData.append('mobile', data.mobile);
+   			formData.append('step', data.step);
+   			formData.append('file', files);
+   				
+          	
+             //加载动画
+				var loading = layer.load(0, {
+		            shade: false,
+		        });
+    			$.ajax({
+    				url : '/admin/center/nailorder/save.do',
+    				type : "POST",
+    				data :formData,
+    				processData : false, // 使数据不做处理
+        			contentType : false, // 不要设置Content-Type请求头
+    				dataType : "json",
+    				success : function(data) {
+    				
+	    				//关闭动画
+					layer.close(loading);
+				
+    						if (data.code == 200) { //这个是从后台取回来的状态值
+								layer.msg(data.msg, {icon : 6,time : 1000
+								},function(){
+								 window.parent.location.reload();//刷新父页面
+								x_admin_close();});
+								
+							} else {
+								layer.msg(data.msg, {
+									icon : 2,
+									time : 1000
+								});
+							}
+    					},
+    				error : function(e) {
+    					console.err(e);
+    					layer.msg("系统异常，稍后再试!", {
+    						icon : 2,
+    						time : 1000
+    					});
+    				}
+    			});
+    
+    			return false;
+    		});
+          
+        });
+    </script>
+</body>
+
+</html>
