@@ -58,6 +58,26 @@
 		</mvc:interceptor>
 	</mvc:interceptors>
 	
+	
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/center/naildetailconfig/add**" />
+			<mvc:mapping path="/admin/center/naildetailconfig/save**" />
+			<mvc:mapping path="/admin/center/naildetailconfig/delete**" />
+			<mvc:mapping path="/admin/center/naildetailconfig/delete/batch**" />
+			<bean class="com.artcweb.interceptor.NailDetailConfigInterceptor"></bean>
+		</mvc:interceptor>
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/admin/center/nailconfig/add**" />
+			<mvc:mapping path="/admin/center/nailconfig/save**" />
+			<mvc:mapping path="/admin/center/nailconfig/delete**" />
+			<mvc:mapping path="/admin/center/nailconfig/delete/batch**" />
+			<bean class="com.artcweb.interceptor.NaiConfigInterceptor"></bean>
+		</mvc:interceptor>
+		
+	</mvc:interceptors>
+	
 
 	<bean id="multipartResolver"
 		class="org.springframework.web.multipart.commons.CommonsMultipartResolver">

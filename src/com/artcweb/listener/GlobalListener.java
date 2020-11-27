@@ -11,8 +11,10 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
+import com.artcweb.baen.NailConfig;
 import com.artcweb.baen.NailDetailConfig;
 import com.artcweb.cache.DateMap;
+import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailDetailConfigService;
 
 
@@ -22,6 +24,8 @@ public class GlobalListener implements ApplicationListener<ApplicationEvent> {
 	
 	@Autowired
 	NailDetailConfigService nailDetailConfigService;
+	@Autowired
+	NailConfigService nailConfigService;
 
 	@Override
 	public void onApplicationEvent(ApplicationEvent applicationEvent) {
@@ -33,6 +37,9 @@ public class GlobalListener implements ApplicationListener<ApplicationEvent> {
 			// 初始化
 			List<NailDetailConfig> nailDetailConfigList = nailDetailConfigService.select(paramMap);
 			DateMap.initNailDetailConfigMap(nailDetailConfigList);
+			
+			List<NailConfig> nailConfigList = nailConfigService.select(paramMap);
+			DateMap.initNailConfigList(nailConfigList);
 		
 			logger.info("初始化数据结束----------");
 		}
