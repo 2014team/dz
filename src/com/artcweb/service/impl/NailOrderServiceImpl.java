@@ -85,12 +85,21 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 					if(StringUtils.isNotEmpty(sourceImageUrl)){
 						// 判断是否有其他数据引用图片
 						Map<String,Object> paramMap  = new  HashMap<String, Object>();
-						paramMap.put("id", n.getId());
+						
 						paramMap.put("imageUrl", sourceImageUrl);
-						Integer checkExist = nailOrderDao.checkExist(paramMap);
-						if(null == checkExist || checkExist < 1){// 没有引用删除
-							boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
-							logger.info("物理删除图片结果 = "+deleteResult);
+						List<NailOrder> nailOrder = nailOrderDao.checkExist(paramMap);
+						if(null == nailOrder || nailOrder.size() > 0){// 没有引用删除
+							
+							for (NailOrder nailOrder2 : nailOrder) {
+								if(!n.getId().equals(nailOrder2.getId())){
+									boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
+									logger.info("物理删除图片结果 = "+deleteResult);
+								}
+							}
+							
+							
+							
+							
 						}
 						
 					}
@@ -297,10 +306,21 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	@Override
-	public boolean checkExist(Map<String, Object> paramMap) {
-		Integer result = nailOrderDao.checkExist(paramMap);
-		if(null != result && result > 0){
-			return true;
+	public boolean checkExist(String imageUrl,String id) {
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("imageUrl", imageUrl);
+		List<NailOrder> nailOrderList = nailOrderDao.checkExist(paramMap);
+		boolean  result= true;
+		if(null != nailOrderList && nailOrderList.size() > 0){
+			if(StringUtils.isEmpty(id)){
+				return result;
+			}
+			for (NailOrder nailOrder : nailOrderList) {
+				Integer idSource = nailOrder.getId();
+				if(!String.valueOf(idSource).equals(id)){
+					return result;
+				}
+			}
 		}
 		return false;
 	}

@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.artcweb.baen.Category;
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.Order;
+import com.artcweb.baen.While;
 import com.artcweb.service.CategoryService;
 import com.artcweb.vo.CategoryVo;
 
@@ -166,5 +167,21 @@ public class CategoryController {
 		result.failure();
 		return result;
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/get", method = { RequestMethod.POST,
+					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
+	public LayUiResult get(Integer id) {
+		
+		LayUiResult result = new LayUiResult();
+		if (null == id || id < 1) {
+			result.failure("id不能为空");
+			return result;
+		}
+		Category entity = categoryService.get(id);
+		result.success(entity);
+		return result;
+	}
+	
 	
 }

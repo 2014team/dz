@@ -171,4 +171,19 @@ public class NailConfigController {
 		return result;
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/get", method = { RequestMethod.POST,
+					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
+	public LayUiResult get(Integer id) {
+		
+		LayUiResult result = new LayUiResult();
+		if (null == id || id < 1) {
+			result.failure("id不能为空");
+			return result;
+		}
+		NailConfig entity = nailconfigService.get(id);
+		result.success(entity);
+		return result;
+	}
+	
 }

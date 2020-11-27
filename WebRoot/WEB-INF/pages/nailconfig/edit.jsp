@@ -14,8 +14,8 @@
 					class="x-red">*</span>类别名称
 				</label>
 				<div class="layui-input-inline">
-					<input type="text" id="nailType" name="nailType" readonly="readonly"
-						value="${entity.nailType}"   lay-verify="required"
+					<input type="text" id="nailType" name="nailType" 
+						value="${entity.nailType}"  lay-verify="required" 
 						autocomplete="off" class="layui-input" maxlength="10">
 				</div>
 				<div class="layui-form-mid layui-word-aux">建议10字符以内</div>
@@ -62,19 +62,25 @@
     				type : "POST",
     				data :data,
     				dataType : "json",
-    				success : function(data) {
+    				success : function(resp) {
     				
 	    				//关闭动画
 					layer.close(loading);
 				
-    						if (data.code == 200) { //这个是从后台取回来的状态值
-								layer.msg(data.msg, {icon : 6,time : 1000
+    						if (resp.code == 200) { //这个是从后台取回来的状态值
+								layer.msg(resp.msg, {icon : 6,time : 1000
 								},function(){
-								 window.parent.location.reload();//刷新父页面
-								x_admin_close();});
+								// 获得frame索引
+									var index = parent.layer.getFrameIndex(window.name);
+									//关闭当前frame
+									parent.layer.close(index);
+									//刷新列表
+									window.parent.reloadTable(data.id);
+								
+								});
 								
 							} else {
-								layer.msg(data.msg, {
+								layer.msg(resp.msg, {
 									icon : 2,
 									time : 1000
 								});

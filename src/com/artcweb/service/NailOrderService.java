@@ -27,7 +27,7 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 
 	NailOrder getById(Integer id);
 	
-	boolean checkExist(Map<String, Object> paramMap);
+	boolean checkExist(String images,String id);
 
 	void nailTotalCount(ConcurrentHashMap<String, NailCount> nailCountMap, NailOrderVo entity);
 }

@@ -18,7 +18,7 @@ public interface NailOrderDao extends BaseDao<NailOrder, Integer> {
 	
 	NailOrder getById(Integer id);
 	
-	Integer checkExist(Map<String, Object> paramMap);
+	List<NailOrder> checkExist(Map<String, Object> paramMap);
 	
 	List<NailOrder> getByBatch(String array);
 

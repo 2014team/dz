@@ -131,14 +131,14 @@ public class NailOrderController {
 		
 		
 		// 名称唯一性验证
-		Map<String,Object> paramMap  = new  HashMap<String, Object>();
-		paramMap.put("username", username);
-		boolean checkExist = nailOrderService.checkExist(paramMap);
-		if(checkExist){// 没有引用删除
-			layUiResult.failure("系统里面图片名称已存");
-			return layUiResult;
-		}
-		
+//		Map<String,Object> paramMap  = new  HashMap<String, Object>();
+//		paramMap.put("username", username);
+//		boolean checkExist = nailOrderService.checkExist(paramMap);
+//		if(checkExist){// 没有引用删除
+//			layUiResult.failure("系统里面图片名称已存");
+//			return layUiResult;
+//		}
+//		
 		// 买家名称
 		entity.setUsername(username);
 		// 来源设置
@@ -251,10 +251,7 @@ public class NailOrderController {
 			
 			
 			// 名称唯一性验证
-			Map<String,Object> paramMap  = new  HashMap<String, Object>();
-			paramMap.put("id", id);
-			paramMap.put("username", username);
-			boolean checkExist = nailOrderService.checkExist(paramMap);
+			boolean checkExist = nailOrderService.checkExist(sourceImageUrl,String.valueOf(id));
 			if(checkExist){// 没有引用删除
 				layUiResult.failure("系统里面图片名称已存");
 				return layUiResult;
@@ -283,10 +280,8 @@ public class NailOrderController {
 				
 				// 判断是否有其他数据引用图片
 				Map<String,Object> paramMap  = new  HashMap<String, Object>();
-				paramMap.put("id", id);
-				paramMap.put("imageUrl", sourceImageUrl);
-				boolean checkExist = nailOrderService.checkExist(paramMap);
-				if(!checkExist){// 没有引用删除
+				boolean checkExist = nailOrderService.checkExist(sourceImageUrl,String.valueOf(id));
+				if(checkExist){// 没有引用删除
 					boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
 					logger.info("物理删除图片结果 = "+deleteResult);
 				}
@@ -352,11 +347,8 @@ public class NailOrderController {
 			
 			if(StringUtils.isNotEmpty(sourceImageUrl)){
 				// 判断是否有其他数据引用图片
-				Map<String,Object> paramMap  = new  HashMap<String, Object>();
-				paramMap.put("id", id);
-				paramMap.put("imageUrl", sourceImageUrl);
-				boolean checkExist = nailOrderService.checkExist(paramMap);
-				if(!checkExist){// 没有引用删除
+				boolean checkExist = nailOrderService.checkExist(sourceImageUrl,String.valueOf(id));
+				if(checkExist){// 没有引用删除
 					boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
 					logger.info("物理删除图片结果 = "+deleteResult);
 				}
@@ -406,6 +398,21 @@ public class NailOrderController {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
 		String fileName = sdf.format(new Date());
 	    ExcelUtil.writeExcel(response, fileName, ExcelUtil.exportPictureCode(nailOrderList));
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/get", method = { RequestMethod.POST,
+					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
+	public LayUiResult get(Integer id) {
+		
+		LayUiResult result = new LayUiResult();
+		if (null == id || id < 1) {
+			result.failure("id不能为空");
+			return result;
+		}
+		NailOrder entity = nailOrderService.get(id);
+		result.success(entity);
+		return result;
 	}
 	
 	

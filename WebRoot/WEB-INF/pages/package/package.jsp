@@ -68,7 +68,7 @@
 		    method:"post",
 			page : { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
 				layout : [ 'limit', 'count', 'prev', 'page', 'next', 'skip' ], //自定义分页布局 //,curr: 5 //设定初始在第 5 页
-				limit : 10,//每页显示的条数
+				limit : 2,//每页显示的条数
 				groups : 5, //步长
 				first : '首页', //不显示首页
 				last : '尾页', //不显示尾页

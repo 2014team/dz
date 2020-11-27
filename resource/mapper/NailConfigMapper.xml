@@ -54,7 +54,7 @@
 	
 	<select id="select" parameterType="Map" resultMap="result">
 		SELECT * FROM t_nail_config t
-		ORDER by id desc
+		ORDER by id
 	</select>
 	
 	<!-- 查询 -->
@@ -73,7 +73,7 @@
 					and t.nail_type = #{entity.nailType}
 			</if>
 		</where>
-		ORDER by t.id desc limit ${page.begin},${page.limit} 
+		ORDER by t.id  limit ${page.begin},${page.limit} 
 	</select>
 	
 	<select id="findByPageCount" parameterType="Map" resultType="int">

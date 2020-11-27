@@ -32,8 +32,12 @@
    	
    	 <!-- 列表 -->	
      <table class="layui-hide" id="table_list" lay-filter="table_list" ></table>
-     
-       <!-- 头部工具条 -->
+         <script type="text/html" id="toolbar">
+  		<div class="layui-btn-container">
+   			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailconfig/add.do')"><i class="layui-icon"></i>增加</button>
+  		</div>
+	</script>
+
      
      <!--列表行Bar  -->
      <script type="text/html" id="rowBar">
@@ -53,6 +57,8 @@
 
 
 <script type="text/javascript">
+var editRowObj;
+
 layui.use([ 'table', 'form', 'laydate' ], function() {
 	    var table  = layui.table,
 		form = layui.form,
@@ -143,6 +149,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 		
 		//监听行工具条
 		table.on('tool(table_list)', function(obj) {
+		editRowObj = obj;
 			 var data = obj.data;
 			 switch(obj.event){
 			  case 'del': //删除
@@ -247,6 +254,57 @@ function order_delAll(layfilterId,url) {
 	});
 		
    }
+   
+   
+    //刷新
+	function reloadTable(id){
+		if(id){
+			editRelaod(id);
+		}else{
+		   addRelaod();
+		}
+	}
+	
+		function addRelaod(){
+				//获取当前页
+				// var pageNO = $(".layui-laypage-skip .layui-input").val();
+				//执行重载
+			     layui.table.reload('rendReloadId', {
+			       page: {
+			         curr:1 //重新从第 1 页开始
+			       }
+			     }, 'data'); 
+		}
+		
+		function editRelaod(id){
+				 $.ajax({
+					url : '/admin/center/nailconfig/get.do',
+					type : "POST",
+					data :{
+				            "id": id,
+				            "page": "1",
+							"limit": 10,
+				        }, //这个是传给后台的值
+					dataType : "json",
+					success : function(resp) {
+					//console.info(data);
+					
+					if(resp.code == 200){
+					editRowObj.update({
+						 nailType: resp.data.nailType,
+						 nailNumber: resp.data.nailNumber,
+						 createDate: resp.data.createDate,
+						 updateDate: resp.data.updateDate
+						 });
+					}
+					
+					
+						
+					}, 
+					
+				});
+		}
+   
 
 </script>
 </html>

@@ -1,9 +1,6 @@
 
 package com.artcweb.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -16,7 +13,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.NailWhile;
-import com.artcweb.baen.Order;
 import com.artcweb.service.NailWhileService;
 import com.artcweb.vo.NailWhileVo;
 
@@ -123,7 +119,7 @@ public class NailWhileController {
 	@ResponseBody
 	@RequestMapping(value = "/delete", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult delete(Order entity, HttpServletRequest request) {
+	public LayUiResult delete(NailWhile entity, HttpServletRequest request) {
 
 		LayUiResult result = new LayUiResult();
 		// 获取参数
@@ -170,10 +166,21 @@ public class NailWhileController {
 		result.failure();
 		return result;
 	}
+
 	
-	public static void main(String[] args) {
-		 SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");//设置日期格式
-         System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
+	@ResponseBody
+	@RequestMapping(value = "/get", method = { RequestMethod.POST,
+					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
+	public LayUiResult get(Integer id) {
+		
+		LayUiResult result = new LayUiResult();
+		if (null == id || id < 1) {
+			result.failure("id不能为空");
+			return result;
+		}
+		NailWhile entity = nailWhileService.get(id);
+		result.success(entity);
+		return result;
 	}
 
 }

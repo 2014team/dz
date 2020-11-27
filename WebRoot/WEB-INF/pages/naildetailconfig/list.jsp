@@ -61,6 +61,8 @@
 
 
 <script type="text/javascript">
+
+var editRowObj;
 layui.use([ 'table', 'form', 'laydate' ], function() {
 	    var table  = layui.table,
 		form = layui.form,
@@ -107,7 +109,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}
 				
 				, {
-					field : 'rgb' ,
+					field : 'rgb1' ,
 					title : '颜色' ,
 					templet: '#rgbTemplet' 
 				},
@@ -165,6 +167,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 		
 		//监听行工具条
 		table.on('tool(table_list)', function(obj) {
+		editRowObj = obj;
 			 var data = obj.data;
 			 switch(obj.event){
 			  case 'del': //删除
@@ -269,6 +272,58 @@ function order_delAll(layfilterId,url) {
 	});
 		
    }
+   
+    //刷新
+	function reloadTable(id){
+		if(id){
+			editRelaod(id);
+		}else{
+		   addRelaod();
+		}
+	}
+	
+		function addRelaod(){
+				//获取当前页
+				// var pageNO = $(".layui-laypage-skip .layui-input").val();
+				//执行重载
+			     layui.table.reload('rendReloadId', {
+			       page: {
+			         curr:1 //重新从第 1 页开始
+			       }
+			     }, 'data'); 
+		}
+		
+		function editRelaod(id){
+				 $.ajax({
+					url : '/admin/center/naildetailconfig/get.do',
+					type : "POST",
+					data :{
+				            "id": id,
+				            "page": "1",
+							"limit": 10,
+				        }, //这个是传给后台的值
+					dataType : "json",
+					success : function(resp) {
+					//console.info(data);
+					if(resp.code == 200){
+					editRowObj.update({
+						 rgb1: resp.data.rgb,
+						 rgb: resp.data.rgb,
+						 newSerialNumber: resp.data.newSerialNumber,
+						 oldSerialNumber: resp.data.oldSerialNumber,
+						 nailSmallWeight: resp.data.nailSmallWeight,
+						 nailBigWeight: resp.data.nailBigWeight,
+						 
+						 });
+					}
+					
+					
+						
+					}, 
+					
+				});
+		}
+   
 
 </script>
 </html>
