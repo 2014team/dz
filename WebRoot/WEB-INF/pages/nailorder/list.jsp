@@ -54,6 +54,7 @@
      <script type="text/html" id="rowBar">
 		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
  		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+		<a class="layui-btn layui-btn-xs" lay-event="export">详情</a>
 	</script>
   </body>
   
@@ -152,7 +153,9 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				},  
 				}*/, {
 					align:'left', toolbar: '#rowBar',
-					title : '操作'
+					title : '操作',
+					width: 160
+					
 				}
 
 			] ]
@@ -182,6 +185,41 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 		      break;
 		      case 'edit':// 编辑
 				x_admin_show('编辑','/admin/center/nailorder/edit/'+obj.data.id+'.do');
+		      break;
+		      case 'export':// 编辑
+				x_admin_show('导出','/admin/center/nailorder/export.do');
+				
+				$.ajax({
+			url : url,
+			type : "POST",
+			data : {
+				"id" : obj.data.id
+			}, //这个是传给后台的值
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 200) { //这个是从后台取回来的状态值
+					obj.del();
+					layer.close(index);
+					layer.msg(data.msg, {
+						icon : 1,
+						time : 1000
+					});
+				} else {
+					layer.msg(data.msg, {
+						icon : 2,
+						time : 1000
+					});
+				}
+			},
+			error : function(e) {
+				console.err(e);
+				layer.msg("系统异常，稍后再试!", {
+					icon : 2,
+					time : 1000
+				});
+			}
+		});
+				
 		      break;
 			 }
 		});

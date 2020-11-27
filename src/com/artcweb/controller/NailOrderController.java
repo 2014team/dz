@@ -2,12 +2,15 @@
 package com.artcweb.controller;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,7 @@ import com.artcweb.constant.UploadConstant;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailOrderService;
+import com.artcweb.util.ExcelUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.UploadUtil;
 import com.artcweb.vo.NailOrderVo;
@@ -394,5 +398,15 @@ public class NailOrderController {
 		result.failure();
 		return result;
 	}
+	
+	
+	@RequestMapping("/export")
+	public void printing(HttpServletResponse response,HttpServletRequest request) {
+		List<NailOrder> nailOrderList = nailOrderService.select(new HashMap<String, Object>());
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+		String fileName = sdf.format(new Date());
+	    ExcelUtil.writeExcel(response, fileName, ExcelUtil.exportPictureCode(nailOrderList));
+	}
+	
 	
 }
