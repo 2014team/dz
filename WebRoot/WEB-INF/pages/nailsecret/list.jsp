@@ -49,8 +49,8 @@
      <!-- 头部工具条 -->
 	<script type="text/html" id="toolbar">
   		<div class="layui-btn-container">
-   			 <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/secret/delete/batch.do')">批量删除</button>
-   			 <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('配置','/admin/center/secret/add.do')"><i class="layui-icon"></i>生成秘钥</button>
+   			 <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/nailsecret/delete/batch.do')">批量删除</button>
+   			 <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('配置','/admin/center/nailsecret/add.do')"><i class="layui-icon"></i>生成秘钥</button>
   		</div>
 	</script>
      
@@ -88,7 +88,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 
 		  table.render({
 			elem : '#table_list',
-			url : '/admin/center/secret/list.do',
+			url : '/admin/center/nailsecret/list.do',
 			toolbar: '#toolbar',
 		    defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
 		      title: '提示'
@@ -122,12 +122,12 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					title : '秘钥' ,
 				}
 				, {
-					field : 'packageName' ,
-					title : '图纸名称' ,
+					field : 'username' ,
+					title : '买家名称' ,
 					hide:true
 				}, {
 					field : 'mobile' ,
-					title : '电话号码' ,
+					title : '手机号码' ,
 					hide:true
 				}
 				, {
@@ -184,10 +184,10 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 			 var data = obj.data;
 			 switch(obj.event){
 			  case 'del': //删除
-				orderd_delete(obj,'/admin/center/secret/delete.do');
+				orderd_delete(obj,'/admin/center/nailsecret/delete.do');
 		      break;
 		      case 'edit':// 编辑
-				x_admin_show('编辑','/admin/center/secret/edit/'+obj.data.orderId+'.do');
+				x_admin_show('编辑','/admin/center/nailsecret/edit/'+obj.data.orderId+'.do');
 		      break;
 			 }
 		});

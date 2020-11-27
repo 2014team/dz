@@ -1,6 +1,9 @@
 
 package com.artcweb.controller;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -11,21 +14,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.artcweb.baen.NailDetailConfig;
 import com.artcweb.baen.LayUiResult;
+import com.artcweb.baen.NailWhile;
 import com.artcweb.baen.Order;
-import com.artcweb.service.NailDetailConfigService;
-import com.artcweb.vo.NailDetailConfigVo;
-
+import com.artcweb.service.NailWhileService;
+import com.artcweb.vo.NailWhileVo;
 
 @Controller
-@RequestMapping("/admin/center/naildetailconfig")
-public class NailDetailConfigController {
+@RequestMapping("/admin/center/nailwhile")
+public class NailWhileController {
 
 	@Autowired
-	private NailDetailConfigService naildetailconfigService;
-	
-	
+	private NailWhileService nailWhileService;
 
 	/**
 	 * @Title: toList
@@ -35,7 +35,7 @@ public class NailDetailConfigController {
 	@RequestMapping(value = "/list/ui")
 	public String toList() {
 
-		return "/naildetailconfig/list";
+		return "/nailwhile/list";
 	}
 
 	/**
@@ -46,7 +46,7 @@ public class NailDetailConfigController {
 	@RequestMapping(value = "/add")
 	public String toAdd(HttpServletRequest request) {
 
-		return "/naildetailconfig/edit";
+		return "/nailwhile/edit";
 	}
 	
 	/**
@@ -58,9 +58,9 @@ public class NailDetailConfigController {
 	 */
 	@RequestMapping(value = "/edit/{id}")
 	public String toEdit(@PathVariable Integer id, HttpServletRequest request) {
-		NailDetailConfig entity = naildetailconfigService.get(id);
+		NailWhile entity = nailWhileService.get(id);
 		request.setAttribute("entity", entity);
-		return "/naildetailconfig/edit";
+		return "/nailwhile/edit";
 	}
 
 	/**
@@ -72,37 +72,19 @@ public class NailDetailConfigController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/save")
-	public LayUiResult save(NailDetailConfigVo entity, HttpServletRequest request) {
+	public LayUiResult save(NailWhileVo entity, HttpServletRequest request) {
 		LayUiResult layUiResult = new LayUiResult();
 
 		// 参数验证
-		String rgb = entity.getRgb();
-		if (StringUtils.isEmpty(rgb)) {
-			layUiResult.failure("rgb不能为空");
+		String mobile = entity.getMobile();
+		if (StringUtils.isEmpty(mobile)) {
+			layUiResult.failure("手机号码不能为空");
 			return layUiResult;
 		}
-		String newSerialNumber = entity.getNewSerialNumber();
-		if (StringUtils.isEmpty(newSerialNumber)) {
-			layUiResult.failure("新编号不能为空");
-			return layUiResult;
-		}
-		String oldSerialNumber = entity.getOldSerialNumber();
-		if (StringUtils.isEmpty(oldSerialNumber)) {
-			layUiResult.failure("旧编号不能为空");
-			return layUiResult;
-		}
-		String nailSmallWeight = entity.getNailSmallWeight();
-		if (StringUtils.isEmpty(nailSmallWeight)) {
-			layUiResult.failure("（小钉）每包克数 不能为空");
-			return layUiResult;
-		}
-		String nailBigWeight = entity.getNailBigWeight();
-		if (StringUtils.isEmpty(nailBigWeight)) {
-			layUiResult.failure("（大钉）每包克数 不能为空");
-			return layUiResult;
-		}
-	
-		Integer result = naildetailconfigService.saveOrUpdate(entity);
+		
+
+		// 保存秘钥
+		Integer result = nailWhileService.saveOrUpdate(entity);
 		if (null != result && result > 0) {
 			layUiResult.success();
 		}
@@ -122,13 +104,13 @@ public class NailDetailConfigController {
 	@ResponseBody
 	@RequestMapping(value = "/list", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult list(NailDetailConfigVo entity, HttpServletRequest request) {
+	public LayUiResult list(NailWhileVo entity, HttpServletRequest request) {
 
 		// 获取参数
 		Integer page = Integer.valueOf(request.getParameter("page"));
 		Integer limit = Integer.valueOf(request.getParameter("limit"));
 		LayUiResult result = new LayUiResult(page, limit);
-		result = naildetailconfigService.findByPage(entity, result);
+		result = nailWhileService.findByPage(entity, result);
 		return result;
 	}
 
@@ -141,7 +123,7 @@ public class NailDetailConfigController {
 	@ResponseBody
 	@RequestMapping(value = "/delete", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult delete(NailDetailConfig entity, HttpServletRequest request) {
+	public LayUiResult delete(Order entity, HttpServletRequest request) {
 
 		LayUiResult result = new LayUiResult();
 		// 获取参数
@@ -151,7 +133,7 @@ public class NailDetailConfigController {
 			return result;
 		}
 
-		Integer delResult = naildetailconfigService.delete(id);
+		Integer delResult = nailWhileService.delete(id);
 		if (null != delResult && delResult > 0) {
 			result.success();
 			return result;
@@ -180,7 +162,7 @@ public class NailDetailConfigController {
 
 		array = array.replace("[", "").replace("]", "");
 
-		boolean deleteResult = naildetailconfigService.deleteByBatch(array);
+		boolean deleteResult = nailWhileService.deleteByBatch(array);
 		if (deleteResult) {
 			result.success();
 			return result;
@@ -189,4 +171,9 @@ public class NailDetailConfigController {
 		return result;
 	}
 	
+	public static void main(String[] args) {
+		 SimpleDateFormat df = new SimpleDateFormat("yyyy/MM/dd/HH/mm/ss");//设置日期格式
+         System.out.println(df.format(new Date()));// new Date()为获取当前系统时间
+	}
+
 }

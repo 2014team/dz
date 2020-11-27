@@ -40,6 +40,13 @@
 		FIND_IN_SET (id,#{id})
 	</delete>
 	
+	<select id="getByBatch" parameterType="String" resultType="com.artcweb.baen.NailOrder">
+		select id as id, image_url as imageUrl from
+		`t_nail_order`
+		where
+		FIND_IN_SET (id,#{id})
+	</select>
+	
 	<!-- 更新 -->
 	<update id="update" parameterType="com.artcweb.baen.NailOrder">
 		update `t_nail_order`
@@ -77,6 +84,24 @@
 		 from
 		`t_nail_order`
 		where id = #{id}
+		order by id limit 1
+	</select>
+	
+	<select id="checkExist" parameterType="Map" resultType="Integer">
+		select count(1)
+		 from
+		`t_nail_order`
+		<where>
+			<if test="null != id  and '' != id">
+					<![CDATA[id <> #{id}]]>
+			</if>
+			<if test="null != imageUrl  and '' != imageUrl">
+					and image_url = #{imageUrl}
+			</if>
+			<if test="null != username  and '' != username">
+					and username = #{username}
+			</if>
+		</where>
 		order by id limit 1
 	</select>
 	

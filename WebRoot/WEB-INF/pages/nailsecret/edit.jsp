@@ -76,7 +76,7 @@
 		            shade: false,
 		        });
     			$.ajax({
-    				url : '/admin/center/secret/save.do',
+    				url : '/admin/center/nailsecret/save.do',
     				type : "POST",
     				data :data,
     				dataType : "json",

@@ -29,6 +29,7 @@ import com.artcweb.dao.NailDetailConfigDao;
 import com.artcweb.dao.NailOrderDao;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.service.NailOrderService;
+import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
 import com.artcweb.util.ImageUtil;
 import com.artcweb.util.UploadUtil;
@@ -71,9 +72,32 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	 * @return
 	 */
 	@Override
-	public boolean deleteByBatch(String array) {
+	public boolean deleteByBatch(String array,HttpServletRequest request) {
+		List<NailOrder> list = nailOrderDao.getByBatch(array);
+		
 		Integer delete = nailOrderDao.deleteByBatch(array);
 		if (null != delete && delete > 0) {
+			
+			if(null != list && list.size() > 0){
+				for (NailOrder n : list) {
+					String sourceImageUrl =n.getImageUrl();
+					if(StringUtils.isNotEmpty(sourceImageUrl)){
+						// 判断是否有其他数据引用图片
+						Map<String,Object> paramMap  = new  HashMap<String, Object>();
+						paramMap.put("id", n.getId());
+						paramMap.put("imageUrl", sourceImageUrl);
+						Integer checkExist = nailOrderDao.checkExist(paramMap);
+						if(null == checkExist || checkExist < 1){// 没有引用删除
+							boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
+							logger.info("物理删除图片结果 = "+deleteResult);
+						}
+						
+					}
+				}
+			}
+			
+			
+			
 			return true;
 		}
 		return false;
@@ -215,6 +239,15 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	@Override
 	public NailOrder getById(Integer id) {
 		return nailOrderDao.getById(id);
+	}
+
+	@Override
+	public boolean checkExist(Map<String, Object> paramMap) {
+		Integer result = nailOrderDao.checkExist(paramMap);
+		if(null != result && result > 0){
+			return true;
+		}
+		return false;
 	}
 	
 	

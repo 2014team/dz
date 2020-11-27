@@ -1,9 +1,6 @@
 
 package com.artcweb.controller;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -14,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.Order;
+import com.artcweb.baen.Secret;
 import com.artcweb.service.SecretService;
 import com.artcweb.vo.SecretVo;
 
@@ -115,7 +112,7 @@ public class SecretController {
 	@ResponseBody
 	@RequestMapping(value = "/delete", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult delete(Order entity, HttpServletRequest request) {
+	public LayUiResult delete(Secret entity, HttpServletRequest request) {
 
 		LayUiResult result = new LayUiResult();
 		// 获取参数

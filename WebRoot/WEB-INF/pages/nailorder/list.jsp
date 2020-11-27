@@ -117,6 +117,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				, {
 					field : 'username' ,
 					title : '买家名称' ,
+					width: 200
 				}
 				, {
 					field : 'mobile' ,
@@ -143,13 +144,13 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					templet : function(d) {
 					return date.toDateString(d.createDate, 'yyyy-MM-dd HH:mm:ss');
 				}, 
-				}, {
+				}/*,  {
 					field : 'updateDate' ,
 					title : '更新时间' ,
 					templet : function(d) {
 					return date.toDateString(d.updateDate, 'yyyy-MM-dd HH:mm:ss');
-				}, 
-				}, {
+				},  
+				}*/, {
 					align:'left', toolbar: '#rowBar',
 					title : '操作'
 				}

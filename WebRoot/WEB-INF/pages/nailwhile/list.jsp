@@ -8,36 +8,20 @@
     <div class="x-nav">
       <span class="layui-breadcrumb">
         <a href="">首页</a>
-        <a href="">订单管理</a>
+        <a href="">白名单管理</a>
         <a>
-          <cite>秘钥列表</cite></a>
+          <cite>白名单列表</cite></a>
       </span>
       <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:38px">&#xe669;</i></a>
     </div>
     <div class="x-body">
       <div class="layui-form layui-row demoTable">
-           	秘钥：
+           	手机号码：
           <div class="layui-inline">
-		    <input class="layui-input" name="secretKey" id=secretKey autocomplete="off">
+		    <input class="layui-input" name="mobile" id=mobile autocomplete="off">
 		  </div>
 		  
-		       状态：
-          <div class="layui-inline">
-		   		 <select id="status" name="status" lay-search>
-	                <option value="">全部</option>
-                  	<option value="0" >未使用</option>
-                  	<option value="1" >已使用</option>
-	            </select>
-		  </div>
-		  
-		  <div class="layui-inline">
-					<label class="layui-form-label">创建时间：</label>
-					<div class="layui-input-inline">
-						<input type="text" name="createDateStr" id="createDateStr" placeholder="请选择开始时间 - 结束时间"
-							autocomplete="off" class="layui-input" readonly="readonly" style="width: 360px;">
-					</div>
-				</div>
 				
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
       </div>
@@ -49,29 +33,23 @@
      <!-- 头部工具条 -->
 	<script type="text/html" id="toolbar">
   		<div class="layui-btn-container">
-   			 <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/secret/delete/batch.do')">批量删除</button>
-   			 <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('配置','/admin/center/secret/add.do')"><i class="layui-icon"></i>生成秘钥</button>
+   			 <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/nailwhile/delete/batch.do')">批量删除</button>
+   			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailwhile/add.do')"><i class="layui-icon"></i>增加</button>
   		</div>
 	</script>
      
      <!--列表行Bar  -->
      <script type="text/html" id="rowBar">
+		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
  		 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 	</script>
   </body>
   
 
-<!--图片模板  -->
-<script type="text/html" id="imageUrlTpl">
-  <img alt="{{d.imageUrl}}" src="{{d.imageUrl}}">
-</script>
-<!-- 序号模板 -->
-<script type="text/html" id="indexTpl">
-   {{d.LAY_TABLE_INDEX+1}}
-</script>
 
 
 <script type="text/javascript">
+
 layui.use([ 'table', 'form', 'laydate' ], function() {
 	    var table  = layui.table,
 		form = layui.form,
@@ -88,7 +66,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 
 		  table.render({
 			elem : '#table_list',
-			url : '/admin/center/secret/list.do',
+			url : '/admin/center/nailwhile/list.do',
 			toolbar: '#toolbar',
 		    defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
 		      title: '提示'
@@ -98,7 +76,6 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 		    method:"post",
 			page : { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
 				layout : [ 'limit', 'count', 'prev', 'page', 'next', 'skip' ], //自定义分页布局 //,curr: 5 //设定初始在第 5 页
-				limits:[10, 50, 100],
 				limit : 10,//每页显示的条数
 				groups : 5, //步长
 				first : '首页', //不显示首页
@@ -118,45 +95,22 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}
 				
 				, {
-					field : 'secretKey' ,
-					title : '秘钥' ,
-				}
-				, {
-					field : 'packageName' ,
-					title : '图纸名称' ,
-					hide:true
-				}, {
 					field : 'mobile' ,
-					title : '电话号码' ,
-					hide:true
+					title : '手机号码' ,
 				}
-				, {
-					field : 'status' ,
-					title : '状态' ,
-					templet : function(d) {
-					  if(d.status == 0){
-					  	return "未使用"
-					  }else if(d.status == 1){
-					  	return "已使用"
-					  }
-					}
-				}/* , {
-					field : 'insertFlag' ,
-					title : '操作标识' ,
-				} */
 				, {
 					field : 'createDate' ,
 					title : '创建时间' ,
 					templet : function(d) {
 					return date.toDateString(d.createDate, 'yyyy-MM-dd HH:mm:ss');
 				}, 
-				}, {
+				},  {
 					field : 'updateDate' ,
 					title : '更新时间' ,
 					templet : function(d) {
 					return date.toDateString(d.updateDate, 'yyyy-MM-dd HH:mm:ss');
 				}, 
-				}, {
+				},{
 					align:'left', toolbar: '#rowBar',
 					title : '操作'
 				}
@@ -184,10 +138,10 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 			 var data = obj.data;
 			 switch(obj.event){
 			  case 'del': //删除
-				orderd_delete(obj,'/admin/center/secret/delete.do');
+				orderd_delete(obj,'/admin/center/nailwhile/delete.do');
 		      break;
 		      case 'edit':// 编辑
-				x_admin_show('编辑','/admin/center/secret/edit/'+obj.data.orderId+'.do');
+				x_admin_show('编辑','/admin/center/nailwhile/edit/'+obj.data.id+'.do');
 		      break;
 			 }
 		});

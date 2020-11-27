@@ -2,6 +2,7 @@
 package com.artcweb.controller;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -21,14 +22,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.NailConfig;
 import com.artcweb.baen.NailOrder;
-import com.artcweb.baen.Order;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.util.FileUtil;
-import com.artcweb.util.GsonUtil;
 import com.artcweb.util.UploadUtil;
 import com.artcweb.vo.NailOrderVo;
 
@@ -124,6 +123,17 @@ public class NailOrderController {
 		
 		String username = UploadUtil.getFileName(file);
 		logger.info("username = "+username);
+		
+		
+		// 名称唯一性验证
+		Map<String,Object> paramMap  = new  HashMap<String, Object>();
+		paramMap.put("username", username);
+		boolean checkExist = nailOrderService.checkExist(paramMap);
+		if(checkExist){// 没有引用删除
+			layUiResult.failure("系统里面图片名称已存");
+			return layUiResult;
+		}
+		
 		// 买家名称
 		entity.setUsername(username);
 		// 来源设置
@@ -160,6 +170,15 @@ public class NailOrderController {
 	}
 	
 	
+	/**
+	* @Title: update
+	* @Description: 更新
+	* @param entity
+	* @param file
+	* @param request
+	* @return
+	* @throws IOException
+	*/
 	@ResponseBody
 	@RequestMapping(value = "/update")
 	public LayUiResult update(NailOrderVo entity, MultipartFile file,HttpServletRequest request) throws IOException {
@@ -220,6 +239,20 @@ public class NailOrderController {
 			
 			String username = UploadUtil.getFileName(file);
 			logger.info("username = "+username);
+			
+			
+			// 名称唯一性验证
+			Map<String,Object> paramMap  = new  HashMap<String, Object>();
+			paramMap.put("id", id);
+			paramMap.put("username", username);
+			boolean checkExist = nailOrderService.checkExist(paramMap);
+			if(checkExist){// 没有引用删除
+				layUiResult.failure("系统里面图片名称已存");
+				return layUiResult;
+			}
+			
+			
+			
 			// 买家名称
 			nailOrder.setUsername(username);
 			// 设置高和宽
@@ -238,8 +271,16 @@ public class NailOrderController {
 		Integer result = nailOrderService.update(nailOrder);
 		if (null != result && result > 0) {
 			if(StringUtils.isNotBlank(sourceImageUrl)){
-				boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
-				logger.info("物理删除图片结果 = "+deleteResult);
+				
+				// 判断是否有其他数据引用图片
+				Map<String,Object> paramMap  = new  HashMap<String, Object>();
+				paramMap.put("id", id);
+				paramMap.put("imageUrl", sourceImageUrl);
+				boolean checkExist = nailOrderService.checkExist(paramMap);
+				if(!checkExist){// 没有引用删除
+					boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
+					logger.info("物理删除图片结果 = "+deleteResult);
+				}
 			}
 			layUiResult.success();
 		}
@@ -279,7 +320,7 @@ public class NailOrderController {
 	@ResponseBody
 	@RequestMapping(value = "/delete", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult delete(Order entity, HttpServletRequest request) {
+	public LayUiResult delete(NailOrder entity, HttpServletRequest request) {
 
 		LayUiResult result = new LayUiResult();
 		// 获取参数
@@ -288,10 +329,32 @@ public class NailOrderController {
 			result.failure("参数[id]不能为空!");
 			return result;
 		}
+		
+		NailOrder e = nailOrderService.get(id);
+		if(null == e){
+			result.failure("系统没有查询要删除数据");
+			return result;
+		}
+		String sourceImageUrl =e.getImageUrl();
 
 		Integer delResult = nailOrderService.delete(id);
 		if (null != delResult && delResult > 0) {
 			result.success();
+			
+			if(StringUtils.isNotEmpty(sourceImageUrl)){
+				// 判断是否有其他数据引用图片
+				Map<String,Object> paramMap  = new  HashMap<String, Object>();
+				paramMap.put("id", id);
+				paramMap.put("imageUrl", sourceImageUrl);
+				boolean checkExist = nailOrderService.checkExist(paramMap);
+				if(!checkExist){// 没有引用删除
+					boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
+					logger.info("物理删除图片结果 = "+deleteResult);
+				}
+				
+			}
+			
+			
 			return result;
 		}
 
@@ -318,7 +381,7 @@ public class NailOrderController {
 
 		array = array.replace("[", "").replace("]", "");
 
-		boolean deleteResult = nailOrderService.deleteByBatch(array);
+		boolean deleteResult = nailOrderService.deleteByBatch(array,request);
 		if (deleteResult) {
 			result.success();
 			return result;

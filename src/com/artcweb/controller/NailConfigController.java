@@ -124,7 +124,7 @@ public class NailConfigController {
 	@ResponseBody
 	@RequestMapping(value = "/delete", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult delete(Order entity, HttpServletRequest request) {
+	public LayUiResult delete(NailConfig entity, HttpServletRequest request) {
 
 		LayUiResult result = new LayUiResult();
 		// 获取参数
