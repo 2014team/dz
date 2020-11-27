@@ -34,17 +34,10 @@
      <table class="layui-hide" id="table_list" lay-filter="table_list" ></table>
      
        <!-- 头部工具条 -->
-	<script type="text/html" id="toolbar">
-  		<div class="layui-btn-container">
-   			    <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/nailconfig/delete/batch.do')">批量删除</button>
-   			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailconfig/add.do')"><i class="layui-icon"></i>增加</button>
-  		</div>
-	</script>
      
      <!--列表行Bar  -->
      <script type="text/html" id="rowBar">
 		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
- 		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 	</script>
   </body>
   
@@ -96,7 +89,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 
 			},
 			cols : [ [
-				 {checkbox: true, fixed: true},
+				/*  {checkbox: true, fixed: true}, */
 				{
 					field : 'indexId', 
 					title : '序号',

@@ -16,12 +16,6 @@ public class NailCount implements Serializable {
 	// 需要包数、件数
 	private String requrePieces;
 
-	
-	// 总钉子数
-	private String totalNailNumber;
-	// 总重量
-	private String totalWeight;
-
 	public String getIndexId() {
 		return indexId;
 	}
@@ -62,20 +56,5 @@ public class NailCount implements Serializable {
 		this.requrePieces = requrePieces;
 	}
 
-	public String getTotalNailNumber() {
-		return totalNailNumber;
-	}
-
-	public void setTotalNailNumber(String totalNailNumber) {
-		this.totalNailNumber = totalNailNumber;
-	}
-
-	public String getTotalWeight() {
-		return totalWeight;
-	}
-
-	public void setTotalWeight(String totalWeight) {
-		this.totalWeight = totalWeight;
-	}
 
 }

@@ -21,6 +21,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.NailConfig;
+import com.artcweb.baen.NailCount;
 import com.artcweb.baen.NailOrder;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
@@ -152,11 +153,13 @@ public class NailOrderController {
 			// 图片颜色统计
 			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
 	
-			// 钉子统计
-			nailOrderService.nailCount(nailColorMap,entity);
+			// 钉子颜色列表统计
+			ConcurrentHashMap<String, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
+			
+			// 钉子与重量总数统计
+			nailOrderService.nailTotalCount(nailCountMap,entity);
 		
 		}
-		
 		
 		// 保存
 		boolean result = nailOrderService.saveNailOrder(entity);
@@ -232,10 +235,12 @@ public class NailOrderController {
 			}
 			// 图片颜色统计
 			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
-			// 钉子统计
-			nailOrderService.nailCount(nailColorMap,entity);
+	
+			// 钉子颜色列表统计
+			ConcurrentHashMap<String, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
 			
-			
+			// 钉子与重量总数统计
+			nailOrderService.nailTotalCount(nailCountMap,entity);
 			
 			String username = UploadUtil.getFileName(file);
 			logger.info("username = "+username);

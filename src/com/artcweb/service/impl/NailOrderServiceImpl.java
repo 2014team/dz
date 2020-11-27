@@ -2,9 +2,9 @@
 package com.artcweb.service.impl;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,18 +21,19 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.baen.LayUiResult;
+import com.artcweb.baen.NailConfig;
 import com.artcweb.baen.NailCount;
 import com.artcweb.baen.NailDetailConfig;
 import com.artcweb.baen.NailOrder;
+import com.artcweb.baen.NailTotalCount;
 import com.artcweb.cache.DateMap;
-import com.artcweb.dao.NailDetailConfigDao;
 import com.artcweb.dao.NailOrderDao;
 import com.artcweb.dto.NailOrderDto;
+import com.artcweb.enums.NailImageTypeEnum;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
 import com.artcweb.util.ImageUtil;
-import com.artcweb.util.UploadUtil;
 import com.artcweb.vo.NailOrderVo;
 
 @Service
@@ -128,6 +129,8 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			logger.info("高="+ih +" 宽="+iw);
 			
 			stepList = new Vector<String>();
+			
+			long begin = System.currentTimeMillis();
 			for (int y = 0; y < ih; y++) {
 				for (int x = 0; x < iw; x++) {
 					int pixel = image.getRGB(x, y);
@@ -161,12 +164,18 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			
 			// --------获取图片上传路径------------------
 			String uploadPath = ImageUtil.getUploadPath(request, image,file, uploadDirpath);
+			long end = System.currentTimeMillis();
+			logger.info("统计钉子像素耗时："+((end-begin)/1000)+" 秒");
+			
 			
 			// 设置高和宽
 			entity.setHeight(String.valueOf(ih));
 			entity.setWidth(String.valueOf(iw));
 			// 设置执行步骤
-			entity.setStep(GsonUtil.toJsonAll(stepList));
+			
+			String step = GsonUtil.toJsonAll(stepList);
+			logger.info("step="+step);
+			entity.setStep(step);
 			// 设置上传图片
 			entity.setImageUrl(uploadPath);
 			
@@ -190,27 +199,47 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	@Override
-	public void nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity) {
+	public ConcurrentHashMap<String, NailCount> nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity) {
 		if(nailColorMap == null || nailColorMap.size() < 1 ){
 			logger.error("nailColorMap为空");
-			return ;
+			return null;
 		}
 		
-		
+		// 获取数量配置
 		Map<String, NailDetailConfig>  nailDetailConfigMap = DateMap.nailDetailConfigMap;
 		if(nailDetailConfigMap == null || nailDetailConfigMap.size() < 1 ){
 			logger.error("nailDetailConfigMap为空");
-			return ;
+			return null;
 		}
-		
 		
 		
 		// 数量统计集合
 		ConcurrentHashMap<String, NailCount> nailCountMap = new ConcurrentHashMap<String, NailCount>();
 		
 		
-		// 计算开始
+		// 详细配置,判断大小图钉
+		 Map<String,NailConfig> nailConfigMap = DateMap.nailConfigMap;
+		 String nailConfigId = entity.getNailConfigId();
+		 NailConfig nailConfig = nailConfigMap.get(nailConfigId);
+		 if(null == nailConfig){
+			 logger.error("没有获取到图片类型");
+			 return null;
+		 }
+		 
+		 boolean nailFlag = false;
+		 String nailNumber = nailConfig.getNailNumber();
+		 BigDecimal nailStandardNumberDecimal = new BigDecimal(nailNumber);
+		 logger.info("数量(每公斤颗数)------------------------"+nailStandardNumberDecimal);
+		 
+		 if(nailConfig.getNailType().equals(NailImageTypeEnum.BIG.getDisplayName())){
+			 nailFlag = true;
+			 
+		 }
+
+		 // 计算开始
 		logger.info(" 计算开始------------------------");
+		long begin = System.currentTimeMillis();
+		
 		for (Map.Entry<String, Integer> entry : nailColorMap.entrySet()) {
 			String key = entry.getKey();
 			Integer value = entry.getValue();
@@ -223,17 +252,43 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			NailCount nailCount = new NailCount();
 			nailCount.setIndexId(nailDetailConfig.getNewSerialNumber());
 			nailCount.setNailNumber(String.valueOf(value));
-			nailCountMap.put(key, nailCount);
+
 			
-			nailCount = null;
+			// 小钉重量计算公式： 重量计算（数量/3600）=公斤（小数点4位）
+			// 大钉重量计算公式： 重量计算（数量/2800）=公斤（小数点4位）
+			BigDecimal nailNumberDecimal = new BigDecimal(value);
+			BigDecimal requreWeight  = nailNumberDecimal.divide(nailStandardNumberDecimal,4,BigDecimal.ROUND_HALF_DOWN);
+			nailCount.setRequreWeight(String.valueOf(requreWeight));
 			
 			
-        }
-		logger.info(" 计算结束------------------------");
+			// 包计算公式  各颜色重量/各颜色小包公斤数=包数（向上取整）
+			String nailBigWeight = nailDetailConfig.getNailBigWeight();
+			String nailSmallWeight = nailDetailConfig.getNailSmallWeight();
+			BigDecimal nailBigWeightDecimal = new BigDecimal(nailBigWeight);
+			if(!nailFlag){
+				//小钉计算
+				nailBigWeightDecimal = new BigDecimal(nailSmallWeight);
+			}
+			BigDecimal requrePieces = requreWeight.divide(nailBigWeightDecimal,0, BigDecimal.ROUND_UP);
+			nailCount.setRequrePieces(String.valueOf(requrePieces));
 		
-		// 钉子统计详情
-		String nailCountDetail = GsonUtil.toJsonAll(nailCountMap);
-		entity.setNailCountDetail(nailCountDetail);
+			
+			nailCountMap.put(key, nailCount);
+
+			nailNumberDecimal = null;
+			nailBigWeightDecimal = null;
+			nailCount = null;
+        }
+		nailStandardNumberDecimal = null;
+		
+		
+		long end = System.currentTimeMillis();
+		logger.info(" 计算结束------------------------");
+		logger.info("统计钉子配置详情耗时："+((end-begin)/1000)+" 秒");
+		  
+		
+		
+		return nailCountMap;
 	}
 
 	@Override
@@ -248,6 +303,57 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public void nailTotalCount(ConcurrentHashMap<String, NailCount> nailCountMap, NailOrderVo entity) {
+		
+		NailTotalCount nailTotalCount =  new NailTotalCount();
+		
+		if(null == nailCountMap || nailCountMap.size() < 1){
+			logger.error("nailCountMap为空");
+			return;
+		}
+		
+		if(null == entity){
+			logger.error("entity为空");
+			return;
+		}
+		
+		BigDecimal wDecimal = new BigDecimal(0);
+		BigDecimal nDecimal = new BigDecimal(0);
+		BigDecimal pDecimal = new BigDecimal(0);
+		//BigDecimal bigDecimal = new BigDecimal(0);
+		for (Map.Entry<String,NailCount> map: nailCountMap.entrySet()) {
+			NailCount nailCount = map.getValue();
+			BigDecimal requreWeightBigDecimal = new BigDecimal(nailCount.getRequreWeight());
+			
+			BigDecimal nailNumberBigDecimal = new BigDecimal(nailCount.getNailNumber());
+			BigDecimal requrePiecesBigDecimal = new BigDecimal(nailCount.getRequrePieces());
+			wDecimal =wDecimal.add(requreWeightBigDecimal);
+			nDecimal =nDecimal.add(nailNumberBigDecimal);
+			pDecimal =pDecimal.add(requrePiecesBigDecimal);
+			requreWeightBigDecimal = null;
+			nailNumberBigDecimal = null;
+			requrePiecesBigDecimal = null;
+		}
+		
+		// 总重量计算
+		nailTotalCount.setTotalWeight(String.valueOf(wDecimal.setScale(2,BigDecimal.ROUND_HALF_DOWN)));
+		// 总数量
+		nailTotalCount.setTotalNailNumber(String.valueOf(nDecimal));
+		// 总包数
+		nailTotalCount.setTotalrPieces(String.valueOf(pDecimal));
+		// 详细列表
+		nailTotalCount.setNailCountDetailMap(nailCountMap);
+		
+		// 钉子统计详情
+		String nailCountDetail = GsonUtil.toJsonAll(nailTotalCount);
+
+		logger.info("------------------------------");
+		logger.info(nailCountDetail);
+		logger.info("------------------------------");
+		entity.setNailCountDetail(nailCountDetail);
 	}
 	
 	

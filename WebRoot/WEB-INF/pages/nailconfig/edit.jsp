@@ -14,7 +14,7 @@
 					class="x-red">*</span>类别名称
 				</label>
 				<div class="layui-input-inline">
-					<input type="text" id="nailType" name="nailType"
+					<input type="text" id="nailType" name="nailType" readonly="readonly"
 						value="${entity.nailType}"   lay-verify="required"
 						autocomplete="off" class="layui-input" maxlength="10">
 				</div>
@@ -30,6 +30,7 @@
 						value="${empty entity.nailNumber ?'' : entity.nailNumber}"   lay-verify="required|number"
 						autocomplete="off" class="layui-input" maxlength="10">
 				</div>
+				<div class="layui-form-mid layui-word-aux">数字</div>
 			</div>
 			
 

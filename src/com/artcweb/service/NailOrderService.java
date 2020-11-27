@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.baen.LayUiResult;
+import com.artcweb.baen.NailCount;
 import com.artcweb.baen.NailOrder;
 import com.artcweb.vo.NailOrderVo;
 
@@ -22,9 +23,11 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 
 	ConcurrentHashMap<String, Integer> uploadImage(HttpServletRequest request,MultipartFile file, NailOrderVo entity,String uploadDirpath);
 
-	void nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity);
+	ConcurrentHashMap<String, NailCount> nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity);
 
 	NailOrder getById(Integer id);
 	
 	boolean checkExist(Map<String, Object> paramMap);
+
+	void nailTotalCount(ConcurrentHashMap<String, NailCount> nailCountMap, NailOrderVo entity);
 }
