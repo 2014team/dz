@@ -306,9 +306,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	@Override
-	public boolean checkExist(String imageUrl,String id) {
-		Map<String, Object> paramMap = new HashMap<String, Object>();
-		paramMap.put("imageUrl", imageUrl);
+	public boolean checkExist(Map<String,Object> paramMap,String id) {
 		List<NailOrder> nailOrderList = nailOrderDao.checkExist(paramMap);
 		boolean  result= true;
 		if(null != nailOrderList && nailOrderList.size() > 0){

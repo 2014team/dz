@@ -26,14 +26,15 @@ import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.NailConfig;
 import com.artcweb.baen.NailCount;
 import com.artcweb.baen.NailOrder;
+import com.artcweb.baen.NailPictureFrame;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailOrderService;
+import com.artcweb.service.NailPictureFrameService;
 import com.artcweb.util.ExcelUtil;
 import com.artcweb.util.FileUtil;
-import com.artcweb.util.UploadUtil;
 import com.artcweb.vo.NailOrderVo;
 
 
@@ -45,6 +46,8 @@ public class NailOrderController {
 	private NailOrderService nailOrderService;
 	@Autowired
 	private NailConfigService nailconfigService;
+	@Autowired
+	private NailPictureFrameService nailPictureFrameService;
 	@Autowired
 	private ImageService imageService;
 
@@ -71,6 +74,9 @@ public class NailOrderController {
 		List<NailConfig> nailconfigList = nailconfigService.select(paramMap);
 		request.setAttribute("nailconfigList", nailconfigList);
 		
+		List<NailPictureFrame> nailPictureFrameList = nailPictureFrameService.select(paramMap);
+		request.setAttribute("nailPictureFrameList", nailPictureFrameList);
+		
 		return "/nailorder/edit";
 	}
 	
@@ -90,6 +96,9 @@ public class NailOrderController {
 		Map<String ,Object> paramMap = null;
 		List<NailConfig> nailconfigList = nailconfigService.select(paramMap);
 		request.setAttribute("nailconfigList", nailconfigList);
+		
+		List<NailPictureFrame> nailPictureFrameList = nailPictureFrameService.select(paramMap);
+		request.setAttribute("nailPictureFrameList", nailPictureFrameList);
 				
 		return "/nailorder/edit";
 	}
@@ -108,15 +117,32 @@ public class NailOrderController {
 	public LayUiResult save(NailOrderVo entity, MultipartFile file,HttpServletRequest request) throws IOException {
 		LayUiResult layUiResult = new LayUiResult();
 		// 参数验证
+		String username = entity.getUsername();
+		if (StringUtils.isEmpty(username)) {
+			layUiResult.failure("买家名称不能为空");
+			return layUiResult;
+		}
 		
 		String nailconfigId = entity.getNailConfigId();
 		if (StringUtils.isEmpty(nailconfigId)) {
-			layUiResult.failure("图片类型不能为空");
+			layUiResult.failure("图钉类型不能为空");
+			return layUiResult;
+		}
+
+		String nailPictureFrameId = entity.getNailPictureFrameId();
+		if (StringUtils.isEmpty(nailPictureFrameId)) {
+			layUiResult.failure("画框颜色不能为空");
 			return layUiResult;
 		}
 		String mobile = entity.getMobile();
 		if (StringUtils.isEmpty(mobile)) {
 			layUiResult.failure("手机号不能为空");
+			return layUiResult;
+		
+		}
+		String imageName = entity.getImageName();
+		if (StringUtils.isEmpty(imageName)) {
+			layUiResult.failure("图纸名称不能为空");
 			return layUiResult;
 		}
 		
@@ -125,22 +151,15 @@ public class NailOrderController {
 			return layUiResult;
 		}
 		
-		
-		String username = UploadUtil.getFileName(file);
-		logger.info("username = "+username);
-		
-		
 		// 名称唯一性验证
-//		Map<String,Object> paramMap  = new  HashMap<String, Object>();
-//		paramMap.put("username", username);
-//		boolean checkExist = nailOrderService.checkExist(paramMap);
-//		if(checkExist){// 没有引用删除
-//			layUiResult.failure("系统里面图片名称已存");
-//			return layUiResult;
-//		}
-//		
-		// 买家名称
-		entity.setUsername(username);
+		Map<String,Object> paramMap  = new  HashMap<String, Object>();
+		paramMap.put("imageName", imageName);
+		boolean checkExist = nailOrderService.checkExist(paramMap,null);
+		if(checkExist){// 没有引用删除
+			layUiResult.failure("图纸名称系统已存在");
+			return layUiResult;
+		}
+		
 		// 来源设置
 		entity.setComefrom(String.valueOf(NailOrderComeFromConstant.BACKSTAGE));
 		entity.setCurrentStep("");
@@ -164,7 +183,6 @@ public class NailOrderController {
 			nailOrderService.nailTotalCount(nailCountMap,entity);
 		
 		}
-		
 		// 保存
 		boolean result = nailOrderService.saveNailOrder(entity);
 		if (result) {
@@ -197,20 +215,47 @@ public class NailOrderController {
 			return layUiResult;
 		}
 		
+		// 参数验证
+		String username = entity.getUsername();
+		if (StringUtils.isEmpty(username)) {
+			layUiResult.failure("买家名称不能为空");
+			return layUiResult;
+		}
+		
 		String nailConfigId = entity.getNailConfigId();
 		if (StringUtils.isEmpty(nailConfigId)) {
-			layUiResult.failure("图片类型不能为空");
+			layUiResult.failure("图钉类型不能为空");
+			return layUiResult;
+		}
+
+		String nailPictureFrameId = entity.getNailPictureFrameId();
+		if (StringUtils.isEmpty(nailPictureFrameId)) {
+			layUiResult.failure("画框颜色不能为空");
 			return layUiResult;
 		}
 		String mobile = entity.getMobile();
 		if (StringUtils.isEmpty(mobile)) {
 			layUiResult.failure("手机号不能为空");
 			return layUiResult;
+		
+		}
+		String imageName = entity.getImageName();
+		if (StringUtils.isEmpty(imageName)) {
+			layUiResult.failure("图纸名称不能为空");
+			return layUiResult;
 		}
 		
-		String imageUrl = entity.getImageUrl();
-		if((null == file || file.isEmpty()) && StringUtils.isEmpty(imageUrl) ){
+		if((null == file || file.isEmpty()) && StringUtils.isEmpty(imageName) ){
 			layUiResult.failure("图片不能为空");
+			return layUiResult;
+		}
+		
+		// 名称唯一性验证
+		Map<String,Object> paramMap  = new  HashMap<String, Object>();
+		paramMap.put("imageName", imageName);
+		boolean checkExist = nailOrderService.checkExist(paramMap,String.valueOf(id));
+		if(checkExist){// 没有引用删除
+			layUiResult.failure("图纸名称系统已存在");
 			return layUiResult;
 		}
 		
@@ -221,8 +266,17 @@ public class NailOrderController {
 			return layUiResult;
 		}
 		
+		
+		// 买家名称
+		nailOrder.setUsername(username);
+		// 钉子类型
 		nailOrder.setNailConfigId(nailConfigId);
+		// 画框颜色
+		nailOrder.setNailPictureFrameId(nailPictureFrameId);
+		// 手机号码
 		nailOrder.setMobile(mobile);
+		// 图纸名称
+		nailOrder.setImageName(imageName);
 		
 		
 		String sourceImageUrl = nailOrder.getImageUrl();
@@ -246,21 +300,7 @@ public class NailOrderController {
 			// 钉子与重量总数统计
 			nailOrderService.nailTotalCount(nailCountMap,entity);
 			
-			String username = UploadUtil.getFileName(file);
-			logger.info("username = "+username);
-			
-			
-			// 名称唯一性验证
-			boolean checkExist = nailOrderService.checkExist(sourceImageUrl,String.valueOf(id));
-			if(checkExist){// 没有引用删除
-				layUiResult.failure("系统里面图片名称已存");
-				return layUiResult;
-			}
-			
-			
-			
-			// 买家名称
-			nailOrder.setUsername(username);
+		
 			// 设置高和宽
 			nailOrder.setHeight(entity.getHeight());
 			nailOrder.setWidth(entity.getWidth());
@@ -279,9 +319,10 @@ public class NailOrderController {
 			if(StringUtils.isNotBlank(sourceImageUrl)){
 				
 				// 判断是否有其他数据引用图片
-				Map<String,Object> paramMap  = new  HashMap<String, Object>();
-				boolean checkExist = nailOrderService.checkExist(sourceImageUrl,String.valueOf(id));
-				if(checkExist){// 没有引用删除
+				Map<String,Object> tparamMap  = new  HashMap<String, Object>();
+				tparamMap.put("imageUrl", sourceImageUrl);
+				boolean tcheckExist = nailOrderService.checkExist(tparamMap,String.valueOf(id));
+				if(tcheckExist){// 没有引用删除
 					boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
 					logger.info("物理删除图片结果 = "+deleteResult);
 				}
@@ -347,14 +388,15 @@ public class NailOrderController {
 			
 			if(StringUtils.isNotEmpty(sourceImageUrl)){
 				// 判断是否有其他数据引用图片
-				boolean checkExist = nailOrderService.checkExist(sourceImageUrl,String.valueOf(id));
+				Map<String,Object> tparamMap  = new  HashMap<String, Object>();
+				tparamMap.put("imageUrl", sourceImageUrl);
+				boolean checkExist = nailOrderService.checkExist(tparamMap,String.valueOf(id));
 				if(checkExist){// 没有引用删除
 					boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
 					logger.info("物理删除图片结果 = "+deleteResult);
 				}
 				
 			}
-			
 			
 			return result;
 		}

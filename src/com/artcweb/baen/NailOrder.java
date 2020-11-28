@@ -25,6 +25,8 @@ public class NailOrder extends BaseBean {
 
 	// 图片类型Id
 	private String nailConfigId;
+	// 画框Id
+	private String nailPictureFrameId;
 
 	// 宽
 	private String width;
@@ -34,6 +36,9 @@ public class NailOrder extends BaseBean {
 
 	// 钉子统计详情
 	private String nailCountDetail;
+	
+	// 图纸名称
+	private String imageName;
 
 	public String getUsername() {
 		return username;
@@ -115,4 +120,21 @@ public class NailOrder extends BaseBean {
 		this.nailCountDetail = nailCountDetail;
 	}
 
+	public String getNailPictureFrameId() {
+		return nailPictureFrameId;
+	}
+
+	public void setNailPictureFrameId(String nailPictureFrameId) {
+		this.nailPictureFrameId = nailPictureFrameId;
+	}
+
+	public String getImageName() {
+		return imageName;
+	}
+
+	public void setImageName(String imageName) {
+		this.imageName = imageName;
+	}
+
+	
 }

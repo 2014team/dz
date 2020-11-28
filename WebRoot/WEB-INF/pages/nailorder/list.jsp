@@ -21,20 +21,23 @@
           <div class="layui-inline">
 		    <input class="layui-input" name="username" id="username" autocomplete="off">
 		  </div>
+           	图纸名称：
+          <div class="layui-inline">
+		    <input class="layui-input" name="imageName" id="imageName" autocomplete="off">
+		  </div>
            	手机号码：
           <div class="layui-inline">
 		    <input class="layui-input" name="mobile" id="mobile" autocomplete="off">
 		  </div>
-		  
-		     来源：
+	
+		<!--     来源：
           <div class="layui-inline">
 		   		 <select id="comefrom" name="comefrom" lay-search>
 	                <option value="">全部</option>
                   	<option value="0" >后台</option>
                   	<option value="1" >H5</option>
 	            </select>
-		  </div>
-				
+		  </div>-->	
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
       </div>
       
@@ -113,18 +116,20 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					title : '序号',
 					type: 'numbers',
 					sort : true,
-					width:80,
 				}
 				
 				, {
 					field : 'username' ,
 					title : '买家名称' ,
-					width: 200
+				}
+				, {
+					field : 'imageName' ,
+					title : '图纸名称' ,
 				}
 				, {
 					field : 'mobile' ,
 					title : '手机号码' ,
-				}, {
+				}/* , {
 					field : 'comefrom' ,
 					title : '来源' ,
 					templet : function(d) {
@@ -135,11 +140,14 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					}else{
 						return ""
 					}
-				}, 
-				}
+				},  
+				}*/
 				, {
 					field : 'nailType' ,
 					title : '图钉类型' , 
+				},  {
+					field : 'colorName' ,
+					title : '画框颜色' , 
 				}, {
 					field : 'createDate' ,
 					title : '创建时间' ,
@@ -355,14 +363,15 @@ function order_delAll(layfilterId,url) {
 					if(resp.code == 200){
 					editRowObj.update({
 						 username: resp.data.username,
+						 imageName: resp.data.imageName,
 						 mobile: resp.data.mobile,
 						 comefrom: resp.data.comefrom,
-						 field: resp.data.field,
+						 nailType: resp.data.nailType,
+						 colorName: resp.data.colorName,
 						 createDate: resp.data.createDate,
 						 
 						 });
 					}
-					
 					
 						
 					}, 

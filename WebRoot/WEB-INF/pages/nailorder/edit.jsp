@@ -9,17 +9,17 @@
 		<form class="layui-form">
 			<input type="hidden" id="id" name="id" value="${entity.id }" />
 		  
-		  <%-- <div class="layui-form-item">
+		<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label"> <span
 					class="x-red">*</span>买家名称
 				</label>
 				<div class="layui-input-inline">
 					<input type="text" id="username" name="username"
 						value="${entity.username}"   lay-verify="required"
-						autocomplete="off" class="layui-input" maxlength="10">
+						autocomplete="off" class="layui-input" maxlength="50">
 				</div>
 				<div class="layui-form-mid layui-word-aux">建议50字符以内</div>
-			</div> --%>
+			</div>
 	
 		
 		<div class="layui-form-item">
@@ -38,6 +38,22 @@
 					
 				</div>
 			</div>	
+		<div class="layui-form-item">
+				<label class="layui-form-label"><span class="x-red">*</span>画框颜色</label>
+				<div class="layui-input-block">
+					<c:forEach items="${nailPictureFrameList }" var="item">
+					<c:choose>
+						<c:when test="${not empty entity and entity.nailPictureFrameId eq item.id}">
+							<input type="radio"  name="nailPictureFrameId" value="${item.id}" title="${item.colorName}" lay-verify="nailPictureFrameId_verify" checked>	
+						</c:when>
+						<c:otherwise>
+							<input type="radio" name="nailPictureFrameId" value="${item.id}" title="${item.colorName}" lay-verify="nailPictureFrameId_verify"> 
+						</c:otherwise>
+					</c:choose>
+					</c:forEach>
+					
+				</div>
+			</div>	
 		
 		  
 		  <div class="layui-form-item">
@@ -49,12 +65,16 @@
 						value="${empty entity.mobile ?'' : entity.mobile}"   lay-verify="required|number|phone"
 						autocomplete="off" class="layui-input" maxlength="11">
 				</div>
+				<div class="layui-form-mid layui-word-aux">数字</div>
 			</div>
+			
+			
+			
 			
 			
 			<div class="layui-form-item">
               <label for="L_repass" class="layui-form-label">
-                <span class="x-red">*</span> 图片
+                <span class="x-red">*</span> GIF图
               </label>
               <div class="layui-input-inline">
                  <div class="layui-upload-drag" id="upload_image_Id">
@@ -66,6 +86,19 @@
           
           <input type="hidden" id="imageUrl" name="imageUrl" value="${entity.imageUrl }"></input>
           </div>
+          
+          
+          <div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label"> <span
+					class="x-red">*</span>图纸名称
+				</label>
+				<div class="layui-input-inline">
+					<input type="text" id="imageName" name="imageName" readonly="readonly"
+						value="${entity.imageName}"   lay-verify="required"
+						autocomplete="off" class="layui-input" maxlength="100">
+				</div>
+				<div class="layui-form-mid layui-word-aux">此值获取的是图片名(建议100字符以内)</div>
+			</div>
 			
 
 			<div class="layui-form-item">
@@ -115,6 +148,28 @@
                             }).focus();
                         return '必填项不能为空';
                     }
+		  	},
+		  	 nailPictureFrameId_verify: function(value, item){ //value：表单的值、item：表单的DOM对象
+		  		var verifyName = $(item).attr('name'),
+                        verifyType = $(item).attr('type'),
+                        formElem = $(item).parents('.layui-form'),
+                        verifyElem = formElem.find('input[name=' + verifyName +']'),
+                        isTrue = verifyElem.is(':checked'),
+                        focusElem = verifyElem.next().find('i.layui-icon');
+                    if (!isTrue || !value) {
+                        focusElem.css(verifyType == 'radio' ? {
+                            "color": "#FF5722"} : {"border-color": "#FF5722"});
+                        //对非输入框设置焦点
+                        focusElem.first().attr("tabIndex", "1").css("outline", "0")
+                            .blur(function () {
+                                focusElem.css(verifyType == 'radio' ? {
+                                    "color": ""
+                                } : {
+                                    "border-color": ""
+                                });
+                            }).focus();
+                        return '必填项不能为空';
+                    }
 		  	}
 		  
 		}); 
@@ -129,9 +184,15 @@
 		      //预读本地文件示例，不支持ie8
 		      console.log(obj)
 		      obj.preview(function(index, file, result){
+		      if(file){
+		      	$("#imageName").val(file.name);
+		      }
+		      
 		      console.log(result,file)
 		      files = file
 		        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'">'); //图片链接（base64）
+		     
+		     	
 		      });
 		    }
 		  });
@@ -143,8 +204,10 @@
           	data = JSON.parse(JSON.stringify(obj.field));
           	var formData = new FormData() 
    			formData.append('id', $('#id').val());
-   			//formData.append('username', data.username);
+   			formData.append('username', data.username);
    			formData.append('nailConfigId',data.nailConfigId);
+   			formData.append('nailPictureFrameId',data.nailPictureFrameId);
+   			formData.append('imageName',data.imageName);
    			formData.append('mobile', data.mobile);
    			formData.append('imageUrl', data.imageUrl);
    			formData.append('step', data.step);

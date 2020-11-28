@@ -4,8 +4,10 @@ package com.artcweb.enums;
  * @ClassName: NailImageTypeEnum
  */
 public enum NailImageTypeEnum {
-	SMAIL("小图钉"),
-	BIG("大图钉"), 
+	SMAIL("小钉"),
+	FLOWER("玫瑰"),
+	MASONRY("钻石"),
+	BIG("大钉"), 
 	
 	;
 	// 显示名称

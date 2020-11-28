@@ -12,17 +12,19 @@
 		<result property="imageUrl" column="image_url" />
 		<result property="comefrom" column="comefrom" />
 		<result property="nailConfigId" column="nail_config_id" />
+		<result property="nailPictureFrameId" column="nail_pictureframe_Id" />
 		<result property="width" column="width" />
 		<result property="height" column="height" />
 		<result property="step" column="step" />
 		<result property="nailCountDetail" column="nail_count_detail" />
+		<result property="imageName" column="image_name" />
 		<result property="createDate" column="create_date" />
 		<result property="updateDate" column="update_date" />
 	</resultMap>
 	
 	<insert id="save" parameterType="com.artcweb.baen.NailOrder" useGeneratedKeys="true" keyProperty="id">
-      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,comefrom,nail_config_id,nail_count_detail,width,height,create_date,update_date)
-      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},now(),now())
+      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,create_date,update_date)
+      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},now(),now())
      </insert>
 
 	<!--删除 -->
@@ -56,8 +58,10 @@
 		step=#{step},
 		current_step=#{currentStep},
 		image_url=#{imageUrl},
+		image_name=#{imageName},
 		comefrom=#{comefrom},
 		nail_config_id=#{nailConfigId},
+		nail_pictureframe_Id=#{nailPictureFrameId},
 		nail_count_detail=#{nailCountDetail},
 		height=#{height},
 		width=#{width},
@@ -74,16 +78,21 @@
 		,step as step
 		,current_step as currentStep
 		,image_url as imageUrl
+		,image_name as imageName
 		,comefrom as comefrom
 		,nail_config_id as nailConfigId
+		,nail_pictureframe_Id as nailPictureFrameId
 		,nail_count_detail as nailCountDetail
 		,height as height
 		,width as width
 		,create_date as createDate
 		,update_date as updateDate
-		 from
-		`t_nail_order`
-		where id = #{id}
+		,nf.nail_type as nailType
+		,tnp.color_name   as colorName
+		 FROM t_nail_order  left join t_nail_config nf on t_nail_order.nail_config_id = nf.id
+		 left join  t_nail_pictureframe tnp on t_nail_order.nail_pictureframe_Id = tnp.id
+		 
+		where t_nail_order.id = #{id}
 		order by id limit 1
 	</select>
 	
@@ -97,6 +106,9 @@
 			</if>
 			<if test="null != imageUrl  and '' != imageUrl">
 					and image_url = #{imageUrl}
+			</if>
+			<if test="null != imageName  and '' != imageName">
+					and image_name = #{imageName}
 			</if>
 			<if test="null != username  and '' != username">
 					and username = #{username}
@@ -112,8 +124,10 @@
 		<!-- ,step as step -->
 		,current_step as currentStep
 		,image_url as imageUrl
+		,image_name as imageName
 		,comefrom as comefrom
 		,nail_config_id as nailConfigId
+		,nail_pictureframe_Id as nailPictureFrameId
 		<!-- ,nail_count_detail as nailCountDetail -->
 		,height as height
 		,width as width
@@ -139,18 +153,25 @@
 		<!--t.step as step,
 		 t.current_step as currentStep,  -->
 		t.image_url as imageUrl,
+		t.image_name as imageName,
 		t.comefrom as comefrom,
 		t.nail_config_id as nailConfigId,
+		t.nail_pictureframe_Id as nailPictureFrameId,
 		<!-- t.nail_count_detail as nailCountDetail,
 		t.width as width,
 		t.height as height, -->
 		nf.nail_type as nailType,
+		tnp.color_name   as colorName,
 		t.create_date as createDate,
 		t.update_date as updateDate
 		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
+		 left join  t_nail_pictureframe tnp on t.nail_pictureframe_Id = tnp.id
 		<where>
 			<if test="null != entity and  null != entity.username and '' != entity.username">
 					t.username  like '%${entity.username}%'
+			</if>
+			<if test="null != entity and  null != entity.imageName and '' != entity.imageName">
+					and t.image_name  like '%${entity.imageName}%'
 			</if>
 			<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
 					and t.mobile like '%${entity.mobile}%'
@@ -160,6 +181,9 @@
 			</if>
 			<if test="null != entity and  null != entity.nailConfigId and '' != entity.nailConfigId">
 					and t.nail_config_id = #{entity.nailConfigId}
+			</if>
+			<if test="null != entity and  null != entity.nailPictureFrameId and '' != entity.nailPictureFrameId">
+					and t.nail_pictureframe_Id = #{entity.nailPictureFrameId}
 			</if>
 		</where>
 		ORDER by t.id desc limit ${page.begin},${page.limit} 
@@ -171,6 +195,9 @@
 			<if test="null != entity and  null != entity.username and '' != entity.username">
 					t.username  like '%${entity.username}%'
 			</if>
+				<if test="null != entity and  null != entity.imageName and '' != entity.imageName">
+					and t.image_name  like '%${entity.imageName}%'
+			</if>
 			<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
 					and t.mobile like '%${entity.mobile}%'
 			</if>
@@ -179,6 +206,9 @@
 			</if>
 			<if test="null != entity and  null != entity.nailConfigId and '' != entity.nailConfigId">
 					and t.nail_config_id = #{entity.nailConfigId}
+			</if>
+			<if test="null != entity and  null != entity.nailPictureFrameId and '' != entity.nailPictureFrameId">
+					and t.nail_pictureframe_Id = #{entity.nailPictureFrameId}
 			</if>
 		</where>
 	</select>

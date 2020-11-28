@@ -7,6 +7,7 @@ public class NailOrderDto extends NailOrder{
 	
 	private String nailType;
 
+	private String colorName;
 	
 	public String getNailType() {
 		return nailType;
@@ -15,6 +16,16 @@ public class NailOrderDto extends NailOrder{
 	
 	public void setNailType(String nailType) {
 		this.nailType = nailType;
+	}
+
+
+	public String getColorName() {
+		return colorName;
+	}
+
+
+	public void setColorName(String colorName) {
+		this.colorName = colorName;
 	}
 	
 	
