@@ -69,7 +69,6 @@
 			
 		</c:forEach>
 				<tr align="center">
-						<td colspan="2">统计</td>
 						<td></td>
 						<td></td>
 						<td>${nailTotalCount.totalNailNumber }</td>
