@@ -5,6 +5,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -208,7 +211,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	@Override
-	public ConcurrentHashMap<String, NailCount> nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity) {
+	public ConcurrentHashMap<Integer, NailCount> nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity) {
 		if(nailColorMap == null || nailColorMap.size() < 1 ){
 			logger.error("nailColorMap为空");
 			return null;
@@ -223,7 +226,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		
 		
 		// 数量统计集合
-		ConcurrentHashMap<String, NailCount> nailCountMap = new ConcurrentHashMap<String, NailCount>();
+		ConcurrentHashMap<Integer, NailCount> nailCountMap = new ConcurrentHashMap<Integer, NailCount>();
 		
 		
 		// 详细配置,判断大小图钉
@@ -282,7 +285,18 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			nailCount.setRequrePieces(String.valueOf(requrePieces));
 		
 			
-			nailCountMap.put(key, nailCount);
+			nailCount.setRgb(key);
+			
+			nailCountMap.put(Integer.valueOf(nailCount.getIndexId()), nailCount);
+			
+			 List<Map.Entry<Integer, NailCount>> list = new ArrayList<Map.Entry<Integer, NailCount>>(nailCountMap.entrySet());
+		        Collections.sort(list, new Comparator<Map.Entry<Integer, NailCount>>() {
+		            public int compare(Map.Entry<Integer, NailCount> o1, Map.Entry<Integer, NailCount> o2) {
+		                return o1.getKey().compareTo(o2.getKey());
+		            }
+		        });
+		        
+		        
 
 			nailNumberDecimal = null;
 			nailBigWeightDecimal = null;
@@ -301,7 +315,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	@Override
-	public NailOrder getById(Integer id) {
+	public NailOrderDto getById(Integer id) {
 		return nailOrderDao.getById(id);
 	}
 
@@ -324,7 +338,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	@Override
-	public void nailTotalCount(ConcurrentHashMap<String, NailCount> nailCountMap, NailOrderVo entity) {
+	public void nailTotalCount(ConcurrentHashMap<Integer, NailCount> nailCountMap, NailOrderVo entity) {
 		
 		NailTotalCount nailTotalCount =  new NailTotalCount();
 		
@@ -342,7 +356,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		BigDecimal nDecimal = new BigDecimal(0);
 		BigDecimal pDecimal = new BigDecimal(0);
 		//BigDecimal bigDecimal = new BigDecimal(0);
-		for (Map.Entry<String,NailCount> map: nailCountMap.entrySet()) {
+		for (Map.Entry<Integer,NailCount> map: nailCountMap.entrySet()) {
 			NailCount nailCount = map.getValue();
 			BigDecimal requreWeightBigDecimal = new BigDecimal(nailCount.getRequreWeight());
 			
@@ -372,6 +386,11 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		logger.info(nailCountDetail);
 		logger.info("------------------------------");
 		entity.setNailCountDetail(nailCountDetail);
+	}
+
+	@Override
+	public NailOrderDto getNailOrder(Map<String, Object> paramMap) {
+		return nailOrderDao.getNailOrder(paramMap);
 	}
 	
 	

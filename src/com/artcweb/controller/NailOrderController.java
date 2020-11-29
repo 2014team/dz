@@ -3,10 +3,14 @@ package com.artcweb.controller;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,14 +31,18 @@ import com.artcweb.baen.NailConfig;
 import com.artcweb.baen.NailCount;
 import com.artcweb.baen.NailOrder;
 import com.artcweb.baen.NailPictureFrame;
+import com.artcweb.baen.NailTotalCount;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
+import com.artcweb.dao.NailOrderDao;
+import com.artcweb.dto.NailOrderDto;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailPictureFrameService;
 import com.artcweb.util.ExcelUtil;
 import com.artcweb.util.FileUtil;
+import com.artcweb.util.GsonUtil;
 import com.artcweb.vo.NailOrderVo;
 
 
@@ -89,7 +97,7 @@ public class NailOrderController {
 	 */
 	@RequestMapping(value = "/edit/{id}")
 	public String toEdit(@PathVariable Integer id, HttpServletRequest request) {
-		NailOrder entity = nailOrderService.getById(id);
+		NailOrderDto entity = nailOrderService.getById(id);
 		request.setAttribute("entity", entity);
 		
 		// 获取图片类型
@@ -101,6 +109,23 @@ public class NailOrderController {
 		request.setAttribute("nailPictureFrameList", nailPictureFrameList);
 				
 		return "/nailorder/edit";
+	}
+	
+	
+	
+	@RequestMapping(value = "/detail/{id}")
+	public String detail(@PathVariable Integer id, HttpServletRequest request) {
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("id", id);
+		NailOrderDto entity = nailOrderService.getNailOrder(paramMap);
+		request.setAttribute("entity", entity);
+		
+		if(StringUtils.isNotBlank(entity.getNailCountDetail())){
+			NailTotalCount nailTotalCount = ( NailTotalCount ) GsonUtil.jsonToBean(entity.getNailCountDetail(),NailTotalCount.class);
+			request.setAttribute("nailTotalCount", nailTotalCount);
+		}
+		
+		return "/nailorder/detail";
 	}
 	
 
@@ -177,7 +202,7 @@ public class NailOrderController {
 			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
 	
 			// 钉子颜色列表统计
-			ConcurrentHashMap<String, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
+			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
 			
 			// 钉子与重量总数统计
 			nailOrderService.nailTotalCount(nailCountMap,entity);
@@ -295,7 +320,7 @@ public class NailOrderController {
 			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
 	
 			// 钉子颜色列表统计
-			ConcurrentHashMap<String, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
+			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
 			
 			// 钉子与重量总数统计
 			nailOrderService.nailTotalCount(nailCountMap,entity);
@@ -452,7 +477,7 @@ public class NailOrderController {
 			result.failure("id不能为空");
 			return result;
 		}
-		NailOrder entity = nailOrderService.get(id);
+		NailOrderDto entity = nailOrderService.getById(id);
 		result.success(entity);
 		return result;
 	}

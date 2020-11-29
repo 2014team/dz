@@ -184,8 +184,9 @@
 		      //预读本地文件示例，不支持ie8
 		      console.log(obj)
 		      obj.preview(function(index, file, result){
-		      if(file){
-		      	$("#imageName").val(file.name);
+		      if(file && file.name && file.name.lastIndexOf(".") != -1){
+		      	var fileNam = file.name.substring(0,file.name.lastIndexOf("."));
+		      	$("#imageName").val(fileNam);
 		      }
 		      
 		      console.log(result,file)
@@ -251,7 +252,7 @@
 					layer.close(loading);
 				
     						if (resp.code == 200) { //这个是从后台取回来的状态值
-								layer.msg(resp.msg, {icon : 6,time : 1000
+								layer.msg(resp.msg, {icon : 6,time : 1500
 								},function(){
 								// 获得frame索引
 									var index = parent.layer.getFrameIndex(window.name);
@@ -265,7 +266,7 @@
 							} else {
 								layer.msg(resp.msg, {
 									icon : 2,
-									time : 1000
+									time : 1500
 								});
 							}
     					},

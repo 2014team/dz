@@ -11,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.NailCount;
 import com.artcweb.baen.NailOrder;
+import com.artcweb.dto.NailOrderDto;
 import com.artcweb.vo.NailOrderVo;
 
 public interface NailOrderService extends BaseService<NailOrder, Integer>{
@@ -23,11 +24,13 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 
 	ConcurrentHashMap<String, Integer> uploadImage(HttpServletRequest request,MultipartFile file, NailOrderVo entity,String uploadDirpath);
 
-	ConcurrentHashMap<String, NailCount> nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity);
+	ConcurrentHashMap<Integer, NailCount> nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity);
 
-	NailOrder getById(Integer id);
+	NailOrderDto getById(Integer id);
 	
 	boolean checkExist(Map<String,Object> paramMap,String id);
 
-	void nailTotalCount(ConcurrentHashMap<String, NailCount> nailCountMap, NailOrderVo entity);
+	void nailTotalCount(ConcurrentHashMap<Integer, NailCount> nailCountMap, NailOrderVo entity);
+	
+	NailOrderDto getNailOrder(Map<String, Object> paramMap);
 }

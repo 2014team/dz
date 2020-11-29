@@ -1,20 +1,33 @@
+
 package com.artcweb.baen;
 
 import java.io.Serializable;
 
-public class NailCount implements Serializable {
+public class NailCount implements Serializable{
+
+	/**
+	* @Fields serialVersionUID : TODO(用一句话描述这个变量表示什么)
+	*/
 	private static final long serialVersionUID = 1L;
 
 	// 序号
 	private String indexId;
+
 	// 钉子数量
 	private String nailNumber;
+
 	// 公斤数（每公斤颗数）
 	private String kilogramNumber;
+
 	// 需要重量
 	private String requreWeight;
+
 	// 需要包数、件数
 	private String requrePieces;
+
+	// rgb值
+	private String rgb;
+	
 
 	public String getIndexId() {
 		return indexId;
@@ -56,5 +69,17 @@ public class NailCount implements Serializable {
 		this.requrePieces = requrePieces;
 	}
 
+	public String getRgb() {
+		return rgb;
+	}
+
+	public void setRgb(String rgb) {
+		this.rgb = rgb;
+	}
+
+	/*@Override
+	public int compareTo(NailCount o) {
+		return this.indexId.compareTo(o.getIndexId());
+	}*/
 
 }

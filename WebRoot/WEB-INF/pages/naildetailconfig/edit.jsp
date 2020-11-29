@@ -27,10 +27,10 @@
 				</label>
 				<div class="layui-input-inline">
 					<input type="text" id="newSerialNumber" name="newSerialNumber"
-						value="${entity.newSerialNumber}"   lay-verify="required"
+						value="${entity.newSerialNumber}"   lay-verify="required|number"
 						autocomplete="off" class="layui-input" maxlength="10">
 				</div>
-				<div class="layui-form-mid layui-word-aux">建议10字符以内</div>
+				<div class="layui-form-mid layui-word-aux">数字  建议10字符以内</div>
 			</div>
 		  <div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label"> <span

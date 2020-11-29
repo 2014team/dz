@@ -16,10 +16,12 @@ public interface NailOrderDao extends BaseDao<NailOrder, Integer> {
 
 	Integer deleteByBatch(String array);
 	
-	NailOrder getById(Integer id);
+	NailOrderDto getById(Integer id);
 	
 	List<NailOrder> checkExist(Map<String, Object> paramMap);
 	
 	List<NailOrder> getByBatch(String array);
+	
+	NailOrderDto getNailOrder(Map<String, Object> paramMap);
 
 }

@@ -72,28 +72,52 @@
 
 	<!-- 查找 -->
 	<select id="get" parameterType="Integer" resultMap="result">
-		select id as id
-		,username as username
-		,mobile as mobile
-		,step as step
-		,current_step as currentStep
-		,image_url as imageUrl
-		,image_name as imageName
-		,comefrom as comefrom
-		,nail_config_id as nailConfigId
-		,nail_pictureframe_Id as nailPictureFrameId
-		,nail_count_detail as nailCountDetail
-		,height as height
-		,width as width
-		,create_date as createDate
-		,update_date as updateDate
-		,nf.nail_type as nailType
-		,tnp.color_name   as colorName
-		 FROM t_nail_order  left join t_nail_config nf on t_nail_order.nail_config_id = nf.id
-		 left join  t_nail_pictureframe tnp on t_nail_order.nail_pictureframe_Id = tnp.id
-		 
-		where t_nail_order.id = #{id}
-		order by id limit 1
+		SELECT t.id AS id
+		,t.username AS username
+		,t.mobile AS mobile
+		,t.step AS step
+		,t.current_step AS currentStep
+		,t.image_url AS imageUrl
+		,t.image_name AS imageName
+		,t.comefrom AS comefrom
+		,t.nail_config_id AS nailConfigId
+		,t.nail_pictureframe_Id AS nailPictureFrameId
+		,t.nail_count_detail AS nailCountDetail
+		,t.height AS height
+		,t.width AS width
+		,t.create_date AS createDate
+		,t.update_date AS updateDate
+		,nf.nail_type AS nailType
+		,tnp.color_name   AS colorName
+		 FROM t_nail_order t LEFT JOIN t_nail_config nf ON t.nail_config_id = nf.id
+		 LEFT JOIN  t_nail_pictureframe tnp ON t.nail_pictureframe_Id = tnp.id
+		where t.id = #{id}
+		order by t.id limit 1
+	</select>
+	
+	<!-- 查找 -->
+	<select id="getNailOrder" parameterType="Map" resultType="com.artcweb.dto.NailOrderDto">
+		SELECT t.id AS id
+		,t.username AS username
+		,t.mobile AS mobile
+		,t.step AS step
+		,t.current_step AS currentStep
+		,t.image_url AS imageUrl
+		,t.image_name AS imageName
+		,t.comefrom AS comefrom
+		,t.nail_config_id AS nailConfigId
+		,t.nail_pictureframe_Id AS nailPictureFrameId
+		,t.nail_count_detail AS nailCountDetail
+		,t.height AS height
+		,t.width AS width
+		,t.create_date AS createDate
+		,t.update_date AS updateDate
+		,nf.nail_type AS nailType
+		,tnp.color_name   AS colorName
+		 FROM t_nail_order t LEFT JOIN t_nail_config nf ON t.nail_config_id = nf.id
+		 LEFT JOIN  t_nail_pictureframe tnp ON t.nail_pictureframe_Id = tnp.id
+		where t.id = #{id}
+		order by t.id limit 1
 	</select>
 	
 	<select id="checkExist" parameterType="Map" resultType="com.artcweb.baen.NailOrder">
@@ -117,26 +141,29 @@
 		order by id limit 1
 	</select>
 	
-	<select id="getById" parameterType="Integer" resultMap="result">
-		select id as id
-		,username as username
-		,mobile as mobile
-		<!-- ,step as step -->
-		,current_step as currentStep
-		,image_url as imageUrl
-		,image_name as imageName
-		,comefrom as comefrom
-		,nail_config_id as nailConfigId
-		,nail_pictureframe_Id as nailPictureFrameId
-		<!-- ,nail_count_detail as nailCountDetail -->
-		,height as height
-		,width as width
-		,create_date as createDate
-		,update_date as updateDate
-		 from
-		`t_nail_order`
-		where id = #{id}
-		order by id limit 1
+	<select id="getById" parameterType="Integer" resultType="com.artcweb.dto.NailOrderDto">
+		
+		SELECT t.id AS id
+		,t.username AS username
+		,t.mobile AS mobile
+		<!-- ,t.step AS step -->
+		,t.current_step AS currentStep
+		,t.image_url AS imageUrl
+		,t.image_name AS imageName
+		,t.comefrom AS comefrom
+		,t.nail_config_id AS nailConfigId
+		,t.nail_pictureframe_Id AS nailPictureFrameId
+		<!-- ,t.nail_count_detail AS nailCountDetail -->
+		,t.height AS height
+		,t.width AS width
+		,t.create_date AS createDate
+		,t.update_date AS updateDate
+		,nf.nail_type AS nailType
+		,tnp.color_name   AS colorName
+		 FROM t_nail_order t LEFT JOIN t_nail_config nf ON t.nail_config_id = nf.id
+		 LEFT JOIN  t_nail_pictureframe tnp ON t.nail_pictureframe_Id = tnp.id
+		where t.id = #{id}
+		order by t.id limit 1
 	</select>
 	
 	

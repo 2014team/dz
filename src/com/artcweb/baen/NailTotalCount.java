@@ -17,7 +17,7 @@ public class NailTotalCount implements Serializable {
 	// 总包数
 	private String totalrPieces;
 	// 详细列表
-	ConcurrentHashMap<String, NailCount> nailCountDetailMap;
+	ConcurrentHashMap<Integer, NailCount> nailCountDetailMap;
 
 	public String getTotalNailNumber() {
 		return totalNailNumber;
@@ -34,10 +34,10 @@ public class NailTotalCount implements Serializable {
 	public void setTotalWeight(String totalWeight) {
 		this.totalWeight = totalWeight;
 	}
-	public ConcurrentHashMap<String, NailCount> getNailCountDetailMap() {
+	public ConcurrentHashMap<Integer, NailCount> getNailCountDetailMap() {
 		return nailCountDetailMap;
 	}
-	public void setNailCountDetailMap(ConcurrentHashMap<String, NailCount> nailCountDetailMap) {
+	public void setNailCountDetailMap(ConcurrentHashMap<Integer, NailCount> nailCountDetailMap) {
 		this.nailCountDetailMap = nailCountDetailMap;
 	}
 
