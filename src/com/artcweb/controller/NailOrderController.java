@@ -491,35 +491,50 @@ public class NailOrderController {
 		NailOrderDto entity = nailOrderService.getNailOrder(paramMap);
 		
 		// 导出订单详情Excel
-		nailOrderService.exportExcel(request,response,entity);
+		//nailOrderService.exportExcel(request,response,entity);
 		
 		
-//	List<Map<String,Object>> rows= new ArrayList<Map<String,Object>>();	
-//	Map<String,Object> map =  new HashMap<String, Object>();
-//	NailOrderExport n = new NailOrderExport();
-//	n.setIndexId("1");
-//	n.setNailNumber("3");
-//	n.setRequrePieces("4");
-//	map.put("indexId", n.getIndexId());
-//	NailOrderExport n1 = new NailOrderExport();
-//	n1.setIndexId("1");
-//	n1.setNailNumber("3");
-//	n1.setRequrePieces("4");
-//	map.put("indexId", n1.getIndexId());
-//	NailOrderExport n2 = new NailOrderExport();
-//	n2.setIndexId("1");
-//	n2.setNailNumber("3");
-//	n2.setRequrePieces("4");
-//	map.put("indexId", n2.getIndexId());
-//	rows.add(map);
-//	
-//	
-//		
-//	String [][] columnNames ={{"编号","数据","重量","包数","项目唯一编码"}, {"indexId","BI_PID","BI_LEVEL","BI_NAME","BI_CODE"}};
-//	String [] columnWidth ={"5","20","20","",""}; 
-//	String excelName="XXXX统计报表";
-//      ExportExcelUtil.exportExcel(request, response, columnNames, columnWidth, rows, excelName);
-//		
+	List<Map<String,Object>> rows= new ArrayList<Map<String,Object>>();	
+	Map<String,Object> map =  new HashMap<String, Object>();
+	NailOrderExport n = new NailOrderExport();
+	n.setIndexId("a");
+	n.setNailNumber("3");
+	n.setRequrePieces("4");
+	map.put("indexId", n.getIndexId());
+	
+	NailOrderExport n1 = new NailOrderExport();
+	n1.setIndexId("b");
+	n1.setNailNumber("3");
+	n1.setRequrePieces("4");
+	map.put("BI_PID", n1.getIndexId());
+	
+	NailOrderExport n2 = new NailOrderExport();
+	n2.setIndexId("c");
+	n2.setNailNumber("3");
+	n2.setRequrePieces("4");
+	map.put("BI_LEVEL", n2.getIndexId());
+	
+	NailOrderExport n3 = new NailOrderExport();
+	n3.setIndexId("d");
+	n3.setNailNumber("3");
+	n3.setRequrePieces("4");
+	map.put("BI_NAME", n3.getIndexId());
+	
+	NailOrderExport n4 = new NailOrderExport();
+	n4.setIndexId("e");
+	n4.setNailNumber("3");
+	n4.setRequrePieces("4");
+	map.put("BI_CODE", n4.getIndexId());
+	
+	rows.add(map);
+	
+	
+		
+	String [][] columnNames ={{"项目唯一编码","编号","数据","重量","包数"}, {"indexId","BI_PID","BI_LEVEL","BI_NAME","BI_CODE"}};
+	String [] columnWidth ={"20","20","20","",""}; 
+	String excelName="XXXX统计报表";
+      ExportExcelUtil.exportExcel(request, response, columnNames, columnWidth, rows, excelName);
+		
 		
 	}
 	

@@ -11,14 +11,13 @@ import cn.afterturn.easypoi.excel.annotation.ExcelTarget;
 @ExcelTarget(value = "slaughterDataModel")
 public class NailOrderExport {
 	 
-	//private  byte[] ImageUrl;
-	@Excel(name = "图片",needMerge=true,mergeRely={0,1,2,3},mergeVertical=true,imageType=1,type=2)
+	@Excel(name = "图片", needMerge=true,mergeVertical=true,mergeRely={1}, imageType=1,type=2)
 	private  String imageUrl;
 	
-	@Excel(name = "编号",mergeRely={1},mergeVertical=true)
+	@Excel(name = "编号")
 	private String indexId;
 	// 钉子数量
-	@Excel(name = "数量" ,mergeRely={1},mergeVertical=true)
+	@Excel(name = "数量")
 	private String nailNumber;
 
 	// 公斤数（每公斤颗数）

@@ -1,16 +1,25 @@
 package com.artcweb.util;
  
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.Map;
- 
+
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
+import org.apache.poi.hssf.usermodel.HSSFPatriarch;
+import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.hssf.util.CellReference;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
+import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Row;
@@ -18,8 +27,11 @@ import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
 import org.apache.poi.xssf.streaming.SXSSFWorkbook;
 import org.apache.poi.xssf.usermodel.XSSFCellStyle;
+import org.apache.poi.xssf.usermodel.XSSFClientAnchor;
+import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  
 /**
  * 导出到excel表工具
@@ -176,7 +188,42 @@ public class ExportExcelUtil  {
 			row.setHeight((short)(2 * 256));
 			for(int j = 0 ;j < columnNames[i-1].length;j++){
 				cell = row.createCell(j);
-				cell.setCellValue(columnNames[i-1][j]);
+				if(i==1 && j==0){
+					try {
+						
+						
+						 BufferedImage  bufferImg = ImageIO.read(new File("E:\\Workspaces\\MyEclipse\\dz\\WebRoot\\upload\\nail\\2020\\11\\S520-陈鹏0817.gif"));
+						// ImageIO.write(bufferImg, "jpg", byteArrayOut);
+						             
+						 ByteArrayOutputStream out = new ByteArrayOutputStream();
+					        try {
+					            ImageIO.write(bufferImg, "png", out);
+					        } catch (IOException e) {
+					            System.out.println(e.getMessage());
+					        }
+					        byte[] aa =  out.toByteArray();
+						 
+						                                         
+						//调用Drawing对象进行绘画操作
+						XSSFDrawing drawingPatriarch = (XSSFDrawing) sheet.createDrawingPatriarch();
+						//使用Anchor进行图片位置等方面的调节
+						XSSFClientAnchor anchor = new XSSFClientAnchor(300, 75, 700, 250, (short) 0, i, (short) 1, 6);
+						//product.getBarcodeImg()是一个byte[]
+						//根据anchor和图片的byte[]来进行创建
+						drawingPatriarch.createPicture(anchor, workbook.addPicture(aa, XSSFWorkbook.PICTURE_TYPE_JPEG));
+						
+					}
+					
+					catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					};
+					
+				}else{
+					cell.setCellValue(columnNames[i-1][j]);
+					
+				}
+				
 				cell.setCellStyle(headerStyle);
 				
 			}
@@ -191,14 +238,13 @@ public class ExportExcelUtil  {
 		Object obj = null;
 		
 		for (int i = 0; i < rows.size(); i++) {
-			
+			Row dataRow = sheet.createRow(columnNames.length+1+ i);
+			if(i ==0){
+				sheet.addMergedRegion(new CellRangeAddress(1, 6, 0, 0)); // 合并大标题行
+			}
 			
 			Map<String,Object> project = rows.get(i);
 			for (int j = 0; j <names.length; j++) {
-				Row dataRow = sheet.createRow(columnNames.length+1+ i);
-				if(j == 1){
-					sheet.addMergedRegion(new CellRangeAddress(2, 9, 0, 1)); // 合并大标题行
-				}
 				Cell dataCell = dataRow.createCell(j);
 				dataCell.setCellStyle(dataStyle);
 				obj = project.get(names[j]);
@@ -207,5 +253,6 @@ public class ExportExcelUtil  {
 		}
 		
 		return workbook;
+
 	}
 }
