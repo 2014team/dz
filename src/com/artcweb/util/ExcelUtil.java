@@ -1,25 +1,16 @@
 package com.artcweb.util;
 
-import cn.afterturn.easypoi.excel.ExcelExportUtil;
-import cn.afterturn.easypoi.excel.entity.ExportParams;
-
-
-import org.apache.poi.ss.usermodel.Workbook;
-
-import com.artcweb.baen.NailOrder;
-import com.artcweb.baen.NailOrderExport;
-
-import javax.imageio.ImageIO;
-import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
+
+import javax.imageio.ImageIO;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.poi.ss.usermodel.Workbook;
 
 /**
  * excel工具类
@@ -111,36 +102,36 @@ public class ExcelUtil {
     /**
      * 获取Workbook对象
      *
-     * @param pigList    
+     * @param nailTotalCount    
      * @return 文件下载
-     */
-    public static Workbook exportPictureCode(List<NailOrder> pigList) {
-        List<NailOrderExport> list = new ArrayList<>();
-        
-        for (NailOrder entity : pigList) {
-        	NailOrderExport e = new NailOrderExport();
-        	e.setUsername(entity.getUsername());
-//        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-//        	e.setCourseCode(item.getCourseCode());
-//        	e.setCourseName(item.getCourseName());
-//        	String codeEndDate = null;
-//        	if(null != item.getCodeEndDate()){
-//        		codeEndDate = sdf.format(item.getCodeEndDate());
-//        	}
-//        	e.setCodeEndDate(codeEndDate);
-//        	e.setIsUseName(item.getIsUseName());
-//        	e.setCodeBatch(item.getCodeBatch());
-//            String s = item.getCourseCode();
-//
-//            QrcodeGenerator generate = new SimpleQrcodeGenerator().generate(s);
-//                BufferedImage image = generate.getImage();
-//            byte[] pngs = imageToBytes(image);
-//            e.setQrCode(pngs);
-            list.add(e);
-		}
-        
-        return ExcelExportUtil.exportExcel(new ExportParams(), NailOrderExport.class, list);
-    }
+//     */
+//    public static Workbook exportPictureCode(NailTotalCount nailTotalCount) {
+//        List<NailOrderExport> list = new ArrayList<>();
+//        
+//        for (NailOrder entity : nailTotalCount) {
+//        	NailOrderExport e = new NailOrderExport();
+//        	e.setUsername(entity.getUsername());
+////        	SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+////        	e.setCourseCode(item.getCourseCode());
+////        	e.setCourseName(item.getCourseName());
+////        	String codeEndDate = null;
+////        	if(null != item.getCodeEndDate()){
+////        		codeEndDate = sdf.format(item.getCodeEndDate());
+////        	}
+////        	e.setCodeEndDate(codeEndDate);
+////        	e.setIsUseName(item.getIsUseName());
+////        	e.setCodeBatch(item.getCodeBatch());
+////            String s = item.getCourseCode();
+////
+////            QrcodeGenerator generate = new SimpleQrcodeGenerator().generate(s);
+////                BufferedImage image = generate.getImage();
+////            byte[] pngs = imageToBytes(image);
+////            e.setQrCode(pngs);
+//            list.add(e);
+//		}
+//        
+//        return ExcelExportUtil.exportExcel(new ExportParams(), NailOrderExport.class, list);
+//    }
 
     /**
      * BufferedImage转byte[]

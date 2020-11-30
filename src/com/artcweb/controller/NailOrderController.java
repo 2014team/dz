@@ -4,13 +4,10 @@ package com.artcweb.controller;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
@@ -30,17 +27,17 @@ import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.NailConfig;
 import com.artcweb.baen.NailCount;
 import com.artcweb.baen.NailOrder;
+import com.artcweb.baen.NailOrderExport;
 import com.artcweb.baen.NailPictureFrame;
 import com.artcweb.baen.NailTotalCount;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
-import com.artcweb.dao.NailOrderDao;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailPictureFrameService;
-import com.artcweb.util.ExcelUtil;
+import com.artcweb.util.ExportExcelUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
 import com.artcweb.vo.NailOrderVo;
@@ -458,15 +455,6 @@ public class NailOrderController {
 		return result;
 	}
 	
-	
-	@RequestMapping("/export")
-	public void printing(HttpServletResponse response,HttpServletRequest request) {
-		List<NailOrder> nailOrderList = nailOrderService.select(new HashMap<String, Object>());
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-		String fileName = sdf.format(new Date());
-	    ExcelUtil.writeExcel(response, fileName, ExcelUtil.exportPictureCode(nailOrderList));
-	}
-	
 	@ResponseBody
 	@RequestMapping(value = "/get", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
@@ -481,6 +469,60 @@ public class NailOrderController {
 		result.success(entity);
 		return result;
 	}
+	
+	/**
+	* @Title: export
+	* @Description: 清单导出
+	* @param response
+	* @param request
+	*/
+	@RequestMapping("/export/{id}")
+	public void export(@PathVariable String id ,HttpServletResponse response,HttpServletRequest request) {
+		if(StringUtils.isEmpty(id)){
+			logger.error("id参数错误,不能为空");
+			return ;
+			
+		}
+		
+		
+		// 获取清单详情
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("id", id);
+		NailOrderDto entity = nailOrderService.getNailOrder(paramMap);
+		
+		// 导出订单详情Excel
+		nailOrderService.exportExcel(request,response,entity);
+		
+		
+//	List<Map<String,Object>> rows= new ArrayList<Map<String,Object>>();	
+//	Map<String,Object> map =  new HashMap<String, Object>();
+//	NailOrderExport n = new NailOrderExport();
+//	n.setIndexId("1");
+//	n.setNailNumber("3");
+//	n.setRequrePieces("4");
+//	map.put("indexId", n.getIndexId());
+//	NailOrderExport n1 = new NailOrderExport();
+//	n1.setIndexId("1");
+//	n1.setNailNumber("3");
+//	n1.setRequrePieces("4");
+//	map.put("indexId", n1.getIndexId());
+//	NailOrderExport n2 = new NailOrderExport();
+//	n2.setIndexId("1");
+//	n2.setNailNumber("3");
+//	n2.setRequrePieces("4");
+//	map.put("indexId", n2.getIndexId());
+//	rows.add(map);
+//	
+//	
+//		
+//	String [][] columnNames ={{"编号","数据","重量","包数","项目唯一编码"}, {"indexId","BI_PID","BI_LEVEL","BI_NAME","BI_CODE"}};
+//	String [] columnWidth ={"5","20","20","",""}; 
+//	String excelName="XXXX统计报表";
+//      ExportExcelUtil.exportExcel(request, response, columnNames, columnWidth, rows, excelName);
+//		
+		
+	}
+	
 	
 	
 }

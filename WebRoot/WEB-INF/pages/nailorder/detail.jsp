@@ -6,8 +6,10 @@
   
    <body>
    
-   <h2 style="text-align: center; margin: 5px">图钉画数量清单(${entity.nailType})</h2>
-	<table class="layui-table">
+   <h2 style="text-align: center; margin: 5px">图钉画数量清单
+ 	<a href="/admin/center/nailorder/export/${entity.id}.do"> <button style="float:left" class="layui-btn layui-btn-sm"><i class="layui-icon">&#xe67d;</i>下载清单</button></a>
+	</h2>
+	<table class="layui-table";>
 		<thead >
 			<tr >
 				<th colspan="2"></th>
@@ -22,7 +24,9 @@
 			<c:choose>
 				<c:when test="${xh.index ==0}">
 					<tr align="center">
-						<td rowspan="4" colspan="2"><img src="${entity.imageUrl }"></td>
+						<td rowspan="4" colspan="2"><img src="${entity.imageUrl }" width="200">
+						<br/>${entity.imageName }
+						</td>
 						<td><button w style='background-color:rgb(${item.value.rgb});width: 80px;height: 25px;border: 0px'></button></td>
 						<td>${item.value.indexId}</td>
 						<td>${item.value.nailNumber}</td>
@@ -36,7 +40,9 @@
 							<c:choose>
 								<c:when test="${xh.index == 4}">
 									<td rowspan="4" colspan="2">
-									画框颜色: ${entity.colorName }
+									<!-- 钉子类型： -->${entity.nailType}<br/>
+									<!-- 画框颜色： -->${entity.colorName }<br/>
+									<!-- 买家名称： -->${entity.username }
 									</td>
 								</c:when>
 								<c:otherwise>

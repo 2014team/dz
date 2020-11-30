@@ -103,7 +103,8 @@
 
 			<div class="layui-form-item">
 				<label for="L_repass" class="layui-form-label"> </label>
-				<button class="layui-btn" lay-filter="save" lay-submit="">保存并下载</button>
+				<button class="layui-btn" lay-filter="save" lay-submit="">保存并下载图钉清单</button>
+				<button class="layui-btn" lay-filter="save" lay-submit="">仅保存</button>
 			</div>
 			
 		</form>

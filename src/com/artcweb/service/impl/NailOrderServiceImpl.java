@@ -5,19 +5,24 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,16 +33,21 @@ import com.artcweb.baen.NailConfig;
 import com.artcweb.baen.NailCount;
 import com.artcweb.baen.NailDetailConfig;
 import com.artcweb.baen.NailOrder;
+import com.artcweb.baen.NailOrderExport;
 import com.artcweb.baen.NailTotalCount;
 import com.artcweb.cache.DateMap;
 import com.artcweb.dao.NailOrderDao;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.NailImageTypeEnum;
 import com.artcweb.service.NailOrderService;
+import com.artcweb.util.ExcelUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
 import com.artcweb.util.ImageUtil;
 import com.artcweb.vo.NailOrderVo;
+
+import cn.afterturn.easypoi.excel.ExcelExportUtil;
+import cn.afterturn.easypoi.excel.entity.ExportParams;
 
 @Service
 public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> implements NailOrderService {
@@ -146,7 +156,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			for (int y = 0; y < ih; y++) {
 				for (int x = 0; x < iw; x++) {
 					int pixel = image.getRGB(x, y);
-					int alpha = (pixel >> 24) & 0xFF;
+					//int alpha = (pixel >> 24) & 0xFF;
 					
 					int red = (pixel >> 16) & 0xFF;
 					int green = (pixel >> 8) & 0xFF;
@@ -392,6 +402,91 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	public NailOrderDto getNailOrder(Map<String, Object> paramMap) {
 		return nailOrderDao.getNailOrder(paramMap);
 	}
-	
-	
+
+	@Override
+	public List<NailCount> getNailCountList(NailOrderDto entity) {
+		
+		List<NailCount> nailCountList = null;
+		if(null != entity){
+			// 钉子统计详情信息
+			if(StringUtils.isNotBlank(entity.getNailCountDetail())){
+				NailTotalCount nailTotalCount = getNailNailTotalCount(entity);
+				
+				// 详细列表
+				if(null != nailTotalCount && null != nailTotalCount.getNailCountDetailMap() && nailTotalCount.getNailCountDetailMap().size() > 0){
+					List<Map.Entry<Integer, NailCount>> list = new ArrayList<Map.Entry<Integer, NailCount>>(nailTotalCount.getNailCountDetailMap().entrySet());
+			        Collections.sort(list, new Comparator<Map.Entry<Integer, NailCount>>() {
+			            public int compare(Map.Entry<Integer, NailCount> o1, Map.Entry<Integer, NailCount> o2) {
+			                return o1.getKey().compareTo(o2.getKey());
+			            }
+			        });
+			        
+			        nailCountList = new ArrayList<NailCount>();
+			        if(null != list && list.size() > 0){
+			        	for (Entry<Integer, NailCount> entry : list) {
+			        		nailCountList.add(entry.getValue());
+						}
+			        }
+				}
+			}
+		}
+		return nailCountList;
+	}
+
+	@Override
+	public void exportExcel(HttpServletRequest request,HttpServletResponse response,NailOrderDto entity) {
+		 List<NailCount> nailCountList = getNailCountList( entity);
+		 List<NailOrderExport> nailOrderExportList = new ArrayList<NailOrderExport>();
+		 if(null  != nailCountList && nailCountList.size() > 0){
+			 String imageUrl = entity.getImageUrl();
+				 if(StringUtils.isEmpty(imageUrl)){
+					logger.error("图片地址为空,imageUrl="+imageUrl);
+					 return;
+				 }
+			 
+		        // excel处理
+			 for (NailCount nailCount : nailCountList) {
+				 NailOrderExport nailOrderExport = new NailOrderExport();
+				 nailOrderExport.setIndexId(nailCount.getIndexId());
+				 nailOrderExport.setImageUrl(imageUrl);
+				 nailOrderExport.setNailNumber(nailCount.getNailNumber());
+				 nailOrderExport.setRequreWeight(nailCount.getRequreWeight());
+				 nailOrderExport.setRequrePieces(nailCount.getRequrePieces());
+				 nailOrderExportList.add(nailOrderExport);
+				 nailOrderExport = null;
+			}
+			 
+			 NailTotalCount nailTotalCount = getNailNailTotalCount(entity);
+			 // 统计行处理
+			 NailOrderExport nailOrderExport = new NailOrderExport();
+			 nailOrderExport.setIndexId("");
+			 nailOrderExport.setNailNumber(nailTotalCount.getTotalNailNumber());
+			 nailOrderExport.setRequreWeight(nailTotalCount.getTotalWeight());
+			 nailOrderExport.setRequrePieces(nailTotalCount.getTotalrPieces());
+			 nailOrderExportList.add(nailOrderExport);
+			 nailOrderExport = null;
+			 
+		 	//下载文件名称处理
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+			String fileName = sdf.format(new Date());
+			
+			Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(), NailOrderExport.class, nailOrderExportList);
+			ExcelUtil.writeExcel(response, fileName, workbook);
+		 }
+		 
+		
+	}
+
+	@Override
+	public NailTotalCount getNailNailTotalCount(NailOrderDto entity) {
+		NailTotalCount nailTotalCount= null;
+		if(null != entity){
+			// 钉子统计详情信息
+			if(StringUtils.isNotBlank(entity.getNailCountDetail())){
+				 nailTotalCount = ( NailTotalCount ) GsonUtil.jsonToBean(entity.getNailCountDetail(),NailTotalCount.class);
+			}
+		}
+		return nailTotalCount;
+	}
+
 }

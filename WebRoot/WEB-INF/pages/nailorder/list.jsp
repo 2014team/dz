@@ -163,7 +163,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}*/, {
 					align:'left', toolbar: '#rowBar',
 					title : '操作',
-					width: 180
+					width: 160
 					
 				}
 
