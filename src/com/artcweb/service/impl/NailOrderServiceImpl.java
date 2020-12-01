@@ -110,10 +110,9 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 									logger.info("物理删除图片结果 = "+deleteResult);
 								}
 							}
-							
-							
-							
-							
+						}else{
+							boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
+							logger.info("物理删除图片结果 = "+deleteResult);
 						}
 						
 					}
@@ -333,19 +332,31 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	@Override
 	public boolean checkExist(Map<String,Object> paramMap,String id) {
 		List<NailOrder> nailOrderList = nailOrderDao.checkExist(paramMap);
-		boolean  result= true;
 		if(null != nailOrderList && nailOrderList.size() > 0){
 			if(StringUtils.isEmpty(id)){
-				return result;
+				return true;
 			}
 			for (NailOrder nailOrder : nailOrderList) {
 				Integer idSource = nailOrder.getId();
 				if(!String.valueOf(idSource).equals(id)){
-					return result;
+					return true;
 				}
 			}
 		}
 		return false;
+	}
+	@Override
+	public boolean checkImageExist(Map<String,Object> paramMap,String id) {
+		List<NailOrder> nailOrderList = nailOrderDao.checkExist(paramMap);
+		if(null != nailOrderList && nailOrderList.size() > 0){
+			for (NailOrder nailOrder : nailOrderList) {
+				Integer idSource = nailOrder.getId();
+				if(!String.valueOf(idSource).equals(id)){
+					return false;
+				}
+			}
+		}
+		return true;
 	}
 
 	@Override

@@ -423,7 +423,7 @@ public class NailOrderController {
 				// 判断是否有其他数据引用图片
 				Map<String,Object> tparamMap  = new  HashMap<String, Object>();
 				tparamMap.put("imageUrl", sourceImageUrl);
-				boolean checkExist = nailOrderService.checkExist(tparamMap,String.valueOf(id));
+				boolean checkExist = nailOrderService.checkImageExist(tparamMap,String.valueOf(id));
 				if(checkExist){// 没有引用删除
 					boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
 					logger.info("物理删除图片结果 = "+deleteResult);
