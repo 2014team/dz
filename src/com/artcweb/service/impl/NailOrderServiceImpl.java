@@ -41,6 +41,7 @@ import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.NailImageTypeEnum;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.util.ExcelUtil;
+import com.artcweb.util.ExportExcelUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
 import com.artcweb.util.ImageUtil;
@@ -436,45 +437,54 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	@Override
 	public void exportExcel(HttpServletRequest request,HttpServletResponse response,NailOrderDto entity) {
 		 List<NailCount> nailCountList = getNailCountList( entity);
-		 List<NailOrderExport> nailOrderExportList = new ArrayList<NailOrderExport>();
+		 if(null != nailCountList && nailCountList.size() > 0){
+			 List<Map<String,Object>> rows = getNailCount(nailCountList,entity);	
+			 String[] columnWidth = getColumnWidth();
+			 String[][] columnNames = getColumnNames();
+			 String excelName = entity.getImageName();
+			 ExportExcelUtil.exportExcel(request, response, columnNames, columnWidth, rows, excelName,entity);
+		 }
+		 
+	}
+		 
+
+	private List<Map<String, Object>> getNailCount(List<NailCount> nailCountList,NailOrderDto entity) {
+		 List<Map<String, Object>>  result = null;
 		 if(null  != nailCountList && nailCountList.size() > 0){
+			 result = new ArrayList<Map<String, Object>>(); 
 			 String imageUrl = entity.getImageUrl();
 				 if(StringUtils.isEmpty(imageUrl)){
 					logger.error("图片地址为空,imageUrl="+imageUrl);
-					 return;
+					 return result;
 				 }
-			 
-		        // excel处理
-			 for (NailCount nailCount : nailCountList) {
-				 NailOrderExport nailOrderExport = new NailOrderExport();
-				 nailOrderExport.setIndexId(nailCount.getIndexId());
-				 nailOrderExport.setImageUrl(imageUrl);
-				 nailOrderExport.setNailNumber(nailCount.getNailNumber());
-				 nailOrderExport.setRequreWeight(nailCount.getRequreWeight());
-				 nailOrderExport.setRequrePieces(nailCount.getRequrePieces());
-				 nailOrderExportList.add(nailOrderExport);
-				 nailOrderExport = null;
-			}
-			 
-			 NailTotalCount nailTotalCount = getNailNailTotalCount(entity);
-			 // 统计行处理
-			 NailOrderExport nailOrderExport = new NailOrderExport();
-			 nailOrderExport.setIndexId("");
-			 nailOrderExport.setNailNumber(nailTotalCount.getTotalNailNumber());
-			 nailOrderExport.setRequreWeight(nailTotalCount.getTotalWeight());
-			 nailOrderExport.setRequrePieces(nailTotalCount.getTotalrPieces());
-			 nailOrderExportList.add(nailOrderExport);
-			 nailOrderExport = null;
-			 
-		 	//下载文件名称处理
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
-			String fileName = sdf.format(new Date());
-			
-			Workbook workbook = ExcelExportUtil.exportExcel(new ExportParams(), NailOrderExport.class, nailOrderExportList);
-			ExcelUtil.writeExcel(response, fileName, workbook);
-		 }
-		 
-		
+				 
+				 for (NailCount nailCount : nailCountList) {
+					 Map<String, Object> map = new HashMap<String, Object>();
+					 map.put("indexId", nailCount.getIndexId());
+					 map.put("nailNumber", nailCount.getNailNumber());
+					 map.put("requreWeight", nailCount.getRequreWeight());
+					 map.put("requrePieces", nailCount.getRequrePieces());
+					 
+					 result.add(map);
+					 map = null;
+				}
+				 
+				// 统计行处理
+				 Map<String, Object> map = new HashMap<String, Object>();
+				 NailTotalCount nailTotalCount = getNailNailTotalCount(entity);
+				 if(null != nailTotalCount){
+					 map.put("indexId", "");
+					 map.put("nailNumber", nailTotalCount.getTotalNailNumber());
+					 map.put("requreWeight", nailTotalCount.getTotalWeight());
+					 map.put("requrePieces", nailTotalCount.getTotalrPieces());
+					 result.add(map);
+					 map = null;
+				 }
+				 
+				 
+				return result; 
+		 } 
+		return null;
 	}
 
 	@Override
@@ -487,6 +497,20 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			}
 		}
 		return nailTotalCount;
+	}
+
+	
+	public String[] getColumnWidth(){
+		String [] columnWidth ={"20","28","28","28","28"}; 
+		return columnWidth;
+	}
+	
+	public String[][] getColumnNames(){
+		String[][] columnNames =  new String[][] {
+			{" ","编号","数据","重量","包数"}, 
+			{"","indexId","nailNumber","requreWeight","requrePieces"}
+			};
+		return columnNames;
 	}
 
 }

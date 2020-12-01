@@ -1,10 +1,12 @@
 package com.artcweb.util;
  
 import java.awt.image.BufferedImage;
+import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.net.URLEncoder;
 import java.util.List;
 import java.util.Map;
 
@@ -12,14 +14,11 @@ import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.poi.hssf.usermodel.HSSFClientAnchor;
-import org.apache.poi.hssf.usermodel.HSSFPatriarch;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.hssf.util.CellReference;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.poi.hssf.usermodel.HSSFFont;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
-import org.apache.poi.ss.usermodel.Drawing;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.PrintSetup;
 import org.apache.poi.ss.usermodel.Row;
@@ -32,33 +31,55 @@ import org.apache.poi.xssf.usermodel.XSSFDrawing;
 import org.apache.poi.xssf.usermodel.XSSFFont;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
- 
-/**
- * 导出到excel表工具
- * 野绅士
- * 2018-10-31
- */
- 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.artcweb.dto.NailOrderDto;
+
+
 public class ExportExcelUtil  {
- 
+	
+	private static Logger logger = LoggerFactory.getLogger(ExportExcelUtil.class);
+	
  
 	public ExportExcelUtil() {
 		super();
 	}
 	
+    private static OutputStream getOutputStream(String fileName, HttpServletResponse response,boolean openFlag) {
+        try {
+        	if(StringUtils.isEmpty(fileName)){
+        		fileName = String.valueOf(System.currentTimeMillis());
+        	}
+			fileName = URLEncoder.encode(fileName, "UTF-8");
+			if (openFlag) {
+				response.setContentType("application/vnd.ms-excel");
+				response.setCharacterEncoding("utf8");
+				response.setContentType("octets/stream");
+				response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xls");
+				response.setHeader("Pragma", "public");
+				response.setHeader("Cache-Control", "no-store");
+				response.addHeader("Cache-Control", "max-age=0");
+			} else {
+				response.addHeader("Content-Disposition", "attachment;filename=" + new String(fileName+".xlsx"));
+				response.setContentType("application/vnd.ms-excel;charset=utf8");
+			}
+            return response.getOutputStream();
+        } catch (IOException e) {
+        	e.printStackTrace();
+            logger.error("导出excel表格失败!");
+        }
+        return null;
+    }
 	
-	public static void exportExcel(HttpServletRequest request, HttpServletResponse response,String[][] columnNames,String[] columnWidth,List<Map<String,Object>> rows,String excelName) {
+	
+	public static void exportExcel(HttpServletRequest request, HttpServletResponse response,String[][] columnNames,String[] columnWidth,List<Map<String,Object>> rows,String excelName,NailOrderDto entity) {
 		try {					
-			SXSSFWorkbook workbook = createSXSSFWorkbook(columnNames,columnWidth,rows,excelName);
-			String fileName = excelName +".xlsx";
-			fileName = new String(fileName.getBytes("GBK"), "ISO-8859-1"); // 取消乱码
-			response.setContentType("octets/stream");
-			response.addHeader("Content-Disposition", "attachment;filename="
-					+ fileName);
-			OutputStream out = response.getOutputStream();
-			workbook.write(out);
-			out.close();
-			System.out.println("成功导出Excel，excel名为："+excelName);
+			SXSSFWorkbook workbook = createSXSSFWorkbook(columnNames,columnWidth,rows,excelName,entity,request);
+
+			OutputStream outputStream = getOutputStream(excelName, response, false);
+			BufferedOutputStream bufferedOutPut = new BufferedOutputStream(outputStream);
+            workbook.write(bufferedOutPut);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -66,7 +87,7 @@ public class ExportExcelUtil  {
  
  
 	
-	private static SXSSFWorkbook createSXSSFWorkbook(String[][] columnNames, String[] columnWidth, List<Map<String,Object>> rows,String excelName){
+	private static SXSSFWorkbook createSXSSFWorkbook(String[][] columnNames, String[] columnWidth, List<Map<String,Object>> rows,String excelName,NailOrderDto entity,HttpServletRequest request){
 		SXSSFWorkbook workbook = new SXSSFWorkbook(); // 创建工作薄，相当于一个文件
  
 		Sheet sheet = workbook.createSheet(); // 创建一个表
@@ -90,18 +111,25 @@ public class ExportExcelUtil  {
 		Font titleFont = workbook.createFont();
 		titleFont.setFontHeightInPoints((short) 12); // 字体大小
 		titleFont.setFontName("宋体");
+		titleFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
 		titleStyle.setFont(titleFont);
  
-		// 填报单位的样式
+		
 		CellStyle titleStyle_2 = workbook.createCellStyle();
-		titleStyle_2.setAlignment(XSSFCellStyle.ALIGN_RIGHT); // 水平居右
+		titleStyle_2.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 水平居中
 		titleStyle_2.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER); // 垂直居中
-		// 标题字体
+		titleStyle_2.setBorderBottom(XSSFCellStyle.BORDER_THIN); // 下边框
+		titleStyle_2.setBorderLeft(XSSFCellStyle.BORDER_THIN); // 左边框
+		titleStyle_2.setBorderTop(XSSFCellStyle.BORDER_THIN); // 上边框
+		titleStyle_2.setBorderRight(XSSFCellStyle.BORDER_THIN); // 右边框
+		titleStyle_2.setWrapText(true); // 设置多行显示
+		// 表头字体
 		Font titleFont_2 = workbook.createFont();
 		titleFont_2.setFontHeightInPoints((short) 11);
 		titleFont_2.setFontName("宋体");
+		titleFont_2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
 		titleStyle_2.setFont(titleFont_2);
- 
+		
 		// 填报单位的样式
 		CellStyle titleStyle_u = workbook.createCellStyle();
 		titleStyle_u.setAlignment(XSSFCellStyle.ALIGN_LEFT); // 水平居左
@@ -113,7 +141,26 @@ public class ExportExcelUtil  {
 		titleFont_u.setFontName("宋体");
 		titleStyle_u.setFont(titleFont_u);
  
-		// 表头样式
+		// 普通文本加粗样式
+		CellStyle headerStyle_b = workbook.createCellStyle();
+		headerStyle_b.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 水平居中
+		headerStyle_b.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER); // 垂直居中
+		headerStyle_b.setBorderBottom(XSSFCellStyle.BORDER_THIN); // 下边框
+		headerStyle_b.setBorderLeft(XSSFCellStyle.BORDER_THIN); // 左边框
+		headerStyle_b.setBorderTop(XSSFCellStyle.BORDER_THIN); // 上边框
+		headerStyle_b.setBorderRight(XSSFCellStyle.BORDER_THIN); // 右边框
+		headerStyle_b.setWrapText(true); // 设置多行显示
+		//这两句话是表示将表头单元格格式设置为文本型，在后面只要调用-----.setDataFormat(format.getFormat("@"))的方法就可以将数据设置为文本型。
+		DataFormat format = workbook.createDataFormat();    
+		headerStyle_b.setDataFormat(format.getFormat("@"));
+		// 表头字体
+		Font headerFont_b = workbook.createFont();
+		headerFont_b.setFontHeightInPoints((short) 9);
+		headerFont_b.setFontName("宋体");
+		headerFont_b.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
+		headerStyle_b.setFont(headerFont_b);
+
+		
 		CellStyle headerStyle = workbook.createCellStyle();
 		headerStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 水平居中
 		headerStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER); // 垂直居中
@@ -122,9 +169,6 @@ public class ExportExcelUtil  {
 		headerStyle.setBorderTop(XSSFCellStyle.BORDER_THIN); // 上边框
 		headerStyle.setBorderRight(XSSFCellStyle.BORDER_THIN); // 右边框
 		headerStyle.setWrapText(true); // 设置多行显示
-		//这两句话是表示将表头单元格格式设置为文本型，在后面只要调用-----.setDataFormat(format.getFormat("@"))的方法就可以将数据设置为文本型。
-		DataFormat format = workbook.createDataFormat();    
-		headerStyle.setDataFormat(format.getFormat("@"));
 		// 表头字体
 		Font headerFont = workbook.createFont();
 		headerFont.setFontHeightInPoints((short) 9);
@@ -132,6 +176,35 @@ public class ExportExcelUtil  {
 		headerStyle.setFont(headerFont);
  
 		// 数据样式
+		CellStyle dataStyle_image = workbook.createCellStyle();
+		dataStyle_image.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 水平居中
+		dataStyle_image.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER); // 垂直居中
+		//dataStyle_image.setBorderBottom(XSSFCellStyle.BORDER_THIN); // 下边框
+		dataStyle_image.setBorderLeft(XSSFCellStyle.BORDER_THIN); // 左边框
+		dataStyle_image.setBorderTop(XSSFCellStyle.BORDER_THIN); // 上边框
+//		dataStyle_p.setBorderRight(XSSFCellStyle.BORDER_THIN); // 右边框
+		//dataStyle_image.setDataFormat(format.getFormat("@"));      //将数据单元格格式设置为文本类型  
+		// 数据字体
+		Font dataFont_image = workbook.createFont();
+		//dataFont_image.setFontHeightInPoints((short) 9);
+		dataFont_image.setFontName("宋体");
+		dataStyle_image.setFont(dataFont_image);
+		
+		
+		CellStyle dataStyle_p = workbook.createCellStyle();
+		dataStyle_p.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 水平居中
+		dataStyle_p.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER); // 垂直居中
+		//dataStyle_p.setBorderBottom(XSSFCellStyle.BORDER_THIN); // 下边框
+		dataStyle_p.setBorderLeft(XSSFCellStyle.BORDER_THIN); // 左边框
+//		dataStyle_p.setBorderTop(XSSFCellStyle.BORDER_THIN); // 上边框
+//		dataStyle_p.setBorderRight(XSSFCellStyle.BORDER_THIN); // 右边框
+		dataStyle_p.setDataFormat(format.getFormat("@"));      //将数据单元格格式设置为文本类型  
+		// 数据字体
+		Font dataFont_p = workbook.createFont();
+		//dataFont_p.setFontHeightInPoints((short) 9);
+		dataFont_p.setFontName("宋体");
+		dataStyle_p.setFont(dataFont_p);
+
 		CellStyle dataStyle = workbook.createCellStyle();
 		dataStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 水平居中
 		dataStyle.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER); // 垂直居中
@@ -180,7 +253,6 @@ public class ExportExcelUtil  {
 		}
 		
 		
-		
 		Row row = null;
 		Cell cell = null;
 		for(int i = 1 ; i<=columnNames.length ; i++){
@@ -189,66 +261,120 @@ public class ExportExcelUtil  {
 			for(int j = 0 ;j < columnNames[i-1].length;j++){
 				cell = row.createCell(j);
 				if(i==1 && j==0){
+					ByteArrayOutputStream out = null;
+					XSSFClientAnchor anchor = null;
 					try {
-						
-						
-						 BufferedImage  bufferImg = ImageIO.read(new File("E:\\Workspaces\\MyEclipse\\dz\\WebRoot\\upload\\nail\\2020\\11\\S520-陈鹏0817.gif"));
-						// ImageIO.write(bufferImg, "jpg", byteArrayOut);
-						             
-						 ByteArrayOutputStream out = new ByteArrayOutputStream();
-					        try {
-					            ImageIO.write(bufferImg, "png", out);
-					        } catch (IOException e) {
-					            System.out.println(e.getMessage());
-					        }
-					        byte[] aa =  out.toByteArray();
-						 
-						                                         
-						//调用Drawing对象进行绘画操作
-						XSSFDrawing drawingPatriarch = (XSSFDrawing) sheet.createDrawingPatriarch();
-						//使用Anchor进行图片位置等方面的调节
-						XSSFClientAnchor anchor = new XSSFClientAnchor(300, 75, 700, 250, (short) 0, i, (short) 1, 6);
-						//product.getBarcodeImg()是一个byte[]
-						//根据anchor和图片的byte[]来进行创建
-						drawingPatriarch.createPicture(anchor, workbook.addPicture(aa, XSSFWorkbook.PICTURE_TYPE_JPEG));
-						
-					}
-					
-					catch (Exception e) {
-						// TODO Auto-generated catch block
+						// 图片处理
+						String imageUrl = entity.getImageUrl();
+						if(StringUtils.isNotEmpty(imageUrl)){
+							imageUrl = request.getSession().getServletContext().getRealPath("/") + imageUrl; 
+							 BufferedImage  bufferImg = ImageIO.read(new File(imageUrl));
+							 out = new ByteArrayOutputStream();
+							 String fileExt =  UploadUtil.getFileExt1(imageUrl);
+							 ImageIO.write(bufferImg, fileExt, out);
+							 byte[] imageByte =  out.toByteArray();
+							//调用Drawing对象进行绘画操作
+								XSSFDrawing drawingPatriarch = (XSSFDrawing) sheet.createDrawingPatriarch();
+								//使用Anchor进行图片位置等方面的调节
+								//   参数   说明    
+				                 //  dx1  第1个单元格中x轴的偏移量     
+				                 //  dy1  第1个单元格中y轴的偏移量     
+				                 //  dx2     第2个单元格中x轴的偏移量     
+				                 //  dy2  第2个单元格中y轴的偏移量    
+				                 //  col1 第1个单元格的列号     
+				                 //  row1  第1个单元格的行号     
+				                 //  col2 第2个单元格的列号     
+				                 //  row2 第2个单元格的行号    
+								 anchor = new XSSFClientAnchor(0, 0, 700, 250, (short) 0, i, (short) 1, 12);
+								//product.getBarcodeImg()是一个byte[]
+								//根据anchor和图片的byte[]来进行创建
+								drawingPatriarch.createPicture(anchor, workbook.addPicture(imageByte, XSSFWorkbook.PICTURE_TYPE_JPEG));
+						}
+					}catch (Exception e) {
 						e.printStackTrace();
-					};
+						logger.error(e.getMessage());
+					}finally{
+						if(null != out){
+							try {
+								out.close();
+							} catch (IOException e) {
+								logger.error(e.getMessage());
+								e.printStackTrace();
+							}
+						}
+						anchor = null;
+					}
 					
 				}else{
 					cell.setCellValue(columnNames[i-1][j]);
-					
 				}
 				
 				cell.setCellStyle(headerStyle);
 				
+				if(i==1){
+					// 二级标题颜色设置
+					cell.setCellStyle(titleStyle_2);
+				}
+				
+				
 			}
+			
 		}
 		
 		sheet.getRow(columnNames.length).setZeroHeight(true);
 		// 合并单元格
 		sheet.addMergedRegion(new CellRangeAddress(0, 0, 0, columnNames[0].length-1)); // 合并大标题行
 		String[] names = columnNames[columnNames.length-1];
- 
 		// 数据填充,标题占一行，columnNames占columnNames.length行，之后才到数据行
 		Object obj = null;
 		
 		for (int i = 0; i < rows.size(); i++) {
 			Row dataRow = sheet.createRow(columnNames.length+1+ i);
 			if(i ==0){
-				sheet.addMergedRegion(new CellRangeAddress(1, 6, 0, 0)); // 合并大标题行
+				sheet.addMergedRegion(new CellRangeAddress(1, 11, 0, 0)); // 合并大标题行
 			}
-			
 			Map<String,Object> project = rows.get(i);
 			for (int j = 0; j <names.length; j++) {
 				Cell dataCell = dataRow.createCell(j);
 				dataCell.setCellStyle(dataStyle);
+				// 第一和第二列处理
+				if(j == 1 || j == 2){
+					dataCell.setCellStyle(headerStyle_b);
+				}
+				
+				
+				// 最后一行样式处理
+				if(i== rows.size()-1){
+					dataCell.setCellStyle(headerStyle_b);
+				}
 				obj = project.get(names[j]);
 				dataCell.setCellValue(obj==null?"":obj.toString());
+				
+				
+				//数据处理
+				if((i == 9 &&j == 0) || (i == 8 &&j == 0) ){
+					dataCell.setCellValue(excelName);
+					dataCell.setCellStyle(dataStyle_p);
+				}
+				
+				// 图钉类型
+				if((i == 12 &&j == 0) ){
+					dataCell.setCellValue(entity.getNailType());
+				} 
+				// 相框颜色
+				if((i == 13 &&j == 0) ){
+					dataCell.setCellValue(entity.getColorName());
+				}
+				// 买家名称
+				if((i == 14 &&j == 0) ){
+					dataCell.setCellValue(entity.getUsername());
+				}
+				
+				if(i==1 && j==0){
+					// 图片样式设置
+					cell.setCellStyle(dataStyle_image);
+				}
+				
 			}
 		}
 		

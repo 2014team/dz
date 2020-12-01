@@ -10,7 +10,7 @@ public class NailCount implements Serializable{
 	*/
 	private static final long serialVersionUID = 1L;
 
-	// 序号
+	// 编号
 	private String indexId;
 
 	// 钉子数量
