@@ -5,11 +5,9 @@ import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +20,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.poi.ss.usermodel.Workbook;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,23 +29,19 @@ import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.NailConfig;
 import com.artcweb.baen.NailCount;
 import com.artcweb.baen.NailDetailConfig;
+import com.artcweb.baen.NailImageSize;
 import com.artcweb.baen.NailOrder;
-import com.artcweb.baen.NailOrderExport;
 import com.artcweb.baen.NailTotalCount;
 import com.artcweb.cache.DateMap;
 import com.artcweb.dao.NailOrderDao;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.NailImageTypeEnum;
 import com.artcweb.service.NailOrderService;
-import com.artcweb.util.ExcelUtil;
 import com.artcweb.util.ExportExcelUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
 import com.artcweb.util.ImageUtil;
 import com.artcweb.vo.NailOrderVo;
-
-import cn.afterturn.easypoi.excel.ExcelExportUtil;
-import cn.afterturn.easypoi.excel.entity.ExportParams;
 
 @Service
 public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> implements NailOrderService {
@@ -534,6 +527,27 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			{"","indexId","nailNumber","requreWeight","requrePieces"}
 			};
 		return columnNames;
+	}
+
+	@Override
+	public String checkNialImageSise(MultipartFile file) {
+		BufferedImage image;
+		try {
+			image = ImageIO.read(file.getInputStream());
+			 if (image == null) { //如果image=null 表示上传的不是图片格式
+			        return "图片格式不正确.";
+			    }
+			 String key = image.getWidth()+"x"+image.getHeight();
+			 NailImageSize nailImageSize = DateMap.nailImageSizeMap.get(key);
+			 if(null == nailImageSize){
+				 return "图片不是尺寸配置列表范围,不符合要求，请尺寸配置";
+			 }
+		}
+		catch (IOException e) {
+			logger.error(e.getMessage());
+			e.printStackTrace();
+		}
+	    return null;
 	}
 
 }

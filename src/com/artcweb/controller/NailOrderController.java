@@ -200,6 +200,13 @@ public class NailOrderController {
 		
 		// 上传图片
 		if(null != file && !file.isEmpty()){
+			
+			// 图片尺寸验证
+			String checkNialImageSise = nailOrderService.checkNialImageSise(file);
+			if (StringUtils.isNotBlank(checkNialImageSise)) {
+				layUiResult.failure(checkNialImageSise);
+				return layUiResult;
+			}
 			// 图片验证
 			String errorMsg = imageService.checkImage(file);
 			if (StringUtils.isNotBlank(errorMsg)) {
@@ -317,6 +324,13 @@ public class NailOrderController {
 		// 上传图片
 		if(null != file && !file.isEmpty()){
 			
+
+			// 图片尺寸验证
+			String checkNialImageSise = nailOrderService.checkNialImageSise(file);
+			if (StringUtils.isNotBlank(checkNialImageSise)) {
+				layUiResult.failure(checkNialImageSise);
+				return layUiResult;
+			}
 			
 			// 图片验证
 			String errorMsg = imageService.checkImage(file);
