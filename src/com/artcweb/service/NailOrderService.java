@@ -23,7 +23,7 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 
 	boolean deleteByBatch(String array,HttpServletRequest request);
 
-	boolean saveNailOrder(NailOrderVo entity);
+	Integer saveNailOrder(NailOrderVo entity);
 
 	ConcurrentHashMap<String, Integer> uploadImage(HttpServletRequest request,MultipartFile file, NailOrderVo entity,String uploadDirpath);
 

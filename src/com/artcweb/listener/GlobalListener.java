@@ -39,7 +39,7 @@ public class GlobalListener implements ApplicationListener<ApplicationEvent> {
 			DateMap.initNailDetailConfigMap(nailDetailConfigList);
 			
 			List<NailConfig> nailConfigList = nailConfigService.select(paramMap);
-			DateMap.initNailConfigList(nailConfigList);
+			DateMap.initNailConfigMap(nailConfigList);
 		
 			logger.info("初始化数据结束----------");
 		}

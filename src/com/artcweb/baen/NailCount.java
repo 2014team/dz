@@ -28,6 +28,19 @@ public class NailCount implements Serializable{
 	// rgb值
 	private String rgb;
 	
+	
+	
+
+	public NailCount() {
+		super();
+	}
+
+	public NailCount(String nailNumber, String requreWeight, String requrePieces) {
+		super();
+		this.nailNumber = nailNumber;
+		this.requreWeight = requreWeight;
+		this.requrePieces = requrePieces;
+	}
 
 	public String getIndexId() {
 		return indexId;

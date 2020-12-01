@@ -8,7 +8,7 @@
     <div class="x-nav">
       <span class="layui-breadcrumb">
         <a href="">首页</a>
-        <a href="">白名单管理</a>
+        <a href="">绕线画管理</a>
         <a>
           <cite>白名单列表</cite></a>
       </span>

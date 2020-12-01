@@ -10,34 +10,27 @@
         <a href="">首页</a>
         <a href="">钉子画管理</a>
         <a>
-          <cite>订单列表</cite></a>
+          <cite>尺寸配置</cite></a>
       </span>
       <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:38px">&#xe669;</i></a>
     </div>
     <div class="x-body">
       <div class="layui-form layui-row demoTable">
-           	买家名称：
+           	尺寸：
           <div class="layui-inline">
-		    <input class="layui-input" name="username" id="username" autocomplete="off">
+		    <input class="layui-input" name="size" id="size" autocomplete="off">
 		  </div>
-           	图纸名称：
+           	宽：
           <div class="layui-inline">
-		    <input class="layui-input" name="imageName" id="imageName" autocomplete="off">
+		    <input class="layui-input" name="width" id="width" autocomplete="off">
 		  </div>
-           	手机号码：
+           	高：
           <div class="layui-inline">
-		    <input class="layui-input" name="mobile" id="mobile" autocomplete="off">
+		    <input class="layui-input" name="height" id="height" autocomplete="off">
 		  </div>
-	
-		<!--     来源：
-          <div class="layui-inline">
-		   		 <select id="comefrom" name="comefrom" lay-search>
-	                <option value="">全部</option>
-                  	<option value="0" >后台</option>
-                  	<option value="1" >H5</option>
-	            </select>
-		  </div>-->	
+		  
+				
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
       </div>
       
@@ -45,33 +38,22 @@
    	 <!-- 列表 -->	
      <table class="layui-hide" id="table_list" lay-filter="table_list" ></table>
      
-       <!-- 头部工具条 -->
+     <!-- 头部工具条 -->
 	<script type="text/html" id="toolbar">
   		<div class="layui-btn-container">
-   			    <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/nailorder/delete/batch.do')">批量删除</button>
-   			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailorder/add.do')"><i class="layui-icon"></i>增加</button>
+   			 <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/nailimagesize/delete/batch.do')">批量删除</button>
+   			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailimagesize/add.do')"><i class="layui-icon"></i>增加</button>
   		</div>
 	</script>
      
      <!--列表行Bar  -->
      <script type="text/html" id="rowBar">
 		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
- 		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-		<a class="layui-btn layui-btn-xs" lay-event="detail">清单</a>
+ 		 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 	</script>
   </body>
   
 
-<form id= 'formid'/>
-
-<!--图片模板  -->
-<script type="text/html" id="imageUrlTpl">
-  <img alt="{{d.imageUrl}}" src="{{d.imageUrl}}">
-</script>
-<!-- 序号模板 -->
-<script type="text/html" id="indexTpl">
-   {{d.LAY_TABLE_INDEX+1}}
-</script>
 
 
 <script type="text/javascript">
@@ -92,7 +74,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 
 		  table.render({
 			elem : '#table_list',
-			url : '/admin/center/nailorder/list.do',
+			url : '/admin/center/nailimagesize/list.do',
 			toolbar: '#toolbar',
 		    defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
 		      title: '提示'
@@ -102,7 +84,6 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 		    method:"post",
 			page : { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
 				layout : [ 'limit', 'count', 'prev', 'page', 'next', 'skip' ], //自定义分页布局 //,curr: 5 //设定初始在第 5 页
-				limits:[10, 50, 100],
 				limit : 10,//每页显示的条数
 				groups : 5, //步长
 				first : '首页', //不显示首页
@@ -118,55 +99,36 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					title : '序号',
 					type: 'numbers',
 					sort : true,
+					width:80,
 				}
 				
 				, {
-					field : 'username' ,
-					title : '买家名称' ,
+					field : 'size' ,
+					title : '尺寸' ,
 				}
 				, {
-					field : 'imageName' ,
-					title : '图纸名称' ,
+					field : 'width' ,
+					title : '宽度' ,
 				}
 				, {
-					field : 'mobile' ,
-					title : '手机号码' ,
-				}/* , {
-					field : 'comefrom' ,
-					title : '来源' ,
-					templet : function(d) {
-					if(d.comefrom==0 ){
-						return "后台";
-					}else if(d.comefrom==1){
-						return "H5";
-					}else{
-						return ""
-					}
-				},  
-				}*/
+					field : 'height' ,
+					title : '高度' ,
+				}
 				, {
-					field : 'nailType' ,
-					title : '图钉类型' , 
-				},  {
-					field : 'colorName' ,
-					title : '画框颜色' , 
-				}, {
 					field : 'createDate' ,
 					title : '创建时间' ,
 					templet : function(d) {
 					return date.toDateString(d.createDate, 'yyyy-MM-dd HH:mm:ss');
 				}, 
-				}/*,  {
+				},  {
 					field : 'updateDate' ,
 					title : '更新时间' ,
 					templet : function(d) {
 					return date.toDateString(d.updateDate, 'yyyy-MM-dd HH:mm:ss');
-				},  
-				}*/, {
+				}, 
+				},{
 					align:'left', toolbar: '#rowBar',
-					title : '操作',
-					width: 180
-					
+					title : '操作'
 				}
 
 			] ]
@@ -193,13 +155,10 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 			 var data = obj.data;
 			 switch(obj.event){
 			  case 'del': //删除
-				orderd_delete(obj,'/admin/center/nailorder/delete.do');
+				orderd_delete(obj,'/admin/center/nailimagesize/delete.do');
 		      break;
 		      case 'edit':// 编辑
-				x_admin_show('编辑','/admin/center/nailorder/edit/'+obj.data.id+'.do');
-		      break;
-		      case 'detail':// 编辑
-				x_admin_show('清单','/admin/center/nailorder/detail/'+obj.data.id+'.do');
+				x_admin_show('编辑','/admin/center/nailimagesize/edit/'+obj.data.id+'.do');
 		      break;
 			 }
 		});
@@ -298,16 +257,12 @@ function order_delAll(layfilterId,url) {
 		
    }
    
-    //刷新
-	function reloadTable(id,resp){
+   //刷新
+	function reloadTable(id){
 		if(id){
 			editRelaod(id);
 		}else{
 		   addRelaod();
-		}
-		if(resp && resp.data){
-			$("#formid").attr("action","/admin/center/nailorder/export/"+resp.data+".do");
-			$("#formid").submit();
 		}
 	}
 	
@@ -324,7 +279,7 @@ function order_delAll(layfilterId,url) {
 		
 		function editRelaod(id){
 				 $.ajax({
-					url : '/admin/center/nailorder/get.do',
+					url : '/admin/center/nailimagesize/get.do',
 					type : "POST",
 					data :{
 				            "id": id,
@@ -336,23 +291,19 @@ function order_delAll(layfilterId,url) {
 					//console.info(data);
 					if(resp.code == 200){
 					editRowObj.update({
-						 username: resp.data.username,
-						 imageName: resp.data.imageName,
 						 mobile: resp.data.mobile,
-						 comefrom: resp.data.comefrom,
-						 nailType: resp.data.nailType,
-						 colorName: resp.data.colorName,
 						 createDate: resp.data.createDate,
+						 updateDate: resp.data.updateDate
 						 
 						 });
 					}
+					
 					
 						
 					}, 
 					
 				});
 		}
-   
 
 </script>
 </html>

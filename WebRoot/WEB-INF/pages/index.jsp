@@ -75,7 +75,7 @@
             
             
             <li>
-                <a href="javascript:;"><i class="iconfont">&#xe6f6;</i><cite>订单管理</cite><i class="iconfont nav_right">&#xe6a7;</i></a>
+                <a href="javascript:;"><i class="iconfont">&#xe735;</i><cite>绕线画管理</cite><i class="iconfont nav_right">&#xe6a7;</i></a>
                 <ul class="sub-menu">
                    <!--  <li><a _href="html/upload.html"><i class="iconfont">&#xe6a7;</i><cite>文件上传</cite></a></li>
                     <li><a _href="html/page.html"><i class="iconfont">&#xe6a7;</i><cite>分页</cite></a></li> -->
@@ -151,7 +151,7 @@
             </li>            
             <li>
                 <a href="javascript:;">
-                    <i class="iconfont">&#xe735;</i>
+                    <i class="iconfont">&#xe6f6;</i>
                     <cite>钉子画管理</cite>
                     <i class="iconfont nav_right">&#xe6a7;</i>
                 </a>
@@ -174,6 +174,13 @@
                         <a _href="/admin/center/nailpictureframe/list/ui.do">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>画框配置</cite>
+                            
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="/admin/center/nailimagesize/list/ui.do">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>尺寸配置</cite>
                             
                         </a>
                     </li>

@@ -6,6 +6,7 @@
 
 <body>
 	<div class="x-body">
+	
 		<form class="layui-form">
 			<input type="hidden" id="id" name="id" value="${entity.id }" />
 		  
@@ -103,7 +104,7 @@
 
 			<div class="layui-form-item">
 				<label for="L_repass" class="layui-form-label"> </label>
-				<button class="layui-btn" lay-filter="save" lay-submit="">保存并下载图钉清单</button>
+				<button class="layui-btn" lay-filter="saveOrDownload" lay-submit="">保存并下载图钉清单</button>
 				<button class="layui-btn" lay-filter="save" lay-submit="">仅保存</button>
 			</div>
 			
@@ -248,7 +249,6 @@
         			contentType : false, // 不要设置Content-Type请求头
     				dataType : "json",
     				success : function(resp) {
-    				
 	    				//关闭动画
 					layer.close(loading);
 				
@@ -261,7 +261,88 @@
 									parent.layer.close(index);
 									//刷新列表
 									window.parent.reloadTable(data.id);
+									
+								});
 								
+							} else {
+								layer.msg(resp.msg, {
+									icon : 2,
+									time : 1500
+								});
+							}
+    					},
+    				error : function(e) {
+    					console.err(e);
+    					layer.msg("系统异常，稍后再试!", {
+    						icon : 2,
+    						time : 1000
+    					});
+    				}
+    			});
+    
+    			return false;
+    		});
+    		
+          // 保存
+          form.on('submit(saveOrDownload)', function(obj) {
+          	data = JSON.parse(JSON.stringify(obj.field));
+          	var formData = new FormData() 
+   			formData.append('id', $('#id').val());
+   			formData.append('username', data.username);
+   			formData.append('nailConfigId',data.nailConfigId);
+   			formData.append('nailPictureFrameId',data.nailPictureFrameId);
+   			formData.append('imageName',data.imageName);
+   			formData.append('mobile', data.mobile);
+   			formData.append('imageUrl', data.imageUrl);
+   			formData.append('step', data.step);
+   			formData.append('file', files);
+   				
+          	
+             //加载动画
+				/* var loading = layer.load(0, {
+		            shade: false,
+		        }); */
+		        
+	        	//加载动画
+		   		var loading = layer.load(2, { //icon支持传入0-2
+		   		    shade: [0.5, 'gray'], //0.5透明度的灰色背景
+		   		    content: '保存并下载中,请稍等操作...',
+		   		    success: function (layero) {
+		   		        layero.find('.layui-layer-content').css({
+		   		            'padding-top': '39px',
+		   		            'width': '60px'
+		   		        });
+		   		    }
+		   		});
+		   		
+		   		var url = '/admin/center/nailorder/save.do';
+   		
+   				if($('#id').val() && $('#id').val() > 0){
+   					url = '/admin/center/nailorder/update.do';
+   				}
+   				
+   		
+    			$.ajax({
+    				url : url,
+    				type : "POST",
+    				data :formData,
+    				processData : false, // 使数据不做处理
+        			contentType : false, // 不要设置Content-Type请求头
+    				dataType : "json",
+    				success : function(resp) {
+	    				//关闭动画
+					layer.close(loading);
+				
+    						if (resp.code == 200) { //这个是从后台取回来的状态值
+								layer.msg(resp.msg, {icon : 6,time : 1500
+								},function(){
+								// 获得frame索引
+									var index = parent.layer.getFrameIndex(window.name);
+									//关闭当前frame
+									parent.layer.close(index);
+									//刷新列表
+									window.parent.reloadTable(data.id,resp);
+									
 								});
 								
 							} else {

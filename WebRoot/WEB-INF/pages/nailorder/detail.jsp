@@ -27,7 +27,13 @@
 						<td rowspan="4" colspan="2"><img src="${entity.imageUrl }" width="200">
 						<br/>${entity.imageName }
 						</td>
-						<td><button w style='background-color:rgb(${item.value.rgb});width: 80px;height: 25px;border: 0px'></button></td>
+						<td>
+						<c:if test="${not empty item.value.rgb}">
+							<button style='background-color:rgb(${item.value.rgb});width: 80px;height: 25px;border: 0px'>
+							</button>
+						</c:if>
+						
+						</td>
 						<td>${item.value.indexId}</td>
 						<td>${item.value.nailNumber}</td>
 						<td>${item.value.requreWeight}</td>
@@ -51,7 +57,12 @@
 								</c:otherwise>
 							</c:choose>
 						
-						<td><button w style='background-color:rgb(${item.value.rgb});width: 80px;height: 25px;border: 0px'></button></td>
+						<td>
+							<c:if test="${not empty item.value.rgb}">
+							<button style='background-color:rgb(${item.value.rgb});width: 80px;height: 25px;border: 0px'>
+							</button>
+							</c:if>
+						</td>
 						<td>${item.value.indexId}</td>
 						<td>${item.value.nailNumber}</td>
 						<td>${item.value.requreWeight}</td>
@@ -61,7 +72,13 @@
 				</c:when>
 				<c:otherwise>
 					<tr align="center">
-						<td ><button w style='background-color:rgb(${item.value.rgb});width: 80px;height: 25px;border: 0px'></button></td>
+						<td >
+							<c:if test="${not empty item.value.rgb}">
+							<button style='background-color:rgb(${item.value.rgb});width: 80px;height: 25px;border: 0px'>
+							</button>
+						</c:if>
+						
+						</td>
 						<td>${item.value.indexId}</td>
 						<td>${item.value.nailNumber}</td>
 						<td>${item.value.requreWeight}</td>

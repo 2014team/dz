@@ -8,7 +8,7 @@
     <div class="x-nav">
       <span class="layui-breadcrumb">
         <a href="">首页</a>
-        <a href="">类别管理</a>
+        <a href="">绕线画管理</a>
         <a>
           <cite>类别列表</cite></a>
       </span>

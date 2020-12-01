@@ -13,17 +13,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.artcweb.baen.NailConfig;
+import com.artcweb.baen.NailImageSize;
 import com.artcweb.cache.DateMap;
-import com.artcweb.service.NailConfigService;
+import com.artcweb.service.NailImageSizeService;
 import com.artcweb.util.ToolUtil;
 
-public class NaiConfigInterceptor implements HandlerInterceptor {
+public class NailImageSizeInterceptor implements HandlerInterceptor {
 
-	private static Logger logger = LoggerFactory.getLogger(NaiConfigInterceptor.class);
+	private static Logger logger = LoggerFactory.getLogger(NailImageSizeInterceptor.class);
 	
 	@Autowired
-	private NailConfigService nailConfigService;
+	private NailImageSizeService service;
 	
 
 	@Override
@@ -44,8 +44,8 @@ public class NaiConfigInterceptor implements HandlerInterceptor {
 		
 		Map<String,Object> paramMap = null;
 		// 初始化
-		List<NailConfig> nailConfigList = nailConfigService.select(paramMap);
-		DateMap.synNailConfigMap(nailConfigList);
+		List<NailImageSize> list = service.select(paramMap);
+		DateMap.synNailImageSizeMap(list);
 	
 		logger.info("同步缓存数据接受----------");
 

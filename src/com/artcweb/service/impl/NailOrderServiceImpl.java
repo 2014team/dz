@@ -128,12 +128,12 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	@Override
-	public boolean saveNailOrder(NailOrderVo entity) {
+	public Integer saveNailOrder(NailOrderVo entity) {
 		Integer result = nailOrderDao.save(entity);
 		if(null != result && result > 0){
-			return true;
+			result = entity.getId();
 		}
-		return false;
+		return result;
 	}
 
 	@Override
@@ -479,6 +479,18 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 					 map.put("requrePieces", nailTotalCount.getTotalrPieces());
 					 result.add(map);
 					 map = null;
+				 }
+				 
+				 if(result.size() < 25){
+					 for(int i = 0; i< (25-result.size()); i++){
+						 map = new HashMap<String, Object>();
+						 map.put("indexId", "");
+						 map.put("nailNumber", "");
+						 map.put("requreWeight", "");
+						 map.put("requrePieces", "");
+						 result.add(map);
+						 map = null;
+					 }
 				 }
 				 
 				 

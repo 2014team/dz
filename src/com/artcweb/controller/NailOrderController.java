@@ -2,9 +2,6 @@
 package com.artcweb.controller;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -27,7 +24,6 @@ import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.NailConfig;
 import com.artcweb.baen.NailCount;
 import com.artcweb.baen.NailOrder;
-import com.artcweb.baen.NailOrderExport;
 import com.artcweb.baen.NailPictureFrame;
 import com.artcweb.baen.NailTotalCount;
 import com.artcweb.constant.NailOrderComeFromConstant;
@@ -37,7 +33,6 @@ import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailPictureFrameService;
-import com.artcweb.util.ExportExcelUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
 import com.artcweb.vo.NailOrderVo;
@@ -115,12 +110,28 @@ public class NailOrderController {
 		Map<String,Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("id", id);
 		NailOrderDto entity = nailOrderService.getNailOrder(paramMap);
-		request.setAttribute("entity", entity);
+		
 		
 		if(StringUtils.isNotBlank(entity.getNailCountDetail())){
 			NailTotalCount nailTotalCount = ( NailTotalCount ) GsonUtil.jsonToBean(entity.getNailCountDetail(),NailTotalCount.class);
+			
+			ConcurrentHashMap<Integer, NailCount> nailCountDetailMap= nailTotalCount.getNailCountDetailMap();
+			if(null != nailCountDetailMap && nailCountDetailMap.size() > 0){
+				// 4取模处理
+				int size = (nailCountDetailMap.size()+1)%4;
+				if(size != 0){
+					for(int i=0;i<(4-size);i++){
+						nailCountDetailMap.put(100+i, new NailCount());
+					}
+					nailTotalCount.setNailCountDetailMap(nailCountDetailMap);
+				}
+			}
+			
+			
+			
 			request.setAttribute("nailTotalCount", nailTotalCount);
 		}
+		request.setAttribute("entity", entity);
 		
 		return "/nailorder/detail";
 	}
@@ -136,7 +147,7 @@ public class NailOrderController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/save")
-	public LayUiResult save(NailOrderVo entity, MultipartFile file,HttpServletRequest request) throws IOException {
+	public LayUiResult save(NailOrderVo entity, MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws IOException {
 		LayUiResult layUiResult = new LayUiResult();
 		// 参数验证
 		String username = entity.getUsername();
@@ -206,9 +217,9 @@ public class NailOrderController {
 		
 		}
 		// 保存
-		boolean result = nailOrderService.saveNailOrder(entity);
-		if (result) {
-			layUiResult.success();
+		Integer result = nailOrderService.saveNailOrder(entity);
+		if (null != result && result > 0) {
+			layUiResult.success(result);
 		}
 		else {
 			layUiResult.failure();
@@ -349,7 +360,7 @@ public class NailOrderController {
 					logger.info("物理删除图片结果 = "+deleteResult);
 				}
 			}
-			layUiResult.success();
+			layUiResult.success(id);
 		}
 		else {
 			layUiResult.failure();
