@@ -159,14 +159,14 @@
                     <li>
                         <a _href="/admin/center/nailconfig/list/ui.do">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>数量配置</cite>
+                            <cite>类型配置</cite>
                             
                         </a>
                     </li >
                     <li>
                         <a _href="/admin/center/naildetailconfig/list/ui.do">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>详细配置</cite>
+                            <cite>颜色配置</cite>
                             
                         </a>
                     </li>

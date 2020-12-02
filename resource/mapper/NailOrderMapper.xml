@@ -16,7 +16,7 @@
 		<result property="width" column="width" />
 		<result property="height" column="height" />
 		<result property="step" column="step" />
-		<result property="thirdId" column="third_id" />
+		<result property="thirdFlag" column="third_flag" />
 		<result property="nailCountDetail" column="nail_count_detail" />
 		<result property="imageName" column="image_name" />
 		<result property="createDate" column="create_date" />
@@ -24,8 +24,8 @@
 	</resultMap>
 	
 	<insert id="save" parameterType="com.artcweb.baen.NailOrder" useGeneratedKeys="true" keyProperty="id">
-      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,third_id,create_date,update_date)
-      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},#{thirdId},now(),now())
+      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,third_flag,create_date,update_date)
+      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},#{thirdFlag},now(),now())
      </insert>
 
 	<!--删除 -->
@@ -66,6 +66,7 @@
 		nail_count_detail=#{nailCountDetail},
 		height=#{height},
 		width=#{width},
+		third_flag=#{thirdFlag},
 		update_date = now()
 		where
 		id=#{id}
@@ -138,8 +139,8 @@
 			<if test="null != username  and '' != username">
 					and username = #{username}
 			</if>
-			<if test="null != thirdId  and '' != thirdId">
-					and third_id = #{thirdId}
+			<if test="null != thirdFlag  and '' != thirdFlag">
+					and third_flag = #{thirdFlag}
 			</if>
 		</where>
 		order by id limit 1
@@ -160,6 +161,7 @@
 		<!-- ,t.nail_count_detail AS nailCountDetail -->
 		,t.height AS height
 		,t.width AS width
+		,t.third_flag AS thirdFlag
 		,t.create_date AS createDate
 		,t.update_date AS updateDate
 		,nf.nail_type AS nailType

@@ -254,28 +254,10 @@ public class ApiNailOrderController {
 		entity.setUsername(fileName);
 		
 		
-		String[] fileNameArr = fileName.split("_");
-		if(null != fileNameArr && fileNameArr.length ==2){
-			entity.setMobile(fileNameArr[0]);
-			entity.setThirdId(fileNameArr[1]);
-
-			// 名称唯一性验证
-			Map<String,Object> paramMap  = new  HashMap<String, Object>();
-			paramMap.put("thirdId", fileNameArr[1]);
-			boolean checkExist = nailOrderService.checkExist(paramMap,null);
-			if(checkExist){// 没有引用删除
-				layUiResult.failure("图纸名称系统已存在");
-				logger.error("图纸名称系统已存在");
-				return layUiResult;
-			}
-		}else{
-			layUiResult.failure("不符合规则的图片名称");
-			logger.error("不符合规则的图片名称");
-			return layUiResult;
-			
+		int len = fileName.length();
+		if(len > 11){
+			entity.setMobile(fileName.substring(0,11));
 		}
-		
-		
 		// 上传图片
 		if(null != file && !file.isEmpty()){
 			

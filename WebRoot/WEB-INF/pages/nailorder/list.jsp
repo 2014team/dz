@@ -30,14 +30,14 @@
 		    <input class="layui-input" name="mobile" id="mobile" autocomplete="off">
 		  </div>
 	
-		<!--     来源：
+		    来源：
           <div class="layui-inline">
 		   		 <select id="comefrom" name="comefrom" lay-search>
 	                <option value="">全部</option>
                   	<option value="0" >后台</option>
                   	<option value="1" >H5</option>
 	            </select>
-		  </div>-->	
+		  </div>
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
       </div>
       
@@ -131,7 +131,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				, {
 					field : 'mobile' ,
 					title : '手机号码' ,
-				}/* , {
+				} , {
 					field : 'comefrom' ,
 					title : '来源' ,
 					templet : function(d) {
@@ -143,7 +143,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 						return ""
 					}
 				},  
-				}*/
+				}
 				, {
 					field : 'nailType' ,
 					title : '图钉类型' , 

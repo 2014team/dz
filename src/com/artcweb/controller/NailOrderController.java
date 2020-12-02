@@ -1,6 +1,8 @@
 
 package com.artcweb.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -10,15 +12,21 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.fileupload.FileItem;
+import org.apache.commons.fileupload.FileItemFactory;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.lang.StringUtils;
+import org.apache.http.entity.ContentType;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.NailConfig;
@@ -29,6 +37,7 @@ import com.artcweb.baen.NailTotalCount;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.dto.NailOrderDto;
+import com.artcweb.enums.ThirdFlagEnum;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailOrderService;
@@ -300,7 +309,7 @@ public class NailOrderController {
 		}
 		
 		
-		NailOrder nailOrder = nailOrderService.get(id);
+		NailOrder nailOrder = nailOrderService.getById(id);
 		if(null == nailOrder){
 			layUiResult.failure("数据不存在");
 			return layUiResult;
@@ -320,6 +329,19 @@ public class NailOrderController {
 		
 		
 		String sourceImageUrl = nailOrder.getImageUrl();
+		
+		
+		String thirdFlag = nailOrder.getThirdFlag();
+		// 判断是否H5数据没有生产订单
+		
+		if(StringUtils.isEmpty(thirdFlag) || !thirdFlag.equals(ThirdFlagEnum.OK.getDisplayName())){
+			File f = new File(request.getSession().getServletContext().getRealPath("/")+sourceImageUrl);
+			FileInputStream inputStream = new FileInputStream(f);
+			file = new MockMultipartFile(f.getName(), f.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
+			 //图片处理
+			 nailOrder.setThirdFlag(ThirdFlagEnum.OK.getDisplayName());
+		}
+		
 		
 		// 上传图片
 		if(null != file && !file.isEmpty()){

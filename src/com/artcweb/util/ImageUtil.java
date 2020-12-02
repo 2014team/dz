@@ -26,7 +26,7 @@ public class ImageUtil {
 	 */
 	public static String checkImage(MultipartFile file) {
 		if (null != file) {
-			if (!file.getContentType().contains("image")) {
+			if (!file.getContentType().contains("image") && !file.getContentType().contains("application/octet-stream")) {
 				return "请上传图片!";
 			}
 		}

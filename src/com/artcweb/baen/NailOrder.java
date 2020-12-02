@@ -25,6 +25,7 @@ public class NailOrder extends BaseBean {
 
 	// 图片类型Id
 	private String nailConfigId;
+
 	// 画框Id
 	private String nailPictureFrameId;
 
@@ -36,12 +37,12 @@ public class NailOrder extends BaseBean {
 
 	// 钉子统计详情
 	private String nailCountDetail;
-	
+
 	// 图纸名称
 	private String imageName;
-	
-	// H5编号
-	private String thirdId;
+
+	// H5传值1:订单已经生成
+	private String thirdFlag;
 
 	public String getUsername() {
 		return username;
@@ -139,13 +140,12 @@ public class NailOrder extends BaseBean {
 		this.imageName = imageName;
 	}
 
-	public String getThirdId() {
-		return thirdId;
+	public String getThirdFlag() {
+		return thirdFlag;
 	}
 
-	public void setThirdId(String thirdId) {
-		this.thirdId = thirdId;
+	public void setThirdFlag(String thirdFlag) {
+		this.thirdFlag = thirdFlag;
 	}
-	
-	
+
 }
