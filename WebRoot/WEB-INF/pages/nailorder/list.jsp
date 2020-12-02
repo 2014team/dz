@@ -117,7 +117,8 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					field : 'indexId', 
 					title : '序号',
 					type: 'numbers',
-					sort : true,
+					/* sort : true,
+					width: 60 */
 				}
 				
 				, {
