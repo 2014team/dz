@@ -13,9 +13,11 @@ import org.springframework.stereotype.Component;
 
 import com.artcweb.baen.NailConfig;
 import com.artcweb.baen.NailDetailConfig;
+import com.artcweb.baen.NailImageSize;
 import com.artcweb.cache.DateMap;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailDetailConfigService;
+import com.artcweb.service.NailImageSizeService;
 
 
 @Component
@@ -26,6 +28,9 @@ public class GlobalListener implements ApplicationListener<ApplicationEvent> {
 	NailDetailConfigService nailDetailConfigService;
 	@Autowired
 	NailConfigService nailConfigService;
+	
+	@Autowired
+	NailImageSizeService nailImageSizeService;
 
 	@Override
 	public void onApplicationEvent(ApplicationEvent applicationEvent) {
@@ -40,7 +45,10 @@ public class GlobalListener implements ApplicationListener<ApplicationEvent> {
 			
 			List<NailConfig> nailConfigList = nailConfigService.select(paramMap);
 			DateMap.initNailConfigMap(nailConfigList);
-		
+			
+			List<NailImageSize> nailImageSizeList = nailImageSizeService.select(paramMap);
+			DateMap.initNailImageSizeMap(nailImageSizeList);
+			
 			logger.info("初始化数据结束----------");
 		}
 	}
