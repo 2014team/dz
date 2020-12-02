@@ -23,5 +23,11 @@ public interface NailOrderDao extends BaseDao<NailOrder, Integer> {
 	List<NailOrder> getByBatch(String array);
 	
 	NailOrderDto getNailOrder(Map<String, Object> paramMap);
+	
+
+	List<NailOrderDto> apiSelect(Map<String, Object> paramMap);
+	
+	NailOrderDto apiGet(Map<String, Object> paramMap);
+	Integer apiUpdateCurrentStep(Map<String, Object> paramMap);
 
 }

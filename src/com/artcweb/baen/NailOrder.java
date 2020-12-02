@@ -39,6 +39,9 @@ public class NailOrder extends BaseBean {
 	
 	// 图纸名称
 	private String imageName;
+	
+	// H5编号
+	private String thirdId;
 
 	public String getUsername() {
 		return username;
@@ -136,5 +139,13 @@ public class NailOrder extends BaseBean {
 		this.imageName = imageName;
 	}
 
+	public String getThirdId() {
+		return thirdId;
+	}
+
+	public void setThirdId(String thirdId) {
+		this.thirdId = thirdId;
+	}
+	
 	
 }

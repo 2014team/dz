@@ -16,6 +16,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.artcweb.enums.ImagePrefixNameEnum;
+import com.artcweb.enums.ImageSuffixNameEnum;
 import com.artcweb.service.ImageService;
 import com.artcweb.util.DataUtil;
 import com.artcweb.util.ImageUtil;
@@ -139,11 +141,48 @@ public class ImageServiceImpl implements ImageService {
 		// // 图片处理
 		Integer scaleWidth = 50;
 		Integer scaleHeight = 50;
-		thumbnail(filePathAndName, scaleWidth, scaleHeight);
+		thumbnail(filePathAndName, scaleWidth, scaleHeight,ImageSuffixNameEnum.JPG);
+		return uploadPath + newFileName;
+	}
+	
+	@Override
+	public String uploadImage(HttpServletRequest request, MultipartFile file, String uploadPath,Integer scaleWidth,Integer scaleHeight,ImagePrefixNameEnum prefix,ImageSuffixNameEnum suffix) {
+		// 如果用的是Tomcat服务器，则文件会上传到\\%TOMCAT_HOME%\\webapps\\YourWebProject\\uploadPath\\文件夹中
+		// String fileName = file.getOriginalFilename();
+		// String fileExt[] = fileName.split("\\.");
+		// 获取文件后缀名称
+		String ext = UploadUtil.getFileExt(file.getOriginalFilename());
+		// 新文件名称
+		String newFileName = UploadUtil.getNewFileName(ext);
+		newFileName = prefix.getDeclaringClass()+newFileName;
+		
+		String year = String.valueOf(DataUtil.getYear(new Date()));
+		String month = String.valueOf(DataUtil.getMonth(new Date()));
+		String folder = year + "/" + month + "/";
+		uploadPath = uploadPath + folder;
+		
+		// 存储文件目录
+		String realPath = request.getSession().getServletContext().getRealPath(uploadPath);
+		String filePathAndName = null;
+		if (realPath.endsWith(File.separator)) {
+			filePathAndName = realPath + newFileName;
+		} else {
+			filePathAndName = realPath + File.separator + newFileName;
+		}
+		logger.info("-----上传的文件:-----" + filePathAndName);
+		try {
+			// 先把文件保存到本地
+			FileUtils.copyInputStreamToFile(file.getInputStream(), new File(realPath, newFileName));
+		} catch (IOException e1) {
+			logger.error("-----文件保存到本地发生异常:-----" + e1.getMessage());
+		}
+		
+		// // 图片处理
+		thumbnail(filePathAndName, scaleWidth, scaleHeight,suffix);
 		return uploadPath + newFileName;
 	}
 
-	private void thumbnail(String filePathAndName, Integer scaleWidth, Integer scaleHeight) {
+	private void thumbnail(String filePathAndName, Integer scaleWidth, Integer scaleHeight,ImageSuffixNameEnum suffix) {
 		try {
 			Thumbnails.of(filePathAndName).size(scaleWidth, scaleHeight).toFile(filePathAndName);
 		} catch (IOException e) {
@@ -153,7 +192,7 @@ public class ImageServiceImpl implements ImageService {
 			try {
 				BufferedImage image = ImageIO.read(cmykJPEGFile);
 				ImageOutputStream output = ImageIO.createImageOutputStream(cmykJPEGFile);
-				if (!ImageIO.write(image, "jpg", output)) {
+				if (!ImageIO.write(image, suffix.getDisplayName(), output)) {
 					logger.info("-----cmyk转化异常:{}-----");
 				}
 				Thumbnails.of(image).scale(0.4f).toFile(filePathAndName);

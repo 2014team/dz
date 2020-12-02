@@ -550,4 +550,34 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	    return null;
 	}
 
+	@Override
+	public List<NailOrderDto> apiSelect(Map<String, Object> paramMap) {
+		List<NailOrderDto> list = nailOrderDao.apiSelect(paramMap);
+		if(null != list && list.size() > 0){
+			for (NailOrderDto nailOrderDto : list) {
+				String imageUrl = nailOrderDto.getImageUrl();
+				imageUrl = ImageUtil.imageUrlDeal(imageUrl);
+				nailOrderDto.setImageUrl(imageUrl);	
+						
+			}
+		}
+		return list;
+	}
+
+	@Override
+	public NailOrderDto apiGet(Map<String, Object> paramMap) {
+		NailOrderDto nailOrderDto = nailOrderDao.apiGet(paramMap);
+		if(null != nailOrderDto){
+			String imageUrl = nailOrderDto.getImageUrl();
+			imageUrl = ImageUtil.imageUrlDeal(imageUrl);
+			nailOrderDto.setImageUrl(imageUrl);	
+		}
+		return nailOrderDto;
+	}
+
+	@Override
+	public Integer apiUpdateCurrentStep(Map<String, Object> paramMap) {
+		return nailOrderDao.apiUpdateCurrentStep(paramMap);
+	}
+
 }

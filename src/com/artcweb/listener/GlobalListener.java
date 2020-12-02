@@ -18,6 +18,7 @@ import com.artcweb.cache.DateMap;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailDetailConfigService;
 import com.artcweb.service.NailImageSizeService;
+import com.artcweb.util.PropertiesUtils;
 
 
 @Component
@@ -48,6 +49,13 @@ public class GlobalListener implements ApplicationListener<ApplicationEvent> {
 			
 			List<NailImageSize> nailImageSizeList = nailImageSizeService.select(paramMap);
 			DateMap.initNailImageSizeMap(nailImageSizeList);
+			
+			
+
+			// 配置文件
+			PropertiesUtils.init("config/config.properties");
+			
+			System.out.println(PropertiesUtils.getValue("api_secretKey"));
 			
 			logger.info("初始化数据结束----------");
 		}

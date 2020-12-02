@@ -44,6 +44,13 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 	void exportExcel(HttpServletRequest request,HttpServletResponse response,NailOrderDto entity);
 
 	String checkNialImageSise(MultipartFile file);
+	
+	
+	List<NailOrderDto> apiSelect(Map<String, Object> paramMap);
+	
+	NailOrderDto apiGet(Map<String, Object> paramMap);
+	
+	Integer apiUpdateCurrentStep(Map<String, Object> paramMap);
 
 
 }

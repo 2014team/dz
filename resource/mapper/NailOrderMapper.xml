@@ -16,6 +16,7 @@
 		<result property="width" column="width" />
 		<result property="height" column="height" />
 		<result property="step" column="step" />
+		<result property="thirdId" column="third_id" />
 		<result property="nailCountDetail" column="nail_count_detail" />
 		<result property="imageName" column="image_name" />
 		<result property="createDate" column="create_date" />
@@ -23,8 +24,8 @@
 	</resultMap>
 	
 	<insert id="save" parameterType="com.artcweb.baen.NailOrder" useGeneratedKeys="true" keyProperty="id">
-      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,create_date,update_date)
-      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},now(),now())
+      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,third_id,create_date,update_date)
+      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},#{thirdId},now(),now())
      </insert>
 
 	<!--删除 -->
@@ -137,6 +138,9 @@
 			<if test="null != username  and '' != username">
 					and username = #{username}
 			</if>
+			<if test="null != thirdId  and '' != thirdId">
+					and third_id = #{thirdId}
+			</if>
 		</where>
 		order by id limit 1
 	</select>
@@ -239,6 +243,81 @@
 			</if>
 		</where>
 	</select>
+	
+	
+	
+	<select id="apiSelect" parameterType="Map" resultType="com.artcweb.dto.NailOrderDto">
+		SELECT t.id as id,
+		t.username as username,
+		t.mobile as mobile,
+		<!--t.step as step,-->
+		 ifnull(t.current_step ,'') as currentStep,  
+		t.image_url as imageUrl,
+		t.image_name as imageName,
+		t.comefrom as comefrom,
+		t.nail_config_id as nailConfigId,
+		t.nail_pictureframe_Id as nailPictureFrameId,
+	 	t.nail_count_detail as nailCountDetail,
+		t.width as width,
+		t.height as height, 
+		nf.nail_type as nailType,
+		tnp.color_name   as colorName,
+		ifnull(tns.status,0) as status,
+		t.create_date as createDate,
+		t.update_date as updateDate
+		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
+		 left join  t_nail_pictureframe tnp on t.nail_pictureframe_Id = tnp.id
+		  left join  t_nail_secret tns on t.id = tns.order_id
+		<where>
+			<if test="null != keyword and '' != keyword">
+					t.image_name  = #{keyword}
+				 OR t.mobile = #{keyword}
+			</if>
+		</where>
+		ORDER by t.id desc
+	</select>
+	
+	<select id="apiGet" parameterType="Map" resultType="com.artcweb.dto.NailOrderDto">
+		SELECT t.id as id,
+		t.username as username,
+		t.mobile as mobile,
+		t.step as step,
+		ifnull(t.current_step ,'') as currentStep,  
+		t.image_url as imageUrl,
+		t.image_name as imageName,
+		t.comefrom as comefrom,
+		t.nail_config_id as nailConfigId,
+		t.nail_pictureframe_Id as nailPictureFrameId,
+	 	t.nail_count_detail as nailCountDetail,
+		t.width as width,
+		t.height as height, 
+		nf.nail_type as nailType,
+		tnp.color_name   as colorName,
+		ifnull(tns.status,0) as status,
+		t.create_date as createDate,
+		t.update_date as updateDate
+		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
+		 left join  t_nail_pictureframe tnp on t.nail_pictureframe_Id = tnp.id
+		 left join  t_nail_secret tns on t.id = tns.order_id
+		<where>
+			<if test="null != keyword and '' != keyword">
+					t.image_name  = #{keyword}
+				 OR t.third_id = #{keyword}
+			</if>
+			<if test="null != id and '' != id">
+					t.id = #{id}
+			</if>
+		</where>
+		ORDER by t.id desc
+	</select>
+	
+	<update id="apiUpdateCurrentStep" parameterType="Map">
+		update `t_nail_order`
+		set current_step=#{currentStep}
+		,update_date=now()
+		where
+		id=#{id}
+	</update>
 	
 	
 

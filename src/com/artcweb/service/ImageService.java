@@ -4,6 +4,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.artcweb.enums.ImagePrefixNameEnum;
+import com.artcweb.enums.ImageSuffixNameEnum;
+
 public interface ImageService {
 
 	/**
@@ -26,5 +29,7 @@ public interface ImageService {
 	
 	
 	public String uploadMinImage(HttpServletRequest request, MultipartFile file, String uploadPath);
+	
+	public String uploadImage(HttpServletRequest request, MultipartFile file, String uploadPath,Integer width,Integer height,ImagePrefixNameEnum prefix,ImageSuffixNameEnum suffix);
 
 }

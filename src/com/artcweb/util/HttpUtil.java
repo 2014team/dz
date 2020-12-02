@@ -14,6 +14,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,8 @@ import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+
+import com.alibaba.fastjson.JSONObject;
 
 /**
  * @ClassName: HttpUtil
@@ -405,5 +408,89 @@ public class HttpUtil {
 		}
 		return result;
 	}
+	
+	public static String getIpAddr(HttpServletRequest request) {
+		// 直接获取跟本服务器连接的客户端ip就好了，这里不用管它是不是代理的
+
+		// 如果所有请求都经过我们自己的nginx才进入到我们后端服务器，才需要通过获取代理列表"X-Forwarded-For"获取到真正的客户端ip。
+		// 即使我们用了nginx，如果有人故意构造了X-Forwarded-For请求头，也是无法获取到用户的真正ip的，其实我们只要获取跟nginx通信的那个客户端ip就可以了，没必要获取坏人的那个真正ip
+		// 获取客户端ip可以参考：https://imququ.com/post/x-forwarded-for-header-in-http.html
+		return request.getRemoteAddr();// 这个方法并不能确保是用户真正的ip，在现在我们没用nginx的情况下，直接获取跟我们服务器通信的客户端ip就好了
+
+//		String ip = request.getHeader("X-Forwarded-For");
+//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+//			ip = request.getHeader("Proxy-Client-IP");
+//		}
+//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+//			ip = request.getHeader("WL-Proxy-Client-IP");
+//		}
+//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+//			ip = request.getHeader("HTTP_CLIENT_IP");
+//		}
+//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+//			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+//		}
+//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+//			ip = request.getRemoteAddr();
+//		}
+//		return ip;
+	}
+	
+	
+	public static JSONObject getRequestParams(HttpServletRequest request) {
+
+		JSONObject paramJson = new JSONObject();
+		Enumeration<String> paramNames = request.getParameterNames();
+		while (paramNames.hasMoreElements()) {
+			String paramName = (String) paramNames.nextElement();
+			String[] paramValues = request.getParameterValues(paramName);
+			if (paramValues.length == 1) {
+				String paramValue = paramValues[0];
+				if (paramValue.length() != 0) {
+					paramJson.put(paramName, paramValue);
+				}
+			}
+		}
+		return paramJson;
+	}
+
+	public static SortedMap<String, Object> getRequestParams2(HttpServletRequest request) {
+
+		SortedMap<String, Object> map = new TreeMap<String, Object>();
+
+		Enumeration<String> paramNames = request.getParameterNames();
+		while (paramNames.hasMoreElements()) {
+			String paramName = (String) paramNames.nextElement();
+			String[] paramValues = request.getParameterValues(paramName);
+			if (paramValues.length == 1) {
+				String paramValue = paramValues[0];
+//				if (paramValue.length() != 0) {
+//					map.put(paramName, paramValue);
+//				}
+				map.put(paramName, paramValue);
+			}
+		}
+		return map;
+	}
+	
+	public static SortedMap<String, Object> getRequestParams3(HttpServletRequest request) {
+		
+		SortedMap<String, Object> map = new TreeMap<String, Object>();
+		
+		Enumeration<String> paramNames = request.getParameterNames();
+		while (paramNames.hasMoreElements()) {
+			String paramName = (String) paramNames.nextElement();
+			String[] paramValues = request.getParameterValues(paramName);
+			String paramValue = "";
+			if(null != paramValues && paramValues.length > 0){
+				if(null != Arrays.asList(paramValues) && Arrays.asList(paramValues).size() > 0){
+					paramValue = Arrays.asList(paramValues).toString();
+				}
+			}
+			map.put(paramName, paramValue);
+		}
+		return map;
+	}
+
 
 }
