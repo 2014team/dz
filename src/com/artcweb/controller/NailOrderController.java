@@ -332,9 +332,10 @@ public class NailOrderController {
 		
 		
 		String thirdFlag = nailOrder.getThirdFlag();
+		String comefrom = nailOrder.getComefrom();
 		// 判断是否H5数据没有生产订单
 		
-		if(StringUtils.isEmpty(thirdFlag) || !thirdFlag.equals(ThirdFlagEnum.OK.getDisplayName())){
+		if(comefrom.equals(NailOrderComeFromConstant.H5) || !thirdFlag.equals(ThirdFlagEnum.OK.getDisplayName())){
 			File f = new File(request.getSession().getServletContext().getRealPath("/")+sourceImageUrl);
 			FileInputStream inputStream = new FileInputStream(f);
 			file = new MockMultipartFile(f.getName(), f.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);

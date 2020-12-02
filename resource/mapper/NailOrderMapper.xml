@@ -114,6 +114,7 @@
 		,t.width AS width
 		,t.create_date AS createDate
 		,t.update_date AS updateDate
+		,ifnull(t.third_flag,0)  AS thirdFlag
 		,nf.nail_type AS nailType
 		,tnp.color_name   AS colorName
 		 FROM t_nail_order t LEFT JOIN t_nail_config nf ON t.nail_config_id = nf.id
@@ -161,7 +162,7 @@
 		<!-- ,t.nail_count_detail AS nailCountDetail -->
 		,t.height AS height
 		,t.width AS width
-		,t.third_flag AS thirdFlag
+		,ifnull(t.third_flag,0)  AS thirdFlag
 		,t.create_date AS createDate
 		,t.update_date AS updateDate
 		,nf.nail_type AS nailType
@@ -194,6 +195,7 @@
 		t.width as width,
 		t.height as height, -->
 		nf.nail_type as nailType,
+		ifnull(t.third_flag,0) as thirdFlag,
 		tnp.color_name   as colorName,
 		t.create_date as createDate,
 		t.update_date as updateDate

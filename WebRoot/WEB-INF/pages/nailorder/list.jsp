@@ -57,7 +57,11 @@
      <script type="text/html" id="rowBar">
 		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
  		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+
+		{{#  if(d.thirdFlag==1 || d.comefrom == 0){ }}
 		<a class="layui-btn layui-btn-xs" lay-event="detail">清单</a>
+		{{# } }}
+
 	</script>
   </body>
   
@@ -344,6 +348,7 @@ function order_delAll(layfilterId,url) {
 						 nailType: resp.data.nailType,
 						 colorName: resp.data.colorName,
 						 createDate: resp.data.createDate,
+						 thirdFlag: resp.data.thirdFlag,
 						 
 						 });
 					}
