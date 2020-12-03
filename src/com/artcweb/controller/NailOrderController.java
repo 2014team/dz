@@ -24,12 +24,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailConfig;
-import com.artcweb.baen.NailCount;
-import com.artcweb.baen.NailOrder;
-import com.artcweb.baen.NailPictureFrame;
-import com.artcweb.baen.NailTotalCount;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailConfig;
+import com.artcweb.bean.NailCount;
+import com.artcweb.bean.NailOrder;
+import com.artcweb.bean.NailPictureFrame;
+import com.artcweb.bean.NailTotalCount;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.SearchConstant;
 import com.artcweb.constant.UploadConstant;

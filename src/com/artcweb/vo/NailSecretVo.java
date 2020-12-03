@@ -1,7 +1,7 @@
 
 package com.artcweb.vo;
 
-import com.artcweb.baen.NailSecret;
+import com.artcweb.bean.NailSecret;
 
 public class NailSecretVo extends NailSecret {
 

@@ -1,7 +1,7 @@
 
 package com.artcweb.vo;
 
-import com.artcweb.baen.Secret;
+import com.artcweb.bean.Secret;
 
 public class SecretVo extends Secret {
 

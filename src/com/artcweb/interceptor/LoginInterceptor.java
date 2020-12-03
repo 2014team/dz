@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.artcweb.baen.AdminUser;
+import com.artcweb.bean.AdminUser;
 import com.artcweb.util.SessionUtil;
 import com.artcweb.util.ToolUtil;
 

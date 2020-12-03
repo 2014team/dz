@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.artcweb.baen.While;
+import com.artcweb.bean.While;
 
 @Repository
 public interface WhileDao extends BaseDao<While, Integer> {

@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.artcweb.baen.Category;
-import com.artcweb.baen.LayUiResult;
+import com.artcweb.bean.Category;
+import com.artcweb.bean.LayUiResult;
 import com.artcweb.dao.CategoryDao;
 import com.artcweb.dto.CategoryDto;
 import com.artcweb.service.CategoryService;

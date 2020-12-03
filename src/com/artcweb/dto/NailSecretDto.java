@@ -1,6 +1,6 @@
 package com.artcweb.dto;
 
-import com.artcweb.baen.NailSecret;
+import com.artcweb.bean.NailSecret;
 
 public class NailSecretDto extends NailSecret{
 	

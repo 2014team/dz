@@ -9,9 +9,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailWhile;
-import com.artcweb.baen.While;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailWhile;
+import com.artcweb.bean.While;
 import com.artcweb.dao.NailWhileDao;
 import com.artcweb.dao.WhileDao;
 import com.artcweb.service.NailWhileService;

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.artcweb.dao.NailImageSizeDao">
 
-	<resultMap type="com.artcweb.baen.NailImageSize" id="result">
+	<resultMap type="com.artcweb.bean.NailImageSize" id="result">
 		<result property="id" column="id" />
 		<result property="size" column="size" />
 		<result property="height" column="height" />
@@ -13,7 +13,7 @@
 		<result property="updateDate" column="update_date" />
 	</resultMap>
 	
-	<insert id="save" parameterType="com.artcweb.baen.NailImageSize" useGeneratedKeys="true" keyProperty="id">
+	<insert id="save" parameterType="com.artcweb.bean.NailImageSize" useGeneratedKeys="true" keyProperty="id">
       INSERT INTO t_nail_image_size(size,height,width,create_date,update_date)
       VALUE (#{size},#{height},#{width},now(),now())
      </insert>
@@ -34,7 +34,7 @@
 	</delete>
 	
 	<!-- 更新 -->
-	<update id="update" parameterType="com.artcweb.baen.NailImageSize">
+	<update id="update" parameterType="com.artcweb.bean.NailImageSize">
 		update `t_nail_image_size`
 		set
 		width=#{width},

@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.artcweb.dao.UserDao">
 
-	<resultMap type="com.artcweb.baen.User" id="result">
+	<resultMap type="com.artcweb.bean.User" id="result">
 		<result property="id" column="id" />
 		<result property="userName" column="user_name" />
 		<result property="sort" column="sort" />
@@ -14,7 +14,7 @@
 
 
 	<!--保存 -->
-	<insert id="save" parameterType="com.artcweb.baen.User" useGeneratedKeys="true" keyProperty="id">
+	<insert id="save" parameterType="com.artcweb.bean.User" useGeneratedKeys="true" keyProperty="id">
 		insert into
 		user(user_name,sort,create_date,update_date)
 		values(#{userName},#{sort},now(),now())
@@ -42,7 +42,7 @@
 
 
 	<!-- 修改 -->
-	<update id="update" parameterType="com.artcweb.baen.User">
+	<update id="update" parameterType="com.artcweb.bean.User">
 		update user
 		set
 		user_name=#{userName}

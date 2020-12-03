@@ -4,7 +4,7 @@ package com.artcweb.util;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.artcweb.baen.AdminUser;
+import com.artcweb.bean.AdminUser;
 import com.artcweb.constant.SessionConstant;
 
 public class SessionUtil {

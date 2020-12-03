@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.artcweb.baen.NailConfig;
+import com.artcweb.bean.NailConfig;
 import com.artcweb.cache.DateMap;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.util.ToolUtil;

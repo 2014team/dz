@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailSecret;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailSecret;
 import com.artcweb.service.NailSecretService;
 import com.artcweb.vo.NailSecretVo;
 

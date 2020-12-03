@@ -1,7 +1,7 @@
 
 package com.artcweb.service;
 
-import com.artcweb.baen.Weixin;
+import com.artcweb.bean.Weixin;
 
 public interface WeixinService extends BaseService<Weixin, Integer>{
 

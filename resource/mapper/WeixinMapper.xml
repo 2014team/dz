@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.artcweb.dao.WeixinDao">
 
-	<resultMap type="com.artcweb.baen.Weixin" id="result">
+	<resultMap type="com.artcweb.bean.Weixin" id="result">
 		<result property="id" column="id" />
 		<result property="openid" column="openid" />
 		<result property="session_key" column="session_key" />
@@ -17,7 +17,7 @@
 		<result property="updateDate" column="update_date" />
 	</resultMap>
 	
-	<insert id="save" parameterType="com.artcweb.baen.Weixin" useGeneratedKeys="true" keyProperty="id">
+	<insert id="save" parameterType="com.artcweb.bean.Weixin" useGeneratedKeys="true" keyProperty="id">
       INSERT INTO `t_weixin` (openid,session_key,errcode,errmsg,userId,mobile,bind_flag,create_date,update_date)
            values (#{openid},#{session_key},#{errcode},#{errmsg},#{userId},#{mobile},#{bindFlag},now(),now())
      </insert>
@@ -35,7 +35,7 @@
 	
 
 	<!-- 更新 -->
-	<update id="update" parameterType="com.artcweb.baen.Weixin">
+	<update id="update" parameterType="com.artcweb.bean.Weixin">
 		update `t_weixin`
 		set
 		mobile=#{mobile},

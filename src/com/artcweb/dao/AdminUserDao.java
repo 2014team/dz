@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.artcweb.baen.AdminUser;
+import com.artcweb.bean.AdminUser;
 
 @Repository
 public interface AdminUserDao extends BaseDao<AdminUser, Integer> {

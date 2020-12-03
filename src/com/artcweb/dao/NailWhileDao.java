@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.artcweb.baen.NailWhile;
+import com.artcweb.bean.NailWhile;
 
 @Repository
 public interface NailWhileDao extends BaseDao<NailWhile, Integer> {

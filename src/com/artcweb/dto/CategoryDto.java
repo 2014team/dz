@@ -2,7 +2,7 @@ package com.artcweb.dto;
 
 import java.util.List;
 
-import com.artcweb.baen.Category;
+import com.artcweb.bean.Category;
 
 public class CategoryDto extends Category{
 

@@ -1,8 +1,8 @@
 
 package com.artcweb.service;
 
-import com.artcweb.baen.Category;
-import com.artcweb.baen.LayUiResult;
+import com.artcweb.bean.Category;
+import com.artcweb.bean.LayUiResult;
 import com.artcweb.vo.CategoryVo;
 
 /**

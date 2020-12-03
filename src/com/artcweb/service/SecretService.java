@@ -4,8 +4,8 @@ package com.artcweb.service;
 import java.util.List;
 import java.util.Map;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.Secret;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.Secret;
 import com.artcweb.dto.SecretDto;
 import com.artcweb.vo.SecretVo;
 

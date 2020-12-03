@@ -10,8 +10,8 @@ import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.artcweb.baen.AdminUser;
-import com.artcweb.baen.LayUiResult;
+import com.artcweb.bean.AdminUser;
+import com.artcweb.bean.LayUiResult;
 import com.artcweb.dao.AdminUserDao;
 import com.artcweb.service.AdminUserService;
 import com.artcweb.util.SessionUtil;

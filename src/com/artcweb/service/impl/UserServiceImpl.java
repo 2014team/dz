@@ -12,9 +12,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.Order;
-import com.artcweb.baen.User;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.Order;
+import com.artcweb.bean.User;
 import com.artcweb.constant.ComeFromConstant;
 import com.artcweb.dao.OrderDao;
 import com.artcweb.dao.PicPackageDao;

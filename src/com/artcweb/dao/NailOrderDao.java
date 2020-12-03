@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.artcweb.baen.NailOrder;
+import com.artcweb.bean.NailOrder;
 import com.artcweb.dto.NailOrderDto;
 
 @Repository

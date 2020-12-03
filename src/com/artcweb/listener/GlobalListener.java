@@ -11,9 +11,9 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.stereotype.Component;
 
-import com.artcweb.baen.NailConfig;
-import com.artcweb.baen.NailDetailConfig;
-import com.artcweb.baen.NailImageSize;
+import com.artcweb.bean.NailConfig;
+import com.artcweb.bean.NailDetailConfig;
+import com.artcweb.bean.NailImageSize;
 import com.artcweb.cache.DateMap;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailDetailConfigService;

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.artcweb.baen.Secret;
+import com.artcweb.bean.Secret;
 import com.artcweb.dto.SecretDto;
 
 @Repository

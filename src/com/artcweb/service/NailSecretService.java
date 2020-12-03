@@ -3,8 +3,8 @@ package com.artcweb.service;
 
 import java.util.Map;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailSecret;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailSecret;
 import com.artcweb.vo.NailSecretVo;
 
 public interface NailSecretService extends BaseService<NailSecret, Integer> {

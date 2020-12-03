@@ -1,6 +1,6 @@
 package com.artcweb.dto;
 
-import com.artcweb.baen.NailWhile;
+import com.artcweb.bean.NailWhile;
 
 public class NailWhileDto extends NailWhile{
 

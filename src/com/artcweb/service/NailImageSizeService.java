@@ -1,8 +1,8 @@
 
 package com.artcweb.service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailImageSize;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailImageSize;
 import com.artcweb.vo.NailImageSizeVo;
 
 public interface NailImageSizeService extends BaseService<NailImageSize, Integer>{

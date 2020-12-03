@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailImageSize;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailImageSize;
 import com.artcweb.dao.NailImageSizeDao;
 import com.artcweb.dto.NailImageSizeDto;
 import com.artcweb.service.NailImageSizeService;

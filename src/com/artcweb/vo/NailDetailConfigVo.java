@@ -1,6 +1,6 @@
 package com.artcweb.vo;
 
-import com.artcweb.baen.NailDetailConfig;
+import com.artcweb.bean.NailDetailConfig;
 
 public class NailDetailConfigVo extends NailDetailConfig{
 

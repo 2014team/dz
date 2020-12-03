@@ -9,8 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailDetailConfig;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailDetailConfig;
 import com.artcweb.dao.NailDetailConfigDao;
 import com.artcweb.dto.NailDetailConfigDto;
 import com.artcweb.service.NailDetailConfigService;

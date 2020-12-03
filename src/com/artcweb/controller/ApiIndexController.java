@@ -7,9 +7,9 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.PicPackage;
-import com.artcweb.baen.Weixin;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.PicPackage;
+import com.artcweb.bean.Weixin;
 import com.artcweb.service.ApiService;
 import com.artcweb.service.WeixinService;
 import com.artcweb.vo.WeixinVo;

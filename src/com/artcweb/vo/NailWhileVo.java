@@ -1,7 +1,7 @@
 
 package com.artcweb.vo;
 
-import com.artcweb.baen.NailWhile;
+import com.artcweb.bean.NailWhile;
 
 public class NailWhileVo extends NailWhile {
 

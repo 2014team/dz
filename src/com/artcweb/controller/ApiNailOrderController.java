@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailCount;
-import com.artcweb.baen.NailSecret;
-import com.artcweb.baen.NailWhile;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailCount;
+import com.artcweb.bean.NailSecret;
+import com.artcweb.bean.NailWhile;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.dto.NailOrderDto;

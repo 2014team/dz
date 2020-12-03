@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.artcweb.dao.NailOrderDao">
 
-	<resultMap type="com.artcweb.baen.NailOrder" id="result">
+	<resultMap type="com.artcweb.bean.NailOrder" id="result">
 		<result property="id" column="id" />
 		<result property="username" column="username" />
 		<result property="mobile" column="mobile" />
@@ -24,7 +24,7 @@
 		<result property="updateDate" column="update_date" />
 	</resultMap>
 	
-	<insert id="save" parameterType="com.artcweb.baen.NailOrder" useGeneratedKeys="true" keyProperty="id">
+	<insert id="save" parameterType="com.artcweb.bean.NailOrder" useGeneratedKeys="true" keyProperty="id">
       INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,result_image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,third_flag,create_date,update_date)
       VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{resultImageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},#{thirdFlag},now(),now())
      </insert>
@@ -44,7 +44,7 @@
 		FIND_IN_SET (id,#{id})
 	</delete>
 	
-	<select id="getByBatch" parameterType="String" resultType="com.artcweb.baen.NailOrder">
+	<select id="getByBatch" parameterType="String" resultType="com.artcweb.bean.NailOrder">
 		select id as id, image_url as imageUrl from
 		`t_nail_order`
 		where
@@ -52,7 +52,7 @@
 	</select>
 	
 	<!-- 更新 -->
-	<update id="update" parameterType="com.artcweb.baen.NailOrder">
+	<update id="update" parameterType="com.artcweb.bean.NailOrder">
 		update `t_nail_order`
 		set
 		username=#{username},
@@ -125,7 +125,7 @@
 		order by t.id limit 1
 	</select>
 	
-	<select id="checkExist" parameterType="Map" resultType="com.artcweb.baen.NailOrder">
+	<select id="checkExist" parameterType="Map" resultType="com.artcweb.bean.NailOrder">
 		select id as id,image_url as imageUrl
 		 from
 		`t_nail_order`

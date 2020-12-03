@@ -7,8 +7,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.Order;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.Order;
 
 public interface OrderService extends BaseService<Order, Integer> {
 

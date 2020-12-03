@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.artcweb.baen.BaseBean;
+import com.artcweb.bean.BaseBean;
 
 /**
  * BaseDao DAO层泛型接口，定义基本的DAO功能

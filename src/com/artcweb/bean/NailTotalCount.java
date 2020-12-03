@@ -1,4 +1,4 @@
-package com.artcweb.baen;
+package com.artcweb.bean;
 
 import java.io.Serializable;
 import java.util.concurrent.ConcurrentHashMap;

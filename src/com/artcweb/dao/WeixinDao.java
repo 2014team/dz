@@ -5,7 +5,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.artcweb.baen.Weixin;
+import com.artcweb.bean.Weixin;
 
 @Repository
 public interface WeixinDao extends BaseDao<Weixin, Integer> {

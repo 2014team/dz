@@ -1,6 +1,6 @@
 package com.artcweb.dto;
 
-import com.artcweb.baen.Secret;
+import com.artcweb.bean.Secret;
 
 public class SecretDto extends Secret{
 	

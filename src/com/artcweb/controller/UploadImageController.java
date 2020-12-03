@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.artcweb.baen.JsonResult;
+import com.artcweb.bean.JsonResult;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.service.ImageService;
 

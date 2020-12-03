@@ -1,6 +1,6 @@
 package com.artcweb.dto;
 
-import com.artcweb.baen.NailConfig;
+import com.artcweb.bean.NailConfig;
 
 public class NailConfigDto extends NailConfig{
 

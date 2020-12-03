@@ -1,8 +1,8 @@
 
 package com.artcweb.service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.While;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.While;
 import com.artcweb.vo.WhileVo;
 
 public interface WhileService extends BaseService<While, Integer> {

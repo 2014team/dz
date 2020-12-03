@@ -1,7 +1,7 @@
 
 package com.artcweb.vo;
 
-import com.artcweb.baen.NailImageSize;
+import com.artcweb.bean.NailImageSize;
 
 public class NailImageSizeVo extends NailImageSize {
 

@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.Order;
-import com.artcweb.baen.Secret;
-import com.artcweb.baen.While;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.Order;
+import com.artcweb.bean.Secret;
+import com.artcweb.bean.While;
 import com.artcweb.service.OrderService;
 import com.artcweb.service.SecretService;
 import com.artcweb.service.WhileService;

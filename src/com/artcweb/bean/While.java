@@ -1,7 +1,7 @@
-package com.artcweb.baen;
+package com.artcweb.bean;
 
 
-public class NailWhile extends BaseBean{
+public class While extends BaseBean{
 
 	private static final long serialVersionUID = 1L;
 	

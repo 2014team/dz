@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import com.artcweb.baen.AdminUser;
-import com.artcweb.baen.JsonResult;
-import com.artcweb.baen.LayUiResult;
+import com.artcweb.bean.AdminUser;
+import com.artcweb.bean.JsonResult;
+import com.artcweb.bean.LayUiResult;
 import com.artcweb.service.AdminUserService;
 import com.artcweb.util.SessionUtil;
 

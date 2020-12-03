@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.artcweb.baen.NailPictureFrame;
+import com.artcweb.bean.NailPictureFrame;
 import com.artcweb.dto.NailPictureFrameDto;
 
 @Repository

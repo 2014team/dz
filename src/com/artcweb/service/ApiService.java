@@ -1,8 +1,8 @@
 
 package com.artcweb.service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.PicPackage;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.PicPackage;
 import com.artcweb.vo.WeixinVo;
 
 public interface ApiService{

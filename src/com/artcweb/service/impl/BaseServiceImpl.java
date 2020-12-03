@@ -8,7 +8,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.artcweb.baen.BaseBean;
+import com.artcweb.bean.BaseBean;
 import com.artcweb.dao.BaseDao;
 import com.artcweb.service.BaseService;
 

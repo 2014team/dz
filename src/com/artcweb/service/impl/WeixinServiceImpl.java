@@ -9,7 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.artcweb.baen.Weixin;
+import com.artcweb.bean.Weixin;
 import com.artcweb.dao.WeixinDao;
 import com.artcweb.service.WeixinService;
 import com.artcweb.util.WeixinUtil;

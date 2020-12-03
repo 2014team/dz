@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.artcweb.baen.User;
+import com.artcweb.bean.User;
 
 @Repository
 public interface UserDao extends BaseDao<User, Integer> {

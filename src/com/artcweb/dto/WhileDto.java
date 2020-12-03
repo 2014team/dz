@@ -1,6 +1,6 @@
 package com.artcweb.dto;
 
-import com.artcweb.baen.While;
+import com.artcweb.bean.While;
 
 public class WhileDto extends While{
 

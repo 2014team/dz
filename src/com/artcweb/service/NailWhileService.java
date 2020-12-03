@@ -1,8 +1,8 @@
 
 package com.artcweb.service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailWhile;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailWhile;
 import com.artcweb.vo.NailWhileVo;
 
 public interface NailWhileService extends BaseService<NailWhile, Integer> {

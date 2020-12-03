@@ -11,8 +11,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailSecret;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailSecret;
 import com.artcweb.dao.NailSecretDao;
 import com.artcweb.dto.NailSecretDto;
 import com.artcweb.service.NailSecretService;

@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.artcweb.baen.NailSecret;
+import com.artcweb.bean.NailSecret;
 import com.artcweb.dto.NailSecretDto;
 
 @Repository

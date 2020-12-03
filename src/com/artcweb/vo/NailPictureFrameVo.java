@@ -1,6 +1,6 @@
 package com.artcweb.vo;
 
-import com.artcweb.baen.NailPictureFrame;
+import com.artcweb.bean.NailPictureFrame;
 
 public class NailPictureFrameVo extends NailPictureFrame{
 

@@ -1,8 +1,8 @@
 
 package com.artcweb.service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailPictureFrame;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailPictureFrame;
 import com.artcweb.vo.NailPictureFrameVo;
 
 public interface NailPictureFrameService extends BaseService<NailPictureFrame, Integer>{

@@ -1,6 +1,6 @@
 package com.artcweb.vo;
 
-import com.artcweb.baen.Order;
+import com.artcweb.bean.Order;
 
 public class OrderVo extends Order{
 

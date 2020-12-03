@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.artcweb.dao.OrderDao">
 
-	<resultMap type="com.artcweb.baen.Order" id="result">
+	<resultMap type="com.artcweb.bean.Order" id="result">
 		<result property="id" column="id" />
 		<result property="userId" column="user_id" />
 		<result property="mobile" column="mobile" />
@@ -20,7 +20,7 @@
 
 
 	<!--保存 -->
-	<insert id="save" parameterType="com.artcweb.baen.Order">
+	<insert id="save" parameterType="com.artcweb.bean.Order">
 		insert into
 		`order`(mobile,package_id,current_step,sort,template,user_id,create_date,update_date)
 		values(#{mobile},#{packageId},#{currentStep},#{sort},#{template},#{userId},now(),now())
@@ -50,7 +50,7 @@
 
 
 	<!-- 修改 -->
-	<update id="update" parameterType="com.artcweb.baen.Order">
+	<update id="update" parameterType="com.artcweb.bean.Order">
 		update `order`
 		set
 		mobile=#{mobile}
@@ -75,7 +75,7 @@
 
 
 	<!-- 查询 -->
-	<select id="getByMap" parameterType="Map" resultType="com.artcweb.baen.Order">
+	<select id="getByMap" parameterType="Map" resultType="com.artcweb.bean.Order">
 		SELECT u.id AS id,o.id AS orderId ,o.`mobile`,u.`user_name` AS userName,o.sort ,p.package_name
 		AS packageName,p.package_id AS  packageId, o.template AS template,p.come_from AS comeFrom,
 		p.image_url AS imageUrl ,p.min_image_url AS minImageUrl ,p.step ,o.current_step AS
@@ -94,7 +94,7 @@
 	</select>
 	
 	<!-- 查询 -->
-	<select id="select" parameterType="Map" resultType="com.artcweb.baen.Order">
+	<select id="select" parameterType="Map" resultType="com.artcweb.bean.Order">
 	SELECT u.id AS id,o.id AS orderId ,u.`user_name` AS userName,o.sort ,o.mobile,p.package_name
 		AS packageName,p.package_id AS packageId,p.come_from AS comeFrom,
 		p.image_url AS imageUrl ,p.min_image_url AS minImageUrl ,p.step ,o.current_step AS
@@ -140,7 +140,7 @@
 
 
 	<!-- 分页查找 -->
-	<select id="findByPage" parameterType="Map" resultType="com.artcweb.baen.Order">
+	<select id="findByPage" parameterType="Map" resultType="com.artcweb.bean.Order">
 		SELECT u.id AS id,o.id AS orderId ,u.`user_name` AS userName,o.sort ,o.mobile,p.package_name
 		AS packageName,
 		p.image_url AS imageUrl ,p.min_image_url AS minImageUrl ,p.step ,o.current_step AS
@@ -168,7 +168,7 @@
 
 	<!-- API分页查找 -->
 	<select id="findPageByApi" parameterType="Map"
-		resultType="com.artcweb.baen.Order">
+		resultType="com.artcweb.bean.Order">
 			<![CDATA[ select t.*,CASE WHEN (LENGTH(w.mobile) > 0 || t.createDate  <= '2020-09-05 17:00:00')  THEN 1 ELSE IFNULL(ts.`status`,0) END AS `status` from 
 			(
 			SELECT o.id AS orderId ,o.sort ,o.mobile,p.`come_from` AS comeFrom, p.package_name AS packageName,
@@ -209,7 +209,7 @@
 
 	<!-- 获取订单详情 -->
 	<select id="getOrderDetail" parameterType="Map"
-		resultType="com.artcweb.baen.Order">
+		resultType="com.artcweb.bean.Order">
 		SELECT t.*,ts.`status` FROM 
 		(
 			SELECT u.id AS id,o.id AS orderId ,o.`mobile`,o.sort ,p.package_name AS packageName,
@@ -259,7 +259,7 @@
 	</select>
 	
 	
-  <select id="getPackageName" parameterType="Map" resultType="com.artcweb.baen.Order">
+  <select id="getPackageName" parameterType="Map" resultType="com.artcweb.bean.Order">
 		<![CDATA[
 		SELECT u.id AS id,o.id AS orderId ,u.`user_name` AS userName,o.sort ,o.mobile,p.package_name
 		AS packageName,

@@ -11,8 +11,8 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.Secret;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.Secret;
 import com.artcweb.dao.SecretDao;
 import com.artcweb.dto.SecretDto;
 import com.artcweb.service.SecretService;

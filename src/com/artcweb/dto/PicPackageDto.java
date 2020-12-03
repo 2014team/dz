@@ -3,7 +3,7 @@ package com.artcweb.dto;
 
 import java.io.Serializable;
 
-import com.artcweb.baen.PicPackage;
+import com.artcweb.bean.PicPackage;
 
 public class PicPackageDto extends PicPackage{
 

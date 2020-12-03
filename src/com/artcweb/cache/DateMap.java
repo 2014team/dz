@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.artcweb.baen.NailConfig;
-import com.artcweb.baen.NailDetailConfig;
-import com.artcweb.baen.NailImageSize;
+import com.artcweb.bean.NailConfig;
+import com.artcweb.bean.NailDetailConfig;
+import com.artcweb.bean.NailImageSize;
 
 public class DateMap {
 

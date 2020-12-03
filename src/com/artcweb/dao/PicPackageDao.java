@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.artcweb.baen.PicPackage;
+import com.artcweb.bean.PicPackage;
 import com.artcweb.dto.PicPackageDto;
 
 @Repository

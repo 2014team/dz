@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.Order;
-import com.artcweb.baen.PicPackage;
-import com.artcweb.baen.User;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.Order;
+import com.artcweb.bean.PicPackage;
+import com.artcweb.bean.User;
 import com.artcweb.constant.ComeFromConstant;
 import com.artcweb.dto.PicPackageDto;
 import com.artcweb.service.OrderService;

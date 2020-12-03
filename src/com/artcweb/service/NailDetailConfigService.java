@@ -1,8 +1,8 @@
 
 package com.artcweb.service;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailDetailConfig;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailDetailConfig;
 import com.artcweb.vo.NailDetailConfigVo;
 
 public interface NailDetailConfigService extends BaseService<NailDetailConfig, Integer>{

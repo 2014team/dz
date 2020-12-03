@@ -102,7 +102,7 @@
 						value="${entity.imageName}"   lay-verify="required"
 						autocomplete="off" class="layui-input" maxlength="100">
 				</div>
-				<div class="layui-form-mid layui-word-aux">此值获取的是图片名(建议100字符以内)</div>
+				<div class="layui-form-mid layui-word-aux">此值自动获取GIF图片名,创建之后不可修改,具有唯一性验证(建议100字符以内)。</div>
 			</div>
 			
 

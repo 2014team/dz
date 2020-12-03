@@ -1,6 +1,6 @@
 package com.artcweb.vo;
 
-import com.artcweb.baen.Category;
+import com.artcweb.bean.Category;
 
 public class CategoryVo  extends Category{
 

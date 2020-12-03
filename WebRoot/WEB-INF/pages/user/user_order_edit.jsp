@@ -51,10 +51,10 @@
 				<div class="layui-input-inline">
 					<input type="text" id="mobile" name="mobile"
 						value="${order.mobile }"
-						lay-verify="required|number|phone" autocomplete="off"
+						lay-verify="required|number|phone" autocomplete="off" maxlength="11"
 						class="layui-input">
 				</div>
-				<div class="layui-form-mid layui-word-aux"></div>
+				<div class="layui-form-mid layui-word-aux">数字</div>
 			</div>
 			<div class="template-div"></div>
 

@@ -10,10 +10,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.multipart.MultipartFile;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.NailCount;
-import com.artcweb.baen.NailOrder;
-import com.artcweb.baen.NailTotalCount;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailCount;
+import com.artcweb.bean.NailOrder;
+import com.artcweb.bean.NailTotalCount;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.vo.NailOrderVo;
 

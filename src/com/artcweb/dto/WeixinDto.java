@@ -1,7 +1,7 @@
 
 package com.artcweb.dto;
 
-import com.artcweb.baen.Weixin;
+import com.artcweb.bean.Weixin;
 
 public class WeixinDto extends Weixin {
 	

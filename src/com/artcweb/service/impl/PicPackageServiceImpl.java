@@ -14,8 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.PicPackage;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.PicPackage;
 import com.artcweb.dao.PicPackageDao;
 import com.artcweb.dto.PicPackageDto;
 import com.artcweb.service.PicPackageService;

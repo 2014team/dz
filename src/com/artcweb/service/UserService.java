@@ -5,8 +5,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.User;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.User;
 
 public interface UserService extends BaseService<User, Integer> {
 

@@ -13,10 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.Order;
-import com.artcweb.baen.PicPackage;
-import com.artcweb.baen.User;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.Order;
+import com.artcweb.bean.PicPackage;
+import com.artcweb.bean.User;
 import com.artcweb.constant.ComeFromConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.dao.OrderDao;

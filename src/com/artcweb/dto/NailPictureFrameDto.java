@@ -1,6 +1,6 @@
 package com.artcweb.dto;
 
-import com.artcweb.baen.NailPictureFrame;
+import com.artcweb.bean.NailPictureFrame;
 
 public class NailPictureFrameDto extends NailPictureFrame{
 

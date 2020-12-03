@@ -1,4 +1,4 @@
-package com.artcweb.baen;
+package com.artcweb.bean;
 
 
 import cn.afterturn.easypoi.excel.annotation.Excel;

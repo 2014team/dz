@@ -6,7 +6,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Repository;
 
-import com.artcweb.baen.NailImageSize;
+import com.artcweb.bean.NailImageSize;
 import com.artcweb.dto.NailImageSizeDto;
 
 @Repository

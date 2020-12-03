@@ -4,7 +4,7 @@ package com.artcweb.util;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
-import com.artcweb.baen.Weixin;
+import com.artcweb.bean.Weixin;
 import com.artcweb.service.impl.WeixinServiceImpl;
 
 public class WeixinUtil {

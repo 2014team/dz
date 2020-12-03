@@ -1,6 +1,6 @@
 package com.artcweb.dto;
 
-import com.artcweb.baen.NailImageSize;
+import com.artcweb.bean.NailImageSize;
 
 public class NailImageSizeDto extends NailImageSize{
 

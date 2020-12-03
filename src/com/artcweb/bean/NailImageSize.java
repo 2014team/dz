@@ -1,5 +1,5 @@
 
-package com.artcweb.baen;
+package com.artcweb.bean;
 
 public class NailImageSize extends BaseBean {
 

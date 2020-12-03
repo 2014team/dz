@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 
-import com.artcweb.baen.BaseBean;
+import com.artcweb.bean.BaseBean;
 
 public abstract interface BaseService<T extends BaseBean, PK extends Serializable> {
 

@@ -1,7 +1,7 @@
 
 package com.artcweb.vo;
 
-import com.artcweb.baen.While;
+import com.artcweb.bean.While;
 
 public class WhileVo extends While {
 

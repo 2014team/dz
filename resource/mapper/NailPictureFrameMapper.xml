@@ -4,14 +4,14 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.artcweb.dao.NailPictureFrameDao">
 
-	<resultMap type="com.artcweb.baen.NailPictureFrame" id="result">
+	<resultMap type="com.artcweb.bean.NailPictureFrame" id="result">
 		<result property="id" column="id" />
 		<result property="colorName" column="color_name" />
 		<result property="createDate" column="create_date" />
 		<result property="updateDate" column="update_date" />
 	</resultMap>
 	
-	<insert id="save" parameterType="com.artcweb.baen.NailPictureFrame" useGeneratedKeys="true" keyProperty="id">
+	<insert id="save" parameterType="com.artcweb.bean.NailPictureFrame" useGeneratedKeys="true" keyProperty="id">
       INSERT INTO t_nail_pictureframe(color_name,create_date,update_date)
       VALUE (#{colorName},now(),now())
      </insert>
@@ -32,7 +32,7 @@
 	</delete>
 	
 	<!-- 更新 -->
-	<update id="update" parameterType="com.artcweb.baen.NailPictureFrame">
+	<update id="update" parameterType="com.artcweb.bean.NailPictureFrame">
 		update `t_nail_pictureframe`
 		set
 		color_name=#{colorName},

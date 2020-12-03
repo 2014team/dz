@@ -4,7 +4,7 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.artcweb.dao.WhileDao">
 
-	<resultMap type="com.artcweb.baen.While" id="result">
+	<resultMap type="com.artcweb.bean.While" id="result">
 		<result property="id" column="id" />
 		<result property="mobile" column="mobile" />
 		<result property="createDate" column="create_date" />
@@ -12,7 +12,7 @@
 	</resultMap>
 
 	
-	<insert id="save" parameterType="com.artcweb.baen.While" useGeneratedKeys="true" keyProperty="id">
+	<insert id="save" parameterType="com.artcweb.bean.While" useGeneratedKeys="true" keyProperty="id">
       INSERT INTO t_while(mobile,create_date,update_date)
       VALUE (#{mobile},now(),now())
      </insert>
@@ -44,7 +44,7 @@
 	</delete>
 	
 	<!-- 更新 -->
-	<update id="update" parameterType="com.artcweb.baen.While">
+	<update id="update" parameterType="com.artcweb.bean.While">
 		update `t_while`
 		set
 		mobile=#{mobile}

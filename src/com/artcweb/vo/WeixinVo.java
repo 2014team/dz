@@ -1,6 +1,6 @@
 package com.artcweb.vo;
 
-import com.artcweb.baen.Weixin;
+import com.artcweb.bean.Weixin;
 
 public class WeixinVo  extends Weixin{
 

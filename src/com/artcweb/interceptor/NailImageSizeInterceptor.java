@@ -13,7 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.artcweb.baen.NailImageSize;
+import com.artcweb.bean.NailImageSize;
 import com.artcweb.cache.DateMap;
 import com.artcweb.service.NailImageSizeService;
 import com.artcweb.util.ToolUtil;

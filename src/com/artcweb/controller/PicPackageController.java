@@ -17,9 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.artcweb.baen.Category;
-import com.artcweb.baen.LayUiResult;
-import com.artcweb.baen.PicPackage;
+import com.artcweb.bean.Category;
+import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.PicPackage;
 import com.artcweb.constant.ComeFromConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.service.CategoryService;

@@ -6,8 +6,8 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
-import com.artcweb.baen.AdminUser;
-import com.artcweb.baen.LayUiResult;
+import com.artcweb.bean.AdminUser;
+import com.artcweb.bean.LayUiResult;
 
 public interface AdminUserService extends BaseService<AdminUser, Integer> {
 

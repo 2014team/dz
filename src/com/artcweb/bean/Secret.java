@@ -1,12 +1,12 @@
 
-package com.artcweb.baen;
+package com.artcweb.bean;
 
 /**
  * @ClassName: Secret
  * @Description:秘钥
  */
 
-public class NailSecret extends BaseBean {
+public class Secret extends BaseBean {
 
 	private static final long serialVersionUID = 1L;
 
