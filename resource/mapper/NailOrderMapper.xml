@@ -207,15 +207,28 @@
 		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
 		 left join  t_nail_pictureframe tnp on t.nail_pictureframe_Id = tnp.id
 		<where>
-			<if test="null != entity and  null != entity.username and '' != entity.username">
-					t.username  like '%${entity.username}%'
-			</if>
-			<if test="null != entity and  null != entity.imageName and '' != entity.imageName">
-					and t.image_name  like '%${entity.imageName}%'
-			</if>
-			<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
-					and t.mobile like '%${entity.mobile}%'
-			</if>
+		
+			<choose>
+				<when test="null != entity and ((null != entity.username and '' != entity.username)||(null != entity.imageName and '' != entity.imageName)||(null != entity.mobile and '' != entity.mobile))">
+					<if test="null != entity and  null != entity.username and '' != entity.username">
+						t.username  like '%${entity.username}%'
+					</if>
+					<if test="null != entity and  null != entity.imageName and '' != entity.imageName">
+							and t.image_name  like '%${entity.imageName}%'
+					</if>
+					<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
+							and t.mobile like '%${entity.mobile}%'
+					</if>
+				</when>
+				<otherwise>
+					<if test="null != entity and  ((null != entity.searchValue and '' != entity.searchValue) and (null != entity.searchKey ||'' == entity.searchKey))">
+						and 
+						(t.username like '%${entity.searchValue}%' or t.image_name  like '%${entity.searchValue}%' or t.mobile like '%${entity.searchValue}%')
+						
+					</if>
+				</otherwise>
+			</choose>
+			
 			<if test="null != entity and  null != entity.comefrom and '' != entity.comefrom">
 					and t.comefrom = #{entity.comefrom}
 			</if>
@@ -232,15 +245,26 @@
 	<select id="findByPageCount" parameterType="Map" resultType="int">
 		SELECT count(1) FROM `t_nail_order` t
 		<where>
-			<if test="null != entity and  null != entity.username and '' != entity.username">
-					t.username  like '%${entity.username}%'
-			</if>
-				<if test="null != entity and  null != entity.imageName and '' != entity.imageName">
-					and t.image_name  like '%${entity.imageName}%'
-			</if>
-			<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
-					and t.mobile like '%${entity.mobile}%'
-			</if>
+			<choose>
+				<when test="null != entity and ((null != entity.username and '' != entity.username)||(null != entity.imageName and '' != entity.imageName)||(null != entity.mobile and '' != entity.mobile))">
+					<if test="null != entity and  null != entity.username and '' != entity.username">
+						t.username  like '%${entity.username}%'
+					</if>
+					<if test="null != entity and  null != entity.imageName and '' != entity.imageName">
+							and t.image_name  like '%${entity.imageName}%'
+					</if>
+					<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
+							and t.mobile like '%${entity.mobile}%'
+					</if>
+				</when>
+				<otherwise>
+					<if test="null != entity and  ((null != entity.searchValue and '' != entity.searchValue) and (null != entity.searchKey ||'' == entity.searchKey))">
+						and 
+						(t.username like '%${entity.searchValue}%' or t.image_name  like '%${entity.searchValue}%' or t.mobile like '%${entity.searchValue}%')
+						
+					</if>
+				</otherwise>
+			</choose>
 			<if test="null != entity and  null != entity.comefrom and '' != entity.comefrom">
 					and t.comefrom = #{entity.comefrom}
 			</if>

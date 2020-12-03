@@ -426,14 +426,18 @@ public class NailOrderController {
 
 		// 查找类型处理
 		String searchKey = entity.getSearchKey();
+		String searchValue = entity.getSearchValue();
 		if(StringUtils.isNotEmpty(searchKey)){
-			String field= SearchConstant.getNailOrderMapBySearchKey(SearchConstant.nailOrderMap,searchKey);
-			if(StringUtils.isNotEmpty(field)){
-				NailOrder nailOrder = new NailOrder();
-				ClassUtil.setFieldValueByFieldName(field, nailOrder, entity.getSearchValue());
-				System.out.println(nailOrder.getUsername());
+			if(searchKey.equals("1")){
+				entity.setUsername(searchValue);
+			}else if(searchKey.equals("2")){
+				entity.setImageName(searchValue);
+			}else if(searchKey.equals("3")){
+				entity.setMobile(searchValue);
+				
 			}
 		}
+		
 		// 获取参数
 		Integer page = Integer.valueOf(request.getParameter("page"));
 		Integer limit = Integer.valueOf(request.getParameter("limit"));
