@@ -130,19 +130,21 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					field : 'nailBigWeight' ,
 					title : '(大钉)每包克数' ,
 				}
-				/* , {
+				 , {
 					field : 'createDate' ,
 					title : '创建时间' ,
+					hide:true,
 					templet : function(d) {
 					return date.toDateString(d.createDate, 'yyyy-MM-dd HH:mm:ss');
 				}, 
 				}, {
 					field : 'updateDate' ,
 					title : '更新时间' ,
+					hide:true,
 					templet : function(d) {
 					return date.toDateString(d.updateDate, 'yyyy-MM-dd HH:mm:ss');
 				},  
-				}*/, {
+				}, {
 					align:'left', toolbar: '#rowBar',
 					title : '操作'
 				}

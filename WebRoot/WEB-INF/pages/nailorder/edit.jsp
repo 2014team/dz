@@ -189,6 +189,7 @@
 		      if(file && file.name && file.name.lastIndexOf(".") != -1){
 		      	var fileNam = file.name.substring(0,file.name.lastIndexOf("."));
 		      	$("#imageName").val(fileNam);
+		      	$("#username").val(fileNam);
 		      }
 		      
 		      console.log(result,file)

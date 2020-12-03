@@ -26,6 +26,7 @@ import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.StatusEnum;
+import com.artcweb.enums.ThirdFlagEnum;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailSecretService;
@@ -235,6 +236,7 @@ public class ApiNailOrderController {
 
 		// 来源设置
 		entity.setComefrom(String.valueOf(NailOrderComeFromConstant.H5));
+		entity.setThirdFlag(ThirdFlagEnum.OFF.getDisplayName());
 		entity.setCurrentStep("");
 		
 		
@@ -255,9 +257,21 @@ public class ApiNailOrderController {
 		
 		
 		int len = fileName.length();
-		if(len > 11){
-			entity.setMobile(fileName.substring(0,11));
+//		if(len > 11){
+//			entity.setMobile(fileName.substring(0,11));
+//		}
+		
+		// 名称唯一性验证（只验证后台数据）
+		Map<String,Object> paramMap  = new  HashMap<String, Object>();
+		//paramMap.put("comefrom", NailOrderComeFromConstant.BACKSTAGE);
+		paramMap.put("imageName", fileName);
+		boolean checkExist = nailOrderService.checkExist(paramMap,null);
+		if(checkExist){// 没有引用删除
+			layUiResult.failure("图纸名称系统已存在");
+			logger.error("图纸名称系统已存在");
+			return layUiResult;
 		}
+		
 		// 上传图片
 		if(null != file && !file.isEmpty()){
 			

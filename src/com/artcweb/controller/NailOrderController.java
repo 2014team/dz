@@ -193,8 +193,9 @@ public class NailOrderController {
 			return layUiResult;
 		}
 		
-		// 名称唯一性验证
+		// 名称唯一性验证（只验证后台数据）
 		Map<String,Object> paramMap  = new  HashMap<String, Object>();
+		//paramMap.put("comefrom", NailOrderComeFromConstant.BACKSTAGE);
 		paramMap.put("imageName", imageName);
 		boolean checkExist = nailOrderService.checkExist(paramMap,null);
 		if(checkExist){// 没有引用删除
@@ -299,8 +300,9 @@ public class NailOrderController {
 			return layUiResult;
 		}
 		
-		// 名称唯一性验证
+		// 名称唯一性验证（只验证后台数据）
 		Map<String,Object> paramMap  = new  HashMap<String, Object>();
+		//paramMap.put("comefrom", NailOrderComeFromConstant.BACKSTAGE);
 		paramMap.put("imageName", imageName);
 		boolean checkExist = nailOrderService.checkExist(paramMap,String.valueOf(id));
 		if(checkExist){// 没有引用删除
@@ -335,7 +337,7 @@ public class NailOrderController {
 		String comefrom = nailOrder.getComefrom();
 		// 判断是否H5数据没有生产订单
 		
-		if(comefrom.equals(NailOrderComeFromConstant.H5) || !thirdFlag.equals(ThirdFlagEnum.OK.getDisplayName())){
+		if(StringUtils.isNotBlank(thirdFlag) && StringUtils.isNotBlank(comefrom) && String.valueOf(comefrom).equals(NailOrderComeFromConstant.H5) && String.valueOf(thirdFlag).equals(ThirdFlagEnum.OFF.getDisplayName())){
 			File f = new File(request.getSession().getServletContext().getRealPath("/")+sourceImageUrl);
 			FileInputStream inputStream = new FileInputStream(f);
 			file = new MockMultipartFile(f.getName(), f.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);

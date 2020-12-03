@@ -143,6 +143,9 @@
 			<if test="null != thirdFlag  and '' != thirdFlag">
 					and third_flag = #{thirdFlag}
 			</if>
+			<if test="null != comefrom">
+					and comefrom = #{comefrom}
+			</if>
 		</where>
 		order by id limit 1
 	</select>
@@ -305,8 +308,8 @@
 		 left join  t_nail_secret tns on t.id = tns.order_id
 		<where>
 			<if test="null != keyword and '' != keyword">
-					t.image_name  = #{keyword}
-				 OR t.third_id = #{keyword}
+					t.mobile  = #{keyword}
+				 OR t.image_name = #{keyword}
 			</if>
 			<if test="null != id and '' != id">
 					t.id = #{id}

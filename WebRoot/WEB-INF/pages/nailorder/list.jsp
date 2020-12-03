@@ -158,19 +158,21 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}, {
 					field : 'createDate' ,
 					title : '创建时间' ,
+					hide:true,
 					templet : function(d) {
 					return date.toDateString(d.createDate, 'yyyy-MM-dd HH:mm:ss');
 				}, 
-				}/*,  {
+				},  {
 					field : 'updateDate' ,
 					title : '更新时间' ,
+					hide:true,
 					templet : function(d) {
 					return date.toDateString(d.updateDate, 'yyyy-MM-dd HH:mm:ss');
 				},  
-				}*/, {
+				}, {
 					align:'left', toolbar: '#rowBar',
 					title : '操作',
-					width: 180
+					width: 160
 					
 				}
 
@@ -351,9 +353,22 @@ function order_delAll(layfilterId,url) {
 						 thirdFlag: resp.data.thirdFlag,
 						 
 						 });
+						 
+						 
+						 var event = editRowObj.event;
+					    if ("edit" === event && resp.data.comefrom == 1) {
+								//获取当前页
+								var pageNO = $(".layui-laypage-skip .layui-input").val();
+								//执行重载
+							     layui.table.reload('rendReloadId', {
+							       page: {
+							         curr:pageNO //重新从第 1 页开始
+							       }
+							     }, 'data'); 
+					    }
+		
 					}
 					
-						
 					}, 
 					
 				});
