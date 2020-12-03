@@ -12,8 +12,10 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.entity.ContentType;
+import org.codehaus.jackson.mrbean.BeanUtil;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
@@ -31,7 +33,6 @@ import com.artcweb.bean.NailOrder;
 import com.artcweb.bean.NailPictureFrame;
 import com.artcweb.bean.NailTotalCount;
 import com.artcweb.constant.NailOrderComeFromConstant;
-import com.artcweb.constant.SearchConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.ThirdFlagEnum;
@@ -39,7 +40,6 @@ import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailPictureFrameService;
-import com.artcweb.util.ClassUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
 import com.artcweb.vo.NailOrderVo;
@@ -309,7 +309,7 @@ public class NailOrderController {
 		}
 		
 		
-		NailOrder nailOrder = nailOrderService.getById(id);
+		NailOrder nailOrder = nailOrderService.get(id);
 		if(null == nailOrder){
 			layUiResult.failure("数据不存在");
 			return layUiResult;
@@ -345,8 +345,110 @@ public class NailOrderController {
 			File f = new File(request.getSession().getServletContext().getRealPath("/")+sourceImageUrl);
 			FileInputStream inputStream = new FileInputStream(f);
 			file = new MockMultipartFile(f.getName(), f.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
-			 //图片处理
-			 nailOrder.setThirdFlag(ThirdFlagEnum.OK.getDisplayName());
+			
+			if(String.valueOf(comefrom).equals(NailOrderComeFromConstant.H5)){
+				//图片处理
+				nailOrder.setThirdFlag(ThirdFlagEnum.OK.getDisplayName());
+			}
+		}
+		
+		
+		// 上传图片
+		if(null != file && !file.isEmpty()){
+			
+
+			// 图片尺寸验证
+			String checkNialImageSise = nailOrderService.checkNialImageSise(file);
+			if (StringUtils.isNotBlank(checkNialImageSise)) {
+				layUiResult.failure(checkNialImageSise);
+				return layUiResult;
+			}
+			
+			// 图片验证
+			String errorMsg = imageService.checkImage(file);
+			if (StringUtils.isNotBlank(errorMsg)) {
+				layUiResult.failure(errorMsg);
+				return layUiResult;
+			}
+			// 图片颜色统计
+			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+	
+			// 钉子颜色列表统计
+			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
+			
+			// 钉子与重量总数统计
+			nailOrderService.nailTotalCount(nailCountMap,entity);
+			
+		
+			// 设置高和宽
+			nailOrder.setHeight(entity.getHeight());
+			nailOrder.setWidth(entity.getWidth());
+			// 设置执行步骤
+			nailOrder.setStep(entity.getStep());
+			// 设置上传图片
+			nailOrder.setImageUrl(entity.getImageUrl());
+			nailOrder.setNailCountDetail(entity.getNailCountDetail());
+		
+		}
+		
+		
+		// 保存
+		Integer result = nailOrderService.update(nailOrder);
+		if (null != result && result > 0) {
+			if(StringUtils.isNotBlank(sourceImageUrl)){
+				
+				// 判断是否有其他数据引用图片
+				Map<String,Object> tparamMap  = new  HashMap<String, Object>();
+				tparamMap.put("imageUrl", sourceImageUrl);
+				boolean tcheckExist = nailOrderService.checkExist(tparamMap,String.valueOf(id));
+				if(tcheckExist){// 没有引用删除
+					boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
+					logger.info("物理删除图片结果 = "+deleteResult);
+				}
+			}
+			layUiResult.success(id);
+		}
+		else {
+			layUiResult.failure();
+		}
+		return layUiResult;
+	}
+	
+	
+	/**
+	* @Title: generator
+	* @Description: 清单生产
+	* @param entity
+	* @param file
+	* @param request
+	* @return
+	* @throws IOException
+	*/
+	@ResponseBody
+	@RequestMapping(value = "/generator")
+	public LayUiResult generator(NailOrderVo entity, HttpServletRequest request) throws IOException {
+		LayUiResult layUiResult = new LayUiResult();
+		// 参数验证
+		Integer id = entity.getId();
+		if (null ==id || id < 1) {
+			layUiResult.failure("id不能为空");
+			return layUiResult;
+		}
+		NailOrder nailOrder = nailOrderService.get(id);
+		if(null == nailOrder){
+			layUiResult.failure("数据不存在");
+			return layUiResult;
+		}
+		
+		
+		entity.setNailConfigId(nailOrder.getNailConfigId());
+		
+		String sourceImageUrl = nailOrder.getImageUrl();
+		MultipartFile file = null;
+		if(StringUtils.isNotBlank(sourceImageUrl)){
+			File f = new File(request.getSession().getServletContext().getRealPath("/")+sourceImageUrl);
+			FileInputStream inputStream = new FileInputStream(f);
+			file = new MockMultipartFile(f.getName(), f.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
 		}
 		
 		

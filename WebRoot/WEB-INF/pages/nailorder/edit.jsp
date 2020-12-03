@@ -7,7 +7,7 @@
 <body>
 	<div class="x-body">
 	
-		<form class="layui-form">
+		<form class="layui-form" >
 			<input type="hidden" id="id" name="id" value="${entity.id }" />
 		  
 		<div class="layui-form-item">
@@ -102,7 +102,7 @@
 						value="${entity.imageName}"   lay-verify="required"
 						autocomplete="off" class="layui-input" maxlength="100">
 				</div>
-				<div class="layui-form-mid layui-word-aux">此值自动获取GIF图片名,创建之后不可修改,具有唯一性验证(建议100字符以内)。</div>
+				<div class="layui-form-mid layui-word-aux">此值自动获取GIF图片名,创建之后不可修改,具有唯一性(建议100字符以内)。</div>
 			</div>
 			
 
@@ -114,6 +114,7 @@
 			
 		</form>
 	</div>
+	
 	<script>
 	
 	 $(function(){
@@ -182,8 +183,7 @@
 		
 		var comefrom =${entity.comefrom}+'';
         
-        
-        if(comefrom && comefrom != 1){
+        if(comefrom != 1){
           
 	           //拖拽上传
 			  upload.render({

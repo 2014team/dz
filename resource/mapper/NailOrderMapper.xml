@@ -82,6 +82,7 @@
 		,t.step AS step
 		,t.current_step AS currentStep
 		,t.image_url AS imageUrl
+		,t.result_image_url AS resultImageUrl
 		,t.image_name AS imageName
 		,t.comefrom AS comefrom
 		,t.nail_config_id AS nailConfigId

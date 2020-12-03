@@ -174,7 +174,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}, {
 					align:'left', toolbar: '#rowBar',
 					title : '操作',
-					width: 160
+					width: 180
 					
 				}
 
@@ -309,15 +309,18 @@ function order_delAll(layfilterId,url) {
    
     //刷新
 	function reloadTable(id,resp){
+		
 		if(id){
 			editRelaod(id);
 		}else{
 		   addRelaod();
 		}
-		if(resp && resp.data){
+		
+	 	if(resp && resp.data){
 			$("#formid").attr("action","/admin/center/nailorder/export/"+resp.data+".do");
 			$("#formid").submit();
-		}
+		} 
+		
 	}
 	
 		function addRelaod(){
@@ -367,13 +370,14 @@ function order_delAll(layfilterId,url) {
 							         curr:pageNO //重新从第 1 页开始
 							       }
 							     }, 'data'); 
-					    }
+					    } 
 		
 					}
 					
 					}, 
 					
 				});
+				
 		}
    
 
