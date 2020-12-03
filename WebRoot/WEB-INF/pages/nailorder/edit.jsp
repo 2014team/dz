@@ -85,6 +85,10 @@
 				</div>
           </div>
           
+          <c:if test="${not empty entity.comefrom and entity.comefrom eq 1}">
+	          <div class="layui-form-mid layui-word-aux">来源H5自动上传,不让修改GIF图</div>
+          </c:if>
+          
           <input type="hidden" id="imageUrl" name="imageUrl" value="${entity.imageUrl }"></input>
           </div>
           
@@ -175,32 +179,37 @@
 		  	}
 		  
 		}); 
+		
+		var comefrom =${entity.comefrom}+'';
+        
+        
+        if(comefrom && comefrom != 1){
           
-           //拖拽上传
-		  upload.render({
-		    elem: '#upload_image_Id'
-		    /* ,url: '/upload/' */
-		     ,size: 1024 //限制文件大小，单位 KB
-		    ,auto:false
-		    ,choose: function(obj){
-		      //预读本地文件示例，不支持ie8
-		      console.log(obj)
-		      obj.preview(function(index, file, result){
-		      if(file && file.name && file.name.lastIndexOf(".") != -1){
-		      	var fileNam = file.name.substring(0,file.name.lastIndexOf("."));
-		      	$("#imageName").val(fileNam);
-		      	$("#username").val(fileNam);
-		      }
-		      
-		      console.log(result,file)
-		      files = file
-		        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'">'); //图片链接（base64）
-		     
-		     	
-		      });
-		    }
-		  });
-		  
+	           //拖拽上传
+			  upload.render({
+			    elem: '#upload_image_Id'
+			    /* ,url: '/upload/' */
+			     ,size: 1024 //限制文件大小，单位 KB
+			    ,auto:false
+			    ,choose: function(obj){
+			      //预读本地文件示例，不支持ie8
+			      console.log(obj)
+			      obj.preview(function(index, file, result){
+			      if(file && file.name && file.name.lastIndexOf(".") != -1){
+			      	var fileNam = file.name.substring(0,file.name.lastIndexOf("."));
+			      	$("#imageName").val(fileNam);
+			      	$("#username").val(fileNam);
+			      }
+			      
+			      console.log(result,file)
+			      files = file
+			        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'">'); //图片链接（base64）
+			     
+			     	
+			      });
+			    }
+			  });
+		  }
 		  
         
           // 保存
