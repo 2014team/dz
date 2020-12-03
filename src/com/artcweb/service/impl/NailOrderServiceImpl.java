@@ -272,7 +272,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			// 小钉重量计算公式： 重量计算（数量/3600）=公斤（小数点4位）
 			// 大钉重量计算公式： 重量计算（数量/2800）=公斤（小数点4位）
 			BigDecimal nailNumberDecimal = new BigDecimal(value);
-			BigDecimal requreWeight  = nailNumberDecimal.divide(nailStandardNumberDecimal,4,BigDecimal.ROUND_HALF_DOWN);
+			BigDecimal requreWeight  = nailNumberDecimal.divide(nailStandardNumberDecimal,4,BigDecimal.ROUND_UP);
 			nailCount.setRequreWeight(String.valueOf(requreWeight));
 			
 			

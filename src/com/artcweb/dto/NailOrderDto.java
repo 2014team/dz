@@ -10,6 +10,8 @@ public class NailOrderDto extends NailOrder {
 	private String colorName;
 
 	private String status;
+	
+	private String toDay;
 
 	public String getNailType() {
 		return nailType;
@@ -34,5 +36,15 @@ public class NailOrderDto extends NailOrder {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	public String getToDay() {
+		return toDay;
+	}
+
+	public void setToDay(String toDay) {
+		this.toDay = toDay;
+	}
+	
+	
 
 }

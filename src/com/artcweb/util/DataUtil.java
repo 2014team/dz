@@ -110,6 +110,11 @@ public class DataUtil {
 		return getSdf(pattern).parse(dateStr);
 	}
 	
+	
+	public static String format(Date date, String pattern) {
+		return getSdf(pattern).format(date);
+	}
+	
 	/**
 	 * @Title: getSdf
 	 * @Description: 高并发使用

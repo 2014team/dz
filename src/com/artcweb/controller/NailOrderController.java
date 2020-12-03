@@ -12,9 +12,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.FileItemFactory;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.entity.ContentType;
 import org.slf4j.LoggerFactory;
@@ -26,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
 import com.artcweb.baen.LayUiResult;
 import com.artcweb.baen.NailConfig;
@@ -35,6 +31,7 @@ import com.artcweb.baen.NailOrder;
 import com.artcweb.baen.NailPictureFrame;
 import com.artcweb.baen.NailTotalCount;
 import com.artcweb.constant.NailOrderComeFromConstant;
+import com.artcweb.constant.SearchConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.ThirdFlagEnum;
@@ -42,6 +39,7 @@ import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailPictureFrameService;
+import com.artcweb.util.ClassUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
 import com.artcweb.vo.NailOrderVo;
@@ -317,6 +315,8 @@ public class NailOrderController {
 			return layUiResult;
 		}
 		
+		String nailConfigId_s = nailOrder.getNailConfigId();
+		
 		
 		// 买家名称
 		nailOrder.setUsername(username);
@@ -335,9 +335,13 @@ public class NailOrderController {
 		
 		String thirdFlag = nailOrder.getThirdFlag();
 		String comefrom = nailOrder.getComefrom();
-		// 判断是否H5数据没有生产订单
-		
-		if(StringUtils.isNotBlank(thirdFlag) && StringUtils.isNotBlank(comefrom) && String.valueOf(comefrom).equals(NailOrderComeFromConstant.H5) && String.valueOf(thirdFlag).equals(ThirdFlagEnum.OFF.getDisplayName())){
+		// 判断是否H5数据没有生产订单、修改订单类型也需要重新计算
+		if((StringUtils.isNotBlank(thirdFlag) && 
+				StringUtils.isNotBlank(comefrom) && 
+				String.valueOf(comefrom).equals(NailOrderComeFromConstant.H5) &&
+				String.valueOf(thirdFlag).equals(ThirdFlagEnum.OFF.getDisplayName())
+			)|| !nailConfigId_s.equals(nailConfigId)
+				){
 			File f = new File(request.getSession().getServletContext().getRealPath("/")+sourceImageUrl);
 			FileInputStream inputStream = new FileInputStream(f);
 			file = new MockMultipartFile(f.getName(), f.getName(), ContentType.APPLICATION_OCTET_STREAM.toString(), inputStream);
@@ -420,6 +424,16 @@ public class NailOrderController {
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
 	public LayUiResult list(NailOrderVo entity, HttpServletRequest request) {
 
+		// 查找类型处理
+		String searchKey = entity.getSearchKey();
+		if(StringUtils.isNotEmpty(searchKey)){
+			String field= SearchConstant.getNailOrderMapBySearchKey(SearchConstant.nailOrderMap,searchKey);
+			if(StringUtils.isNotEmpty(field)){
+				NailOrder nailOrder = new NailOrder();
+				ClassUtil.setFieldValueByFieldName(field, nailOrder, entity.getSearchValue());
+			
+			}
+		}
 		// 获取参数
 		Integer page = Integer.valueOf(request.getParameter("page"));
 		Integer limit = Integer.valueOf(request.getParameter("limit"));

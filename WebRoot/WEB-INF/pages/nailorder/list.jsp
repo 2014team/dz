@@ -17,29 +17,31 @@
     </div>
     <div class="x-body">
       <div class="layui-form layui-row demoTable">
-           	买家名称：
           <div class="layui-inline">
-		    <input class="layui-input" name="username" id="username" autocomplete="off">
-		  </div>
-           	图纸名称：
-          <div class="layui-inline">
-		    <input class="layui-input" name="imageName" id="imageName" autocomplete="off">
-		  </div>
-           	手机号码：
-          <div class="layui-inline">
-		    <input class="layui-input" name="mobile" id="mobile" autocomplete="off">
-		  </div>
-	
-		    来源：
-          <div class="layui-inline">
-		   		 <select id="comefrom" name="comefrom" lay-search>
+		   		 <select id="searchKey" name="searchKey" lay-search>
 	                <option value="">全部</option>
-                  	<option value="0" >后台</option>
-                  	<option value="1" >H5</option>
+                  	<option value="1" >买家名称</option>
+                  	<option value="2" >图纸名称</option>
+                  	<option value="3" >手机号码</option>
 	            </select>
 		  </div>
+		   <div class="layui-inline">
+		    <input class="layui-input" name="searchValue" id="searchValue" autocomplete="off">
+		  </div>
+		  
+		  来源：
+          <div class="layui-inline">
+	        <select id="comefrom" name="comefrom" lay-search>
+	                 <option value="">全部</option>
+	                   <option value="0" >后台</option>
+	                   <option value="1" >H5</option>
+	             </select>
+	    	</div>
+		  
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
       </div>
+      
+       
       
    	
    	 <!-- 列表 -->	

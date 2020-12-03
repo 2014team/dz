@@ -7,6 +7,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -240,7 +241,7 @@ public class ExportExcelUtil  {
 		row0.setHeight((short)(3 * 256));
 		Cell cell0_0 = row0.createCell(0); // 创建单元格，参数说明的是第几个单元格
 		cell0_0.setCellStyle(titleStyle);
-		cell0_0.setCellValue(excelName); // 设置单元格 和里面的内容		
+		cell0_0.setCellValue(excelName+"("+DataUtil.format(new Date(), DataUtil.DATE_YYYY_MM_DD_HH_MM_SS)+")"); // 设置单元格 和里面的内容		
 		
 		if(columnWidth.length>0){
 			Integer clWidth;
