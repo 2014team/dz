@@ -178,7 +178,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			
 			
 			// --------获取图片上传路径------------------
-			String uploadPath = ImageUtil.getUploadPath(request, image,file, uploadDirpath);
+			String uploadPath = ImageUtil.getUploadPath(request, image,file, uploadDirpath,false);
 			long end = System.currentTimeMillis();
 			logger.info("统计钉子像素耗时："+((end-begin)/1000)+" 秒");
 			
@@ -556,8 +556,11 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		if(null != list && list.size() > 0){
 			for (NailOrderDto nailOrderDto : list) {
 				String imageUrl = nailOrderDto.getImageUrl();
+				String resultImageUrl = nailOrderDto.getResultImageUrl();
 				imageUrl = ImageUtil.imageUrlDeal(imageUrl);
+				resultImageUrl = ImageUtil.imageUrlDeal(resultImageUrl);
 				nailOrderDto.setImageUrl(imageUrl);	
+				nailOrderDto.setResultImageUrl(resultImageUrl);
 						
 			}
 		}
@@ -569,8 +572,11 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		NailOrderDto nailOrderDto = nailOrderDao.apiGet(paramMap);
 		if(null != nailOrderDto){
 			String imageUrl = nailOrderDto.getImageUrl();
+			String resultImageUrl = nailOrderDto.getResultImageUrl();
 			imageUrl = ImageUtil.imageUrlDeal(imageUrl);
+			resultImageUrl = ImageUtil.imageUrlDeal(resultImageUrl);
 			nailOrderDto.setImageUrl(imageUrl);	
+			nailOrderDto.setResultImageUrl(resultImageUrl);
 		}
 		return nailOrderDto;
 	}

@@ -10,6 +10,7 @@
 		<result property="mobile" column="mobile" />
 		<result property="currentStep" column="current_step" />
 		<result property="imageUrl" column="image_url" />
+		<result property="resultImageUrl" column="result_image_url" />
 		<result property="comefrom" column="comefrom" />
 		<result property="nailConfigId" column="nail_config_id" />
 		<result property="nailPictureFrameId" column="nail_pictureframe_Id" />
@@ -24,8 +25,8 @@
 	</resultMap>
 	
 	<insert id="save" parameterType="com.artcweb.baen.NailOrder" useGeneratedKeys="true" keyProperty="id">
-      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,third_flag,create_date,update_date)
-      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},#{thirdFlag},now(),now())
+      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,result_image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,third_flag,create_date,update_date)
+      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{resultImageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},#{thirdFlag},now(),now())
      </insert>
 
 	<!--删除 -->
@@ -59,6 +60,7 @@
 		step=#{step},
 		current_step=#{currentStep},
 		image_url=#{imageUrl},
+		result_image_url=#{resultImageUrl},
 		image_name=#{imageName},
 		comefrom=#{comefrom},
 		nail_config_id=#{nailConfigId},
@@ -260,6 +262,7 @@
 		<!--t.step as step,-->
 		 ifnull(t.current_step ,'') as currentStep,  
 		t.image_url as imageUrl,
+		t.result_image_url as resultImageUrl,
 		t.image_name as imageName,
 		t.comefrom as comefrom,
 		t.nail_config_id as nailConfigId,
@@ -267,8 +270,8 @@
 	 	t.nail_count_detail as nailCountDetail,
 		t.width as width,
 		t.height as height, 
-		nf.nail_type as nailType,
-		tnp.color_name   as colorName,
+		ifnull(nf.nail_type,'') as nailType,
+		ifnull(tnp.color_name,'')   as colorName,
 		ifnull(tns.status,0) as status,
 		t.create_date as createDate,
 		t.update_date as updateDate
@@ -291,6 +294,7 @@
 		t.step as step,
 		ifnull(t.current_step ,'') as currentStep,  
 		t.image_url as imageUrl,
+		t.result_image_url as resultImageUrl,
 		t.image_name as imageName,
 		t.comefrom as comefrom,
 		t.nail_config_id as nailConfigId,

@@ -72,18 +72,27 @@ public class ImageUtil {
 		
 	}
 	
+	
 	/**
 	* @Title: getUploadPath
 	* @Description: 获取上传路径
+	* @author zhuzq
+	* @date  2020年12月3日 下午2:33:04
 	* @param request
+	* @param image
 	* @param file
 	* @param uploadPath
+	* @param fileNameFlag false:名字是源文件名,true:修改成当前时间唯一名称
 	* @return
-	 */
-	public static String getUploadPath(HttpServletRequest request,BufferedImage image,MultipartFile file,String uploadPath) {
+	*/
+	public static String getUploadPath(HttpServletRequest request,BufferedImage image,MultipartFile file,String uploadPath,boolean fileNameFlag) {
 		// 新文件名称
-		String newFileName = file.getOriginalFilename();//UploadUtil.getNewFileName(ext);
-
+		
+		String newFileName = file.getOriginalFilename();
+		if(fileNameFlag){
+			newFileName = UploadUtil.getNewFileName(UploadUtil.getFileExt(file.getOriginalFilename()));
+		}
+		
 		String year = String.valueOf(DataUtil.getYear(new Date()));
 		String month = String.valueOf(DataUtil.getMonth(new Date()));
 		String folder = year + "/" + month + "/";

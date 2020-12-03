@@ -1,11 +1,14 @@
 package com.artcweb.controller;
 
+import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,6 +34,7 @@ import com.artcweb.service.ImageService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailSecretService;
 import com.artcweb.service.NailWhileService;
+import com.artcweb.util.ImageUtil;
 import com.artcweb.util.UploadUtil;
 import com.artcweb.vo.NailOrderVo;
 
@@ -209,17 +213,28 @@ public class ApiNailOrderController {
 	
 	@ResponseBody
 	@RequestMapping(value = "/order/save")
-	public LayUiResult save(NailOrderVo entity, MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public LayUiResult save(NailOrderVo entity, MultipartFile sourceFile,MultipartFile resultFile,HttpServletRequest request,HttpServletResponse response) throws IOException {
 		LayUiResult layUiResult = new LayUiResult();
 		
 		
-		if(null == file || file.isEmpty() ){
-			layUiResult.failure("图片不能为空");
+		if(null == sourceFile || sourceFile.isEmpty() ){
+			layUiResult.failure("[sourceFile]图片不能为空");
+			return layUiResult;
+		}
+		if(null == resultFile || resultFile.isEmpty() ){
+			layUiResult.failure("[resultFile]图片不能为空");
 			return layUiResult;
 		}
 		
 		// 图片验证
-		String errorMsg = imageService.checkImage(file);
+		String errorMsg = imageService.checkImage(sourceFile);
+		if (StringUtils.isNotBlank(errorMsg)) {
+			layUiResult.failure(errorMsg);
+			logger.error("图片验证失败");
+			return layUiResult;
+		}
+		
+		errorMsg= imageService.checkImage(resultFile);
 		if (StringUtils.isNotBlank(errorMsg)) {
 			layUiResult.failure(errorMsg);
 			logger.error("图片验证失败");
@@ -227,7 +242,7 @@ public class ApiNailOrderController {
 		}
 		
 		// 图片尺寸验证
-		String checkNialImageSise = nailOrderService.checkNialImageSise(file);
+		String checkNialImageSise = nailOrderService.checkNialImageSise(sourceFile);
 		if (StringUtils.isNotBlank(checkNialImageSise)) {
 			layUiResult.failure(checkNialImageSise);
 			logger.error("图片不是尺寸配置列表范围,不符合要求，请尺寸配置");
@@ -241,7 +256,7 @@ public class ApiNailOrderController {
 		
 		
 		// 设置图片名称
-		String fileName = UploadUtil.getFileName(file);
+		String fileName = UploadUtil.getFileName(sourceFile);
 		
 		if(StringUtils.isEmpty(fileName)){
 			layUiResult.failure("文件名称不能为空");
@@ -255,6 +270,23 @@ public class ApiNailOrderController {
 		//设置买家名称
 		entity.setUsername(fileName);
 		
+		
+		
+		BufferedImage image = null;
+		InputStream input = null;
+		try {
+			input = resultFile.getInputStream();
+			image = ImageIO.read(input);
+			String resultImageUrl = ImageUtil.getUploadPath(request, image,resultFile, UploadConstant.SAVE_UPLOAD_NAIL_PATH,true);
+			entity.setResultImageUrl(resultImageUrl);
+		}catch (Exception e) {
+			e.printStackTrace();
+			logger.error("处理resultFile失败");
+		}finally{
+			if(null != input){
+				input.close();
+			}
+		}
 		
 		int len = fileName.length();
 //		if(len > 11){
@@ -273,10 +305,10 @@ public class ApiNailOrderController {
 		}
 		
 		// 上传图片
-		if(null != file && !file.isEmpty()){
+		if(null != sourceFile && !sourceFile.isEmpty()){
 			
 			// 图片颜色统计
-			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,sourceFile,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
 	
 			// 钉子颜色列表统计
 			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);

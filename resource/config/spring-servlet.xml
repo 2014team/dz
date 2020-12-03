@@ -60,8 +60,8 @@
 	
 	<mvc:interceptors>
 		<mvc:interceptor>
-			<mvc:mapping path="/api/nail/***" />
-			<mvc:exclude-mapping path="/order/save/**"/>  
+			<mvc:mapping path="/api/nail/**" />
+			<mvc:exclude-mapping path="/api/nail/order/save"/>  
 			<bean class="com.artcweb.interceptor.GlobalApiInterceptor"></bean>
 		</mvc:interceptor>
 	</mvc:interceptors>

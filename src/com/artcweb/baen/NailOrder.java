@@ -19,6 +19,8 @@ public class NailOrder extends BaseBean {
 
 	// 图片路径
 	private String imageUrl;
+	// 效果图片路径
+	private String resultImageUrl;
 
 	// 来源 0:后台1:H5
 	private String comefrom;
@@ -148,4 +150,13 @@ public class NailOrder extends BaseBean {
 		this.thirdFlag = thirdFlag;
 	}
 
+	public String getResultImageUrl() {
+		return resultImageUrl;
+	}
+
+	public void setResultImageUrl(String resultImageUrl) {
+		this.resultImageUrl = resultImageUrl;
+	}
+	
+	
 }

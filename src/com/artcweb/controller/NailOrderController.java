@@ -431,7 +431,7 @@ public class NailOrderController {
 			if(StringUtils.isNotEmpty(field)){
 				NailOrder nailOrder = new NailOrder();
 				ClassUtil.setFieldValueByFieldName(field, nailOrder, entity.getSearchValue());
-			
+				System.out.println(nailOrder.getUsername());
 			}
 		}
 		// 获取参数
