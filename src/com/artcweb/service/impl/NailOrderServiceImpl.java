@@ -88,6 +88,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			
 			if(null != list && list.size() > 0){
 				for (NailOrder n : list) {
+					String resultImageUrl =n.getResultImageUrl();
 					String sourceImageUrl =n.getImageUrl();
 					if(StringUtils.isNotEmpty(sourceImageUrl)){
 						// 判断是否有其他数据引用图片
@@ -101,6 +102,11 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 								if(!n.getId().equals(nailOrder2.getId())){
 									boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
 									logger.info("物理删除图片结果 = "+deleteResult);
+									if(deleteResult){
+										boolean  sourceImageUrlresult = FileUtil.deleteFile(resultImageUrl,request);
+										logger.info("物理删除图片结果 = "+sourceImageUrlresult);
+										
+									}
 								}
 							}
 						}else{

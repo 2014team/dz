@@ -7,11 +7,11 @@
    <body>
    
    <h2 style="text-align: center; margin: 5px">图钉画数量清单
+ 	 <c:if test="${empty entity.nailCountDetail}"> --%>
+ 	<a onclick="generator(${entity.id})"> <button style="float:left;margin-right: 10px" class="layui-btn layui-btn-sm"><i class="layui-icon">&#xe642;</i>清单生成</button></a>
+ 	 </c:if> 
  	<a href="/admin/center/nailorder/export/${entity.id}.do"> <button style="float:left" class="layui-btn layui-btn-sm"><i class="layui-icon">&#xe67d;</i>下载清单</button></a>
  	
- 	<%-- <c:if test="${empty entity.nailCountDetail}"> --%>
- 	<a onclick="generator(${entity.id})"> <button style="float:left;margin-left: 10px" class="layui-btn layui-btn-sm"><i class="layui-icon">&#xe67d;</i>清单生成</button></a>
- 	<%-- </c:if> --%>
 	
 	</h2>
 	<table class="layui-table";>

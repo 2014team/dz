@@ -443,7 +443,20 @@ public class NailOrderController {
 		
 		entity.setNailConfigId(nailOrder.getNailConfigId());
 		
+		if(StringUtils.isEmpty(nailOrder.getNailConfigId())){
+			layUiResult.failure("订单 画框信息没有无法生存订单");
+			return layUiResult;
+		}
+		
+		
 		String sourceImageUrl = nailOrder.getImageUrl();
+		
+		if(StringUtils.isEmpty(sourceImageUrl)){
+			layUiResult.failure("订单 图片不存在无法生存订单");
+			return layUiResult;
+		}
+		
+		
 		MultipartFile file = null;
 		if(StringUtils.isNotBlank(sourceImageUrl)){
 			File f = new File(request.getSession().getServletContext().getRealPath("/")+sourceImageUrl);
@@ -573,6 +586,7 @@ public class NailOrderController {
 			return result;
 		}
 		String sourceImageUrl =e.getImageUrl();
+		String resultImageUrl =e.getResultImageUrl();
 
 		Integer delResult = nailOrderService.delete(id);
 		if (null != delResult && delResult > 0) {
@@ -586,6 +600,11 @@ public class NailOrderController {
 				if(checkExist){// 没有引用删除
 					boolean  deleteResult = FileUtil.deleteFile(sourceImageUrl,request);
 					logger.info("物理删除图片结果 = "+deleteResult);
+					if(deleteResult){
+						boolean  resultImageUrlResult = FileUtil.deleteFile(resultImageUrl,request);
+						logger.info("物理删除图片结果 = "+resultImageUrlResult);
+						
+					}
 				}
 				
 			}
