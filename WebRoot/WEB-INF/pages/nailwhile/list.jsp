@@ -19,7 +19,7 @@
       <div class="layui-form layui-row demoTable">
            	手机号码：
           <div class="layui-inline">
-		    <input class="layui-input" name="mobile" id=mobile autocomplete="off">
+		    <input class="layui-input" name="mobile" id="mobile" autocomplete="off">
 		  </div>
 		  
 				

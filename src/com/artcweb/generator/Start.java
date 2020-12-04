@@ -22,7 +22,7 @@ public class Start {
 			DataBaseUtil.jdbc_driver = "com.mysql.jdbc.Driver";
 			DataBaseUtil.jdbc_url = "jdbc:mysql://112.74.216.57:3306/artcweb_admin_dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true";
 			DataBaseUtil.jdbc_user = "**";
-			DataBaseUtil.jdbc_password = "**";
+			DataBaseUtil.jdbc_password = "*";
 			
 			
 			//sqlserver

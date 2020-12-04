@@ -129,6 +129,18 @@ public abstract class GeneratorCode {
 				target_file_name = template_name + ".jsp";
 				
 				
+			}else if(template_name.equalsIgnoreCase("edit")){
+				//如果是mybatis.ftl，则生成mybatis核心配置文件sqlMapConfig.xml
+				File config_source_folder = new File(projectPath);
+				config_source_folder = new File(config_source_folder , "/WebRoot/WEB-INF/pages");
+				if(!config_source_folder.exists())
+					config_source_folder.mkdirs();
+				target_file_dir = new File(config_source_folder , DataBaseUtil.lowerFirstCapse(className));
+				if(!target_file_dir.exists())
+				target_file_dir.mkdirs();
+				target_file_name = template_name + ".jsp";
+				
+				
 			}else if(template_name.equalsIgnoreCase("service")){
 				//如果是service.ftl，则生成service接口
 				target_file_dir = new File(file , "service");

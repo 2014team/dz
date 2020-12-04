@@ -42,13 +42,10 @@
 	</delete>
 	
 	<!-- 批量删除 -->
-	<delete id="deleteByBatch"  parameterType="java.util.List">
+	<delete id="deleteByBatch"  parameterType="String">
 		delete from
 		${table.tableName}
-		where ${table.key_fields[0].field_name} in
-		<foreach collection="list" item="item" open="(" close=")" separator=",">
-			${"#"}{item}
-		</foreach>
+		where FIND_IN_SET (id,${"#"}{id})
 	</delete>
 	
 	<!-- 修改-->
@@ -79,7 +76,7 @@
 			</#if>
 		</#list>
 		 from ${table.tableName} where ${table.key_fields[0].field_name} = ${"#"}{${table.key_fields[0].java_field_Name}} 
-		 order by sort_id ,create_date desc limit 1;
+		 order by id ,create_date desc limit 1;
  	</select>
  	
  	<!-- 通过Map单个查找-->

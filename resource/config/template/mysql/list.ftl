@@ -17,10 +17,20 @@
     </div>
     <div class="x-body">
       <div class="layui-form layui-row demoTable">
-           	手机号码：
-          <div class="layui-inline">
-		    <input class="layui-input" name="mobile" id=mobile autocomplete="off">
-		  </div>
+          
+		  
+		  
+		  <#list (table.common_fields) as field>
+			<#if (field.java_field_Name != 'createDate' && field.java_field_Name != 'updateDate')>
+				 	${field.field_comment}：
+		          <div class="layui-inline">
+				    <input class="layui-input" name="${field.java_field_Name}" id="${field.java_field_Name}" autocomplete="off">
+				  </div>
+			<#else>
+				
+			</#if>
+			</#list>
+			
 		  
 				
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
@@ -84,8 +94,6 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 			},
 			cols : [ [
 				 {checkbox: true, fixed: true}
-			<#list (table.common_fields) as field>
-			<#if field_index ==0>
 			,{
 					field : 'indexId', 
 					title : '序号',
@@ -93,7 +101,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					sort : true,
 					width:80,
 				}
-			<#else>
+			<#list (table.common_fields) as field>
 			<#if (field.java_field_Name != 'createDate' && field.java_field_Name != 'updateDate')>
 				,{
 					field : '${field.java_field_Name}' ,
@@ -107,7 +115,6 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					return date.toDateString(d.${field.java_field_Name}, 'yyyy-MM-dd HH:mm:ss');
 				    }
 				}
-			</#if>
 			</#if>
 			</#list>
 				,{

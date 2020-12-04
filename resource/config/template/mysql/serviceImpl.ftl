@@ -44,7 +44,7 @@ public class ${table.className?cap_first}ServiceImpl extends BaseServiceImpl<${t
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("entity", entity);
 		paramMap.put("page", result);
-		Integer count = ${table.className?uncap_first}Dao.findByPageCount(paramMap);
+		Integer count = ${table.className?uncap_first}Dao.selectByPageCount(paramMap);
 		if (null != count && count > 0) {
 			List<${table.className?cap_first}Dto> dataList = ${table.className?uncap_first}Dao.selectByPage(paramMap);
 			result.setData(dataList);

@@ -19,7 +19,7 @@
       <div class="layui-form layui-row demoTable">
            	秘钥：
           <div class="layui-inline">
-		    <input class="layui-input" name="secretKey" id=secretKey autocomplete="off">
+		    <input class="layui-input" name="secretKey" id="secretKey" autocomplete="off">
 		  </div>
 		  
 		       状态：
