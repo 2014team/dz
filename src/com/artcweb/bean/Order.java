@@ -74,7 +74,7 @@ public class Order extends BaseBean {
 	 * 0:定制 1：模板
 	 */
 
-	private int comeFrom;
+	private Integer comeFrom;
 
 	/**
 	 * 上传步骤文件名称
@@ -204,11 +204,11 @@ public class Order extends BaseBean {
 		this.minImageUrl = minImageUrl;
 	}
 
-	public int getComeFrom() {
+	public Integer getComeFrom() {
 		return comeFrom;
 	}
 
-	public void setComeFrom(int comeFrom) {
+	public void setComeFrom(Integer comeFrom) {
 		this.comeFrom = comeFrom;
 	}
 
