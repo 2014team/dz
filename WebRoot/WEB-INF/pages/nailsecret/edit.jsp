@@ -69,7 +69,6 @@
         
           // 保存
           form.on('submit(save)', function(obj) {
-          debugger
           	data = JSON.parse(JSON.stringify(obj.field));
              //加载动画
 				var loading = layer.load(0, {
@@ -105,7 +104,7 @@
 							}
     					},
     				error : function(e) {
-    					console.err(e);
+    					console.error(e);
     					layer.msg("系统异常，稍后再试!", {
     						icon : 2,
     						time : 1000

@@ -99,7 +99,7 @@
 							}
     					},
     				error : function(e) {
-    					console.err(e);
+    					console.error(e);
     					layer.msg("系统异常，稍后再试!", {
     						icon : 2,
     						time : 500

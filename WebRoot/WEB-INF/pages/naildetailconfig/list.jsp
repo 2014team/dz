@@ -214,7 +214,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}
 			},
 			error : function(e) {
-				console.err(e);
+				console.error(e);
 				layer.msg("系统异常，稍后再试!", {
 					icon : 2,
 					time : 1000
@@ -263,7 +263,7 @@ function order_delAll(layfilterId,url) {
 				}
 			},
 			error : function(e) {
-				console.err(e);
+				console.error(e);
 				layer.msg("系统异常，稍后再试!", {
 					icon : 2,
 					time : 1000

@@ -26,8 +26,10 @@
 			<#if field_index ==0>
 			${"#"}{${field.java_field_Name}}
 			<#else>
-			<#if (field.java_field_Name != 'Date' || field.java_field_Name != 'Date')>
-				,${"#"}{${field.java_field_Name}}
+			<#if (field.java_field_Name != 'createDate' && field.java_field_Name != 'updateDate')>
+			,${"#"}{${field.java_field_Name}}
+			<#else>
+			,now()	
 			</#if>
 			</#if>
 			</#list>
@@ -57,7 +59,7 @@
 		update ${table.tableName} 
 			set update_Date = now()
 		<#list table.common_fields as field>
-			<#if (field.field_name != 'createDate' && field.field_name != 'updateDate')>
+			<#if (field.java_field_Name != 'createDate' && field.java_field_Name != 'updateDate')>
 				,${field.field_name} = ${"#"}{${field.java_field_Name}}
 			</#if>
 		</#list>
@@ -105,7 +107,7 @@
 			</#if>
  		</#list>
 		</where>
-		order by sort_id ,create_date desc limit 1;
+		order by id ,create_date desc limit 1;
 	</select>
 	
 	<!-- 列表查询 -->
@@ -132,56 +134,56 @@
 			</#if>
  		</#list>
  		</where>
- 		order by sort_id ,create_date desc;
+ 		order by id ,create_date desc;
  	</select>
  	
  	<!-- 分页查找 -->
-	<select id="findByPage" parameterType="Map" resultMap="resultMap">
+	<select id="selectByPage" parameterType="Map" resultType="${dtoPackageName}.${table.className?cap_first}Dto">
 		select 
  		<#list (table.key_fields + table.common_fields) as field>
  			<#if (field_index  == 0 )>
-				${field.field_name}
+				t.${field.field_name} as ${field.java_field_Name}
 				<#else>
-				,${field.field_name}
+				,t.${field.field_name} as ${field.java_field_Name}
 			</#if>
 		</#list>
- 		 from ${table.tableName}
+ 		 from ${table.tableName} as t
  		<where>
  		<#list table.key_fields + table.common_fields as field>
  			<#if (field_index  == 0 )>
- 			<if test="null != ${table.className?uncap_first +"Vo."+ field.java_field_Name} <#if field.java_type != 'Integer'>and ''!= ${table.className?uncap_first +"Vo."+ field.java_field_Name}</#if>">
-			${field.field_name} = ${"#"}{${table.className?uncap_first +"Vo."+ field.java_field_Name}} 
+ 			<if test="null != entity.${field.java_field_Name} <#if field.java_type != 'Integer'>and ''!= entity.${field.java_field_Name}</#if>">
+				${field.field_name} = ${"#"}{${table.className?uncap_first +"Vo."+ field.java_field_Name}} 
 			</if>	
 			<#else>
-			<if test="null != ${table.className?uncap_first +"Vo."+ field.java_field_Name} <#if field.java_type != 'Integer'>and ''!= ${table.className?uncap_first +"Vo."+ field.java_field_Name}</#if>">
-			and ${field.field_name} = ${"#"}{${table.className?uncap_first +"Vo."+ field.java_field_Name}}
+			<if test="null != entity.${field.java_field_Name} <#if field.java_type != 'Integer'>and ''!= entity.${field.java_field_Name}</#if>">
+				and ${field.field_name} = ${"#"}{entity.${field.java_field_Name}}
 			</if> 
 			</#if>
  		</#list>
  		</where>
- 		order by sort_id ,create_date desc   
+ 		order by t.id ,t.create_date desc   
  		<if test="null != page and '' != page and null != page.begin and null !=page.limit ">
  		 limit ${"$"}{page.begin} , ${"$"}{page.limit};
  		 </if>
 	</select>
 	
 	<!-- 分页查找数量 -->
-	<select id="findByPageCount" parameterType="Map" resultType="Integer">
-		select count(1)  from ${table.tableName}
+	<select id="selectByPageCount" parameterType="Map" resultType="Integer">
+		select count(1)  from ${table.tableName} as t
  		<where>
  		<#list table.key_fields + table.common_fields as field>
  			<#if (field_index  == 0 )>
- 			<if test="null != ${table.className?uncap_first +"Vo."+ field.java_field_Name} <#if field.java_type != 'Integer'>and ''!= ${table.className?uncap_first +"Vo."+ field.java_field_Name}</#if>">
-			${field.field_name} = ${"#"}{${table.className?uncap_first +"Vo."+ field.java_field_Name}} 
+ 			<if test="null != entity.${field.java_field_Name} <#if field.java_type != 'Integer'>and ''!= entity.${field.java_field_Name}</#if>">
+				t.${field.field_name} = ${"#"}{${table.className?uncap_first +"Vo."+ field.java_field_Name}} 
 			</if>	
 			<#else>
-			<if test="null != ${table.className?uncap_first +"Vo."+ field.java_field_Name} <#if field.java_type != 'Integer'>and ''!= ${table.className?uncap_first +"Vo."+ field.java_field_Name}</#if>">
-			and ${field.field_name} = ${"#"}{${table.className?uncap_first +"Vo."+ field.java_field_Name}}
+			<if test="null != entity.${field.java_field_Name} <#if field.java_type != 'Integer'>and ''!= entity.${field.java_field_Name}</#if>">
+				and t.${field.field_name} = ${"#"}{entity.${field.java_field_Name}}
 			</if> 
 			</#if>
  		</#list>
  		</where>
- 		order by sort_id ,create_date desc ;
+ 		order by id ,t.create_date desc ;
 	</select>
 
 </mapper>

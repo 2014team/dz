@@ -165,6 +165,21 @@ public class DataBaseUtil {
 		}
 	}
 	
+	/**
+	* @Title: lowerFirstCapse
+	* @Description: T把一个字符串首字母小写
+	* @param str
+	* @return
+	*/
+	public static String lowerFirstCapse(String str){
+		 
+		char[]chars = str.toCharArray();
+		 
+		chars[0] += 32;
+		 
+		return String.valueOf(chars);
+		}
+	
 	
 	/**
 	 * 
