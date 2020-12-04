@@ -10,10 +10,10 @@ import com.artcweb.bean.NailImageSize;
 
 public class DateMap {
 
-	// 化数量配置
+	// 类型配置
 	public static Map<String, NailDetailConfig> nailDetailConfigMap = new HashMap<String, NailDetailConfig>();
 	
-	// 详细配置
+	// 颜色配置
 	public static Map<String,NailConfig> nailConfigMap = new HashMap<String,NailConfig>();
 	
 	// 图片尺寸大小
@@ -21,7 +21,7 @@ public class DateMap {
 
 	/**
 	* @Title: initNailDetailConfigMap
-	* @Description: 初始化数量配置
+	* @Description: 初始化类型配置
 	* @param list
 	*/
 	public static void initNailDetailConfigMap(List<NailDetailConfig> list) {
@@ -38,7 +38,7 @@ public class DateMap {
 
 	/**
 	* @Title: initNailConfigMap
-	* @Description: 详细配置
+	* @Description: 颜色配置
 	* @param list
 	*/
 	public static void initNailConfigMap(List<NailConfig> list) {
@@ -72,7 +72,7 @@ public class DateMap {
 
 	/**
 	* @Title: synChroNailDetailConfigMap
-	* @Description: 修改操作后，数量配置同步缓存
+	* @Description: 修改操作后，类型配置同步缓存
 	* @param list
 	*/
 	public static void synChroNailDetailConfigMap(List<NailDetailConfig> list) {
@@ -87,7 +87,7 @@ public class DateMap {
 
 	/**
 	* @Title: synNailConfigList
-	* @Description: 修改操作后，详细配置同步缓存
+	* @Description: 修改操作后，颜色配置同步缓存
 	* @param list
 	*/
 	public static void synNailConfigMap(List<NailConfig> list) {
