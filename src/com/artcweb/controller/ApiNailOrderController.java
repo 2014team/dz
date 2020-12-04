@@ -3,9 +3,13 @@ package com.artcweb.controller;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
@@ -23,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailCount;
+import com.artcweb.bean.NailDetailConfig;
 import com.artcweb.bean.NailSecret;
 import com.artcweb.bean.NailWhile;
 import com.artcweb.constant.NailOrderComeFromConstant;
@@ -31,6 +36,7 @@ import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.StatusEnum;
 import com.artcweb.enums.ThirdFlagEnum;
 import com.artcweb.service.ImageService;
+import com.artcweb.service.NailDetailConfigService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailSecretService;
 import com.artcweb.service.NailWhileService;
@@ -46,6 +52,8 @@ public class ApiNailOrderController {
 	
 	@Autowired
 	private NailOrderService nailOrderService;
+	@Autowired
+	private NailDetailConfigService nailDetailConfigService;
 	
 	@Autowired
 	private NailSecretService nailSecretService;
@@ -210,6 +218,38 @@ public class ApiNailOrderController {
 		return result;
 	}
 	
+	
+	@ResponseBody
+	@RequestMapping(value = "/config/color/list", method = { RequestMethod.POST,
+					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
+	public LayUiResult colorList(NailOrderVo entity, LayUiResult result) {
+		Map<String,Object> paramMap = null;
+		List<NailDetailConfig> list = nailDetailConfigService.select(paramMap);
+		TreeMap<String, String> map = new TreeMap<String, String>();
+		if(null != list && list.size() > 0){
+			for (NailDetailConfig n : list) {
+				map.put(n.getRgb(), n.getNewSerialNumber());
+			}
+		}
+	      result.success(map);
+		
+		return result;
+	}
+	
+	
+	
+	/**
+	 * 
+	* @Title: save
+	* @Description: H5调用保存
+	* @param entity
+	* @param sourceFile
+	* @param resultFile
+	* @param request
+	* @param response
+	* @return
+	* @throws IOException
+	 */
 	
 	@ResponseBody
 	@RequestMapping(value = "/order/save")
