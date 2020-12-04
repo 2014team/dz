@@ -32,11 +32,11 @@
    	
    	 <!-- 列表 -->	
      <table class="layui-hide" id="table_list" lay-filter="table_list" ></table>
-         <script type="text/html" id="toolbar">
+       <!--  <script type="text/html" id="toolbar">
   		<div class="layui-btn-container">
    			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailconfig/add.do')"><i class="layui-icon"></i>增加</button>
   		</div>
-	</script>
+	</script>-->	
 
      
      <!--列表行Bar  -->

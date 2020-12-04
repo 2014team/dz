@@ -16,7 +16,7 @@
 				<div class="layui-input-inline">
 					<input type="text" id="nailType" name="nailType" 
 						value="${entity.nailType}"  lay-verify="required" 
-						autocomplete="off" class="layui-input" maxlength="10">
+						autocomplete="off" class="layui-input" maxlength="10" readonly="readonly">
 				</div>
 				<div class="layui-form-mid layui-word-aux">建议10字符以内</div>
 			</div>
