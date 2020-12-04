@@ -5,16 +5,16 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import ${dtoPackageName}.${table.className?cap_first}Dto;
-import ${voPackageName}.${table.className?cap_first}Vo;
+import ${entityPackageName}.LayUiResult;
+import ${entityPackageName}.${table.className?cap_first};
 import ${servicePackageName}.${table.className?cap_first}Service;
-import ${entityCommonPackage}.JsonResult;
-import ${entityCommonPackage}.AdminResultByPage;
+import ${voPackageName}.${table.className?cap_first}Vo;
+
 
 /**
  * @ClassName: ${table.className?cap_first}Controller
@@ -23,199 +23,188 @@ import ${entityCommonPackage}.AdminResultByPage;
  * @date ${dateTime}
  */
 @Controller
+@RequestMapping("/admin/center/${table.className?uncap_first}")
 public class ${table.className?cap_first}Controller {
 
 	@Autowired
 	private ${table.className?cap_first}Service ${table.className?uncap_first}Service;
 
 	/**
+	 * @Title: toList
+	 * @Description: 到列表UI
+	 * @return
+	 */
+	@RequestMapping(value = "/list/ui")
+	public String toList() {
+
+		return "/${table.className?uncap_first}/list";
+	}
+
+	/**
+	 * @Title: toAdd
+	 * @Description: 到新增UI
+	 * @return
+	 */
+	@RequestMapping(value = "/add")
+	public String toAdd(HttpServletRequest request) {
+
+		return "/${table.className?uncap_first}/edit";
+	}
+	
+	/**
+	 * @Title: toEdit
+	 * @Description: 到编辑UI
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/edit/{id}")
+	public String toEdit(@PathVariable Integer id, HttpServletRequest request) {
+		${table.className?cap_first} entity = ${table.className?uncap_first}Service.get(id);
+		request.setAttribute("entity", entity);
+		return "/${table.className?uncap_first}/edit";
+	}
+
+	/**
 	 * @Title: save
 	 * @Description: 保存
-	 * @author ${author}
-	 * @date ${dateTime}
-	 * @param ${table.className?uncap_first}Vo
+	 * @param entity
+	 * @param request
+	 * @return
+	*/
+	@ResponseBody
+	@RequestMapping(value = "/save")
+	public LayUiResult save(${table.className?cap_first}Vo entity, HttpServletRequest request) {
+		LayUiResult layUiResult = new LayUiResult();
+
+		// 参数验证
+		<#list table.common_fields as field>
+		<#if (field.java_type == 'String' && field.java_type == 'String')>
+	    String ${field.java_field_Name} = entity.get${field.java_field_Name?cap_first}();
+		if (StringUtils.isBlank(${field.java_field_Name})) {
+			layUiResult.failure("${field.field_comment}不能为空");
+			return layUiResult;
+		}
+		<#elseif (field.java_type == 'Integer' && field.java_type == 'Integer')>
+		Integer ${field.java_field_Name} = entity.get${field.java_field_Name?cap_first}();
+		if (null == ${field.java_field_Name}) {
+			layUiResult.failure("${field.field_comment}不能为空");
+			return layUiResult;
+		}
+		<#else>
+		</#if>
+		</#list>
+		
+
+		// 保存秘钥
+		Integer result = ${table.className?uncap_first}Service.saveOrUpdate(entity);
+		if (null != result && result > 0) {
+			layUiResult.success();
+		}
+		else {
+			layUiResult.failure();
+		}
+		return layUiResult;
+	}
+
+	/**
+	 * @Title: list
+	 * @Description: 列表
+	 * @param adminCate
+	 * @param request
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/admin/${table.className?uncap_first}/save", method = { RequestMethod.GET, RequestMethod.POST })
-	public JsonResult save(${table.className?cap_first}Vo ${table.className?uncap_first}Vo) {
-		JsonResult result = new JsonResult();
+	@RequestMapping(value = "/list", method = { RequestMethod.POST,
+					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
+	public LayUiResult list(${table.className?cap_first}Vo entity, HttpServletRequest request) {
 
-		// 参数验证
-		String errMsg = ${table.className?uncap_first}Service.checkParam(${table.className?uncap_first}Vo);
-		if (StringUtils.isNotBlank(errMsg)) {
-			result.failure(errMsg);
-			return result;
-		}
-
-		// 唯一性验证
-		errMsg = ${table.className?uncap_first}Service.checkUnique(${table.className?uncap_first}Vo);
-		if (StringUtils.isNotBlank(errMsg)) {
-			result.failure(errMsg);
-			return result;
-		}
-		// 保存
-		boolean save = ${table.className?uncap_first}Service.save${table.className?cap_first}(${table.className?uncap_first}Vo);
-		if (save) {
-			result.success();
-		} else {
-			result.failure();
-		}
-
+		// 获取参数
+		Integer page = Integer.valueOf(request.getParameter("page"));
+		Integer limit = Integer.valueOf(request.getParameter("limit"));
+		LayUiResult result = new LayUiResult(page, limit);
+		result = ${table.className?uncap_first}Service.findByPage(entity, result);
 		return result;
 	}
 
 	/**
 	 * @Title: delete
 	 * @Description: 删除
-	 * @author ${author}
-	 * @date ${dateTime}
-	 * @param ${table.className?uncap_first}Id
+	 * @param delete
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/admin/${table.className?uncap_first}/delete", method = { RequestMethod.GET, RequestMethod.POST })
-	public JsonResult delete(Integer ${table.key_fields[0].java_field_Name}) {
-		JsonResult result = new JsonResult();
+	@RequestMapping(value = "/delete", method = { RequestMethod.POST,
+					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
+	public LayUiResult delete(${table.className?cap_first} entity, HttpServletRequest request) {
 
-		// 验证参数
-		if (null == ${table.key_fields[0].java_field_Name}) {
-			result.failure("${table.key_fields[0].field_comment}不能为空");
+		LayUiResult result = new LayUiResult();
+		// 获取参数
+		Integer id = entity.getId();
+		if (null == id) {
+			result.failure("参数[id]不能为空!");
 			return result;
 		}
-		// 删除
-		boolean delete = ${table.className?uncap_first}Service.delete${table.className?cap_first}(${table.key_fields[0].java_field_Name});
-		if (delete) {
+
+		Integer delResult = ${table.className?uncap_first}Service.delete(id);
+		if (null != delResult && delResult > 0) {
 			result.success();
-		} else {
-			result.failure();
+			return result;
 		}
 
+		result.failure();
 		return result;
 	}
 
 	/**
-	 * @Title: batchDelete
+	 * @Title: deleteBatch
 	 * @Description: 批量删除
-	 * @author ${author}
-	 * @date ${dateTime}
-	 * @param ${table.className?uncap_first}IdArr
+	 * @param array
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/admin/${table.className?uncap_first}/batch/delete", method = { RequestMethod.GET, RequestMethod.POST })
-	public JsonResult deleteByIdArr(@RequestParam("${table.key_fields[0].java_field_Name}Arr[]") Integer[] ${table.key_fields[0].java_field_Name}Arr) {
-		JsonResult result = new JsonResult();
-		// 验证参数
-		if (null == ${table.key_fields[0].java_field_Name}Arr || ${table.key_fields[0].java_field_Name}Arr.length < 1) {
-			result.failure("请选项要删除的数据");
+	@RequestMapping(value = "/delete/batch", method = { RequestMethod.POST,
+					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
+	public LayUiResult deleteBatch(String array, HttpServletRequest request) {
+
+		LayUiResult result = new LayUiResult();
+		if (StringUtils.isBlank(array)) {
+			result.failure();
 			return result;
 		}
-		// 删除
-		Integer delete = ${table.className?uncap_first}Service.deleteByBatch(${table.key_fields[0].java_field_Name}Arr);
-		if (null != delete && delete > 0) {
-			result.success();
-		} else {
-			result.failure();
-		}
 
+		array = array.replace("[", "").replace("]", "");
+
+		boolean deleteResult = ${table.className?uncap_first}Service.deleteByBatch(array);
+		if (deleteResult) {
+			result.success();
+			return result;
+		}
+		result.failure();
 		return result;
 	}
-
+	
 	/**
-	 * @Title: update
-	 * @Description: 修改
-	 * @author ${author}
-	 * @date ${dateTime}
-	 * @param ${table.className?uncap_first}Vo
-	 * @return
-	 */
+	* @Title: get
+	* @Description: 获取单个对象
+	* @param id
+	* @return
+	*/
 	@ResponseBody
-	@RequestMapping(value = "/admin/${table.className?uncap_first}/update", method = { RequestMethod.GET, RequestMethod.POST })
-	public JsonResult update(${table.className?cap_first}Vo ${table.className?uncap_first}Vo) {
-		JsonResult result = new JsonResult();
-
-		// 验证参数
-		Integer ${table.key_fields[0].java_field_Name} = ${table.className?uncap_first}Vo.get${table.key_fields[0].java_field_Name?cap_first}();
-		if (null == ${table.key_fields[0].java_field_Name}) {
-			result.failure("${table.key_fields[0].field_comment}不能为空");
+	@RequestMapping(value = "/get", method = { RequestMethod.POST,
+					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
+	public LayUiResult get(Integer id) {
+		
+		LayUiResult result = new LayUiResult();
+		if (null == id || id < 1) {
+			result.failure("id不能为空");
 			return result;
 		}
-		String errMsg = ${table.className?uncap_first}Service.checkParam(${table.className?uncap_first}Vo);
-		if (StringUtils.isNotBlank(errMsg)) {
-			result.failure(errMsg);
-			return result;
-		}
-
-		// 唯一性验证
-		errMsg = ${table.className?uncap_first}Service.checkUnique(${table.className?uncap_first}Vo);
-		if (StringUtils.isNotBlank(errMsg)) {
-			result.failure(errMsg);
-			return result;
-		}
-		// 修改
-		boolean update = ${table.className?uncap_first}Service.update${table.className?cap_first}(${table.className?uncap_first}Vo);
-		if (update) {
-			result.success();
-		} else {
-			result.failure();
-		}
-
+		${table.className?cap_first} entity = ${table.className?uncap_first}Service.get(id);
+		result.success(entity);
 		return result;
 	}
-
-	/**
-	 * @Title: list
-	 * @Description: 分页查找
-	 * @author ${author}
-	 * @date ${dateTime}
-	 * @param ${table.className?uncap_first}Vo
-	 * @param request
-	 * @return
-	 */
-	@ResponseBody
-	@RequestMapping(value = "/admin/${table.className?uncap_first}/list", method = { RequestMethod.POST })
-	public AdminResultByPage list(${table.className?cap_first}Vo ${table.className?uncap_first}Vo, HttpServletRequest request) {
-
-		Integer page = Integer.valueOf(request.getParameter("page"));
-		Integer limit = Integer.valueOf(request.getParameter("limit"));
-
-		AdminResultByPage jsonResult = new AdminResultByPage(page, limit);
-
-		jsonResult = ${table.className?uncap_first}Service.findByPage(${table.className?uncap_first}Vo, jsonResult);
-
-		return jsonResult;
-	}
-
-	/**
-	 * @Title: toList
-	 * @Description: 列表UI
-	 * @author ${author}
-	 * @date ${dateTime}
-	 * @return
-	 */
-	@RequestMapping(value = "/admin/${table.className?uncap_first}/list/ui", method = { RequestMethod.GET })
-	public String toList() {
-		return "/admin/${table.className?uncap_first}/${table.className?uncap_first}_list";
-	}
-
-	/**
-	 * @Title: edit
-	 * @Description: 编辑
-	 * @author ${author}
-	 * @date ${dateTime}
-	 * @param ${table.className?uncap_first}Id
-	 * @param request
-	 * @return
-	 */
-	@RequestMapping(value = "/admin/${table.className?uncap_first}/edit", method = { RequestMethod.GET, RequestMethod.POST })
-	public String edit(Integer ${table.key_fields[0].java_field_Name}, HttpServletRequest request) {
-		// 编辑,为空新增
-		if (null != ${table.key_fields[0].java_field_Name}) {
-			${table.className?cap_first}Dto ${table.className?uncap_first}Dto = ${table.className?uncap_first}Service.get${table.className?cap_first}(${table.key_fields[0].java_field_Name});
-			request.setAttribute("${table.className?uncap_first}Dto", ${table.className?uncap_first}Dto);
-		}
-		return "/admin/${table.className?uncap_first}/${table.className?uncap_first}_edit";
-	}
+	
+	
 
 }

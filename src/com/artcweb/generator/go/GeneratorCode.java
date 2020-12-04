@@ -107,10 +107,23 @@ public abstract class GeneratorCode {
 				target_file_name = DataBaseUtil.capitalFirstChar(className) + "Dao.java";				
 			} else if(template_name.equalsIgnoreCase("mapper")){
 				//如果是mapper.ftl，则生成mapper.xml
-				target_file_dir = new File(file , "mapper");
+//				target_file_dir = new File(file , "F:/dz/resource/mapper");
+//				if(!target_file_dir.exists())
+//					target_file_dir.mkdirs();
+//				target_file_name = DataBaseUtil.capitalFirstChar(className) + "Mapper.xml";
+//				
+//				
+//				//如果是mybatis.ftl，则生成mybatis核心配置文件sqlMapConfig.xml
+				File config_source_folder = new File(projectPath);
+				config_source_folder = new File(config_source_folder , "config");
+				if(!config_source_folder.exists())
+					config_source_folder.mkdirs();
+				target_file_dir = new File(config_source_folder , "mybatis");
 				if(!target_file_dir.exists())
-					target_file_dir.mkdirs();
+				target_file_dir.mkdirs();
 				target_file_name = DataBaseUtil.capitalFirstChar(className) + "Mapper.xml";
+				
+				
 			} else if(template_name.equalsIgnoreCase("service")){
 				//如果是service.ftl，则生成service接口
 				target_file_dir = new File(file , "service");
