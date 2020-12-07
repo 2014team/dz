@@ -178,9 +178,9 @@ public class SecretController {
 		Map<String,Object> paramMap = new HashMap<String,Object>();
 		paramMap.put("siteName", siteName);
 		paramMap.put("id", id);
-		SecretDto entity = secretService.getDetail(paramMap);
+		SecretDto entity = secretService.detail(paramMap);
 		request.setAttribute("entity", entity);
-		return "/nailconfig/edit";
+		return "/secret/detail";
 	}
 	
 

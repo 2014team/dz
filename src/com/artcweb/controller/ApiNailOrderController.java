@@ -65,11 +65,7 @@ public class ApiNailOrderController {
 	*/
 	@ResponseBody
 	@RequestMapping("/search")
-	public LayUiResult indexSearch(HttpServletRequest request,MultipartFile file,NailOrderVo entity, LayUiResult result){
-		
-//		String s = imageService.uploadImage(request, file, UploadConstant.SAVE_UPLOAD_NAIL_PATH, 1000, 1000,ImagePrefixNameEnum.NAIL,ImageSuffixNameEnum.GIF);
-//		System.out.println(s);
-		
+	public LayUiResult indexSearch(HttpServletRequest request,NailOrderVo entity, LayUiResult result){
 		// 验证
 		String keyword = entity.getKeyword();
 		if(StringUtils.isEmpty(keyword)){

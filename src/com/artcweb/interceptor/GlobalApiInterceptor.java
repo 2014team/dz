@@ -36,15 +36,15 @@ public class GlobalApiInterceptor implements HandlerInterceptor {
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object arg2) throws Exception {
 		
-		if(true){
+		/*if(true){
 			return true;
-		}
+		}*/
 		// 获取请求IP
 		String ip = HttpUtil.getIpAddr(request);
 		logger.info("ip="+ip);
 		
 		// 获取所有参数并封装成map
-		SortedMap<String, Object> paramMap = HttpUtil.getRequestParams3(request);
+		SortedMap<String, Object> paramMap = HttpUtil.getRequestParams2(request);
 		
 		String jsonStr = GsonUtil.toJsonAll(paramMap);
 		String requestURI = request.getRequestURI();

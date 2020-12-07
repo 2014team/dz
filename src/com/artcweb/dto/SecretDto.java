@@ -8,6 +8,7 @@ public class SecretDto extends Secret{
 	private Integer packageId;
 	private String packageName;
 	private String mobile;
+	private String username;
 	
 	public Integer getPackageId() {
 		return packageId;
@@ -31,6 +32,16 @@ public class SecretDto extends Secret{
 	
 	public void setMobile(String mobile) {
 		this.mobile = mobile;
+	}
+
+	
+	public String getUsername() {
+		return username;
+	}
+
+	
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 

@@ -40,7 +40,7 @@ public interface SecretService extends BaseService<Secret, Integer> {
 	
 	boolean updateByMap(Map<String,Object> paramMap);
 	
-	SecretDto getDetail(Map<String, Object> paramMap);;
+	SecretDto detail(Map<String, Object> paramMap);;
 	
 
 }

@@ -7,55 +7,96 @@
 <body>
 	<div class="x-body">
 		<form class="layui-form">
-			<input type="hidden" id="id" name="id" value="${entity.id }" />
 			
-			
-
 		  
-		 <!--  <div class="layui-form-item">
-				<label for="L_pass" class="layui-form-label"> <span
-					class="x-red">*</span>操作标识
-				</label>
-				<div class="layui-input-inline">
-					<input type="text" id="insertFlag" name="insertFlag"
-						value="11"   lay-verify="required"
-						autocomplete="off" class="layui-input" disabled="disabled">
-				</div>
-				<div class="layui-form-mid layui-word-aux">主要作用：根据此值查询本次生产的秘钥</div>
-				
-			</div>
-		   -->
 		  <div class="layui-form-item">
-				<label for="L_pass" class="layui-form-label"> <span
-					class="x-red">*</span>秘钥数量
+				<label for="L_pass" class="layui-form-label">秘钥
 				</label>
 				<div class="layui-input-inline">
-					<input type="text" id="secretNumber" name="secretNumber"
-						value=""   lay-verify="required|number"
+					<input type="text"
+						value="${entity.secretKey }"  readonly="readonly"
 						autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-form-mid layui-word-aux">数字</div>
 			</div>
 			
 		  <div class="layui-form-item">
-				<label for="L_pass" class="layui-form-label"> <span
-					class="x-red">*</span>秘钥长度
+				<label for="L_pass" class="layui-form-label">秘钥
 				</label>
 				<div class="layui-input-inline">
-					<input type="text" id="secretDigit" name="secretDigit"
-						value="6"   lay-verify="required|number"
+					<input type="text"
+						value="${entity.status eq 1? '已使用':'未使用' }"  readonly="readonly"
 						autocomplete="off" class="layui-input">
 				</div>
-				<div class="layui-form-mid layui-word-aux">数字范围(6-32),默认6</div>
-				
 			</div>
+		  <div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label">使用项目名称
+				</label>
+				<div class="layui-input-inline">
+					<input type="text"
+						value="${entity.siteName eq 1? '绕线画':'图钉画' }"  readonly="readonly"
+						autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		  <div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label">订单ID
+				</label>
+				<div class="layui-input-inline">
+					<input type="text"
+						value="${entity.orderId }"  readonly="readonly"
+						autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		  <div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label">买家名称
+				</label>
+				<div class="layui-input-inline">
+					<input type="text"
+						value="${entity.username }"  readonly="readonly"
+						autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		  <div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label">手机号码
+				</label>
+				<div class="layui-input-inline">
+					<input type="text"
+						value="${entity.mobile }"  readonly="readonly"
+						autocomplete="off" class="layui-input">
+				</div>
+			</div>
+		  <div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label">图纸名称
+				</label>
+				<div class="layui-input-inline">
+					<input type="text"
+						value="${entity.packageName }"  readonly="readonly"
+						autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			
+		  <div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label">创建日期
+				</label>
+				<div class="layui-input-inline">
+					<input type="text"
+						value="<fmt:formatDate value="${entity.createDate}" pattern="yyyy年MM月dd日HH点mm分ss秒" />"  readonly="readonly"
+						autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			
+		  <div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label">使用日期
+				</label>
+				<div class="layui-input-inline">
+					<input type="text"
+						value="<fmt:formatDate value="${entity.updateDate}" pattern="yyyy年MM月dd日HH点mm分ss秒" />"  readonly="readonly"
+						autocomplete="off" class="layui-input">
+				</div>
+			</div>
+			
+		  
 		  
 
-			<div class="layui-form-item">
-				<label for="L_repass" class="layui-form-label"> </label>
-				<button class="layui-btn" lay-filter="save" lay-submit="">
-					生成秘钥</button>
-			</div>
 		</form>
 	</div>
 	<script>

@@ -146,7 +146,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					  	return "绕线画项目"
 					  }else if(d.siteName == 2){
 					  	return "钉子画项目"
-					  }
+					  }else{return""}
 					}
 				}/* , {
 					field : 'insertFlag' ,
@@ -195,7 +195,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				orderd_delete(obj,'/admin/center/secret/delete.do');
 		      break;
 		      case 'detail':// 详情
-				x_admin_show('详情','/admin/center/secret/detail/'+obj.data.siteName+'/'+obj.data.orderId+'.do');
+				x_admin_show('详情','/admin/center/secret/detail/'+obj.data.siteName+'/'+obj.data.id+'.do');
 		      break;
 			 }
 		});
