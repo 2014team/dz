@@ -1,7 +1,6 @@
 
 package com.artcweb.service;
 
-import java.util.List;
 import java.util.Map;
 
 import com.artcweb.bean.LayUiResult;
@@ -40,6 +39,8 @@ public interface SecretService extends BaseService<Secret, Integer> {
 	Secret getByMap(Map<String,Object> paramMap);
 	
 	boolean updateByMap(Map<String,Object> paramMap);
+	
+	SecretDto getDetail(Map<String, Object> paramMap);;
 	
 
 }

@@ -21,8 +21,8 @@ public class Start {
 			//mysql
 			DataBaseUtil.jdbc_driver = "com.mysql.jdbc.Driver";
 			DataBaseUtil.jdbc_url = "jdbc:mysql://112.74.216.57:3306/artcweb_admin_dev?useUnicode=true&characterEncoding=utf8&autoReconnect=true";
-			DataBaseUtil.jdbc_user = "**";
-			DataBaseUtil.jdbc_password = "*";
+			DataBaseUtil.jdbc_user = "root";
+			DataBaseUtil.jdbc_password = "artcweb_dz";
 			
 			
 			//sqlserver
@@ -42,9 +42,9 @@ public class Start {
 			paramMap.put("basePackageName","com.artcweb");
 			//dao、service、实体类继承父类包
 			paramMap.put("commonPackage","com.artcweb");
-			paramMap.put("description","测试");//表名
+			paramMap.put("description","H5调用");//表名
 
-			paramMap.put("tableName","t_test");//表名
+			paramMap.put("tableName","t_nail_h5_strjson");//表名
 			generator.createCode(paramMap);//第一个表
 			
 			//第二个表

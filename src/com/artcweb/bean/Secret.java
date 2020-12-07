@@ -18,6 +18,9 @@ public class Secret extends BaseBean {
 
 	// 状态 0：未使用 1：已使用
 	private Integer status;
+	
+	// 使用项目名称
+	private String siteName;
 
 	public String getSecretKey() {
 		return secretKey;
@@ -42,5 +45,14 @@ public class Secret extends BaseBean {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+
+	public String getSiteName() {
+		return siteName;
+	}
+
+	public void setSiteName(String siteName) {
+		this.siteName = siteName;
+	}
+	
 
 }

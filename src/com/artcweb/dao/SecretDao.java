@@ -27,6 +27,11 @@ public interface SecretDao extends BaseDao<Secret, Integer> {
 	Integer searchByPageCount(Map<String, Object> paramMap);
 	
 	
+	SecretDto getDetail(Map<String, Object> paramMap);
+	
+	
+	
+	
 
 	
 

@@ -116,6 +116,11 @@ public class SecretServiceImpl extends BaseServiceImpl<Secret, Integer> implemen
 		return true;
 	}
 
+	@Override
+	public SecretDto getDetail(java.util.Map<String, Object> paramMap) {
+		return secretDao.getDetail(paramMap);
+	}
+
 
 
 	

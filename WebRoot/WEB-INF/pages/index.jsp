@@ -191,7 +191,7 @@
                             
                         </a>
                     </li>
-                    <li>
+                   <!--  <li>
                         <a _href="/admin/center/nailsecret/list/ui.do">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>秘钥列表</cite>
@@ -204,7 +204,7 @@
                             <cite>白名单列表</cite>
                             
                         </a>
-                    </li>
+                    </li> -->
                     
                 </ul>
             </li>              

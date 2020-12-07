@@ -19,6 +19,7 @@ import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.Order;
 import com.artcweb.bean.Secret;
 import com.artcweb.bean.While;
+import com.artcweb.enums.SiteEnum;
 import com.artcweb.service.OrderService;
 import com.artcweb.service.SecretService;
 import com.artcweb.service.WhileService;
@@ -144,6 +145,7 @@ public class ApiOrderController {
 				//更新秘钥
 				secret.setStatus(1);
 				secret.setOrderId(orderId);
+				secret.setSiteName(String.valueOf(SiteEnum.LINE.getValue()));
 				Integer updateResult = secretService.update(secret);
 				if(null != updateResult && updateResult > 0){
 					order.setStatus(1);

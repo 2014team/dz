@@ -8,36 +8,26 @@
     <div class="x-nav">
       <span class="layui-breadcrumb">
         <a href="">首页</a>
-        <a href="">绕线画管理</a>
+        <a href="">钉子画管理</a>
         <a>
-          <cite>秘钥列表</cite></a>
+          <cite>H5调用列表</cite></a>
       </span>
       <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:38px">&#xe669;</i></a>
     </div>
     <div class="x-body">
       <div class="layui-form layui-row demoTable">
-           	秘钥：
-          <div class="layui-inline">
-		    <input class="layui-input" name="secretKey" id=secretKey autocomplete="off">
-		  </div>
+          
 		  
-		       状态：
-          <div class="layui-inline">
-		   		 <select id="status" name="status" lay-search>
-	                <option value="">全部</option>
-                  	<option value="0" >未使用</option>
-                  	<option value="1" >已使用</option>
-	            </select>
-		  </div>
 		  
-		  <div class="layui-inline">
-					<label class="layui-form-label">创建时间：</label>
-					<div class="layui-input-inline">
-						<input type="text" name="createDateStr" id="createDateStr" placeholder="请选择开始时间 - 结束时间"
-							autocomplete="off" class="layui-input" readonly="readonly" style="width: 360px;">
-					</div>
-				</div>
+				 	json内容：
+		          <div class="layui-inline">
+				    <input class="layui-input" name="strJson" id="strJson" autocomplete="off">
+				  </div>
+				
+				
+			
+		  
 				
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
       </div>
@@ -49,40 +39,27 @@
      <!-- 头部工具条 -->
 	<script type="text/html" id="toolbar">
   		<div class="layui-btn-container">
-   			 <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/secret/delete/batch.do')">批量删除</button>
-   			 <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('配置','/admin/center/secret/add.do')"><i class="layui-icon"></i>生成秘钥</button>
+   			 <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="delAll('rendReloadId','/admin/center/nailH5Strjson/delete/batch.do')">批量删除</button>
+   			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailH5Strjson/add.do')"><i class="layui-icon"></i>增加</button>
   		</div>
 	</script>
      
      <!--列表行Bar  -->
      <script type="text/html" id="rowBar">
+		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
  		 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-
-
-		{{#  if(d.status==1){ }}
-		 <a class="layui-btn layui-btn-xs" lay-event="detail">详情</a>	
-		{{# } }}
-		
 	</script>
   </body>
   
 
-<!--图片模板  -->
-<script type="text/html" id="imageUrlTpl">
-  <img alt="{{d.imageUrl}}" src="{{d.imageUrl}}">
-</script>
-<!-- 序号模板 -->
-<script type="text/html" id="indexTpl">
-   {{d.LAY_TABLE_INDEX+1}}
-</script>
 
 
 <script type="text/javascript">
+var editRowObj;
 layui.use([ 'table', 'form', 'laydate' ], function() {
 	    var table  = layui.table,
 		form = layui.form,
 		laydate = layui.laydate;
-		
 		
 		//年月范围选择
 		laydate.render({
@@ -90,11 +67,10 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 			,type: 'datetime'
 			,range : '~'
 		});
-	
 
 		  table.render({
 			elem : '#table_list',
-			url : '/admin/center/secret/list.do',
+			url : '/admin/center/nailH5Strjson/list.do',
 			toolbar: '#toolbar',
 		    defaultToolbar: ['filter', 'exports', 'print', { //自定义头部工具栏右侧图标。如无需自定义，去除该参数即可
 		      title: '提示'
@@ -104,7 +80,6 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 		    method:"post",
 			page : { //支持传入 laypage 组件的所有参数（某些参数除外，如：jump/elem） - 详见文档
 				layout : [ 'limit', 'count', 'prev', 'page', 'next', 'skip' ], //自定义分页布局 //,curr: 5 //设定初始在第 5 页
-				limits:[10, 50, 100],
 				limit : 10,//每页显示的条数
 				groups : 5, //步长
 				first : '首页', //不显示首页
@@ -114,57 +89,33 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 
 			},
 			cols : [ [
-				 {checkbox: true, fixed: true},
-				{
+				 {checkbox: true, fixed: true}
+			,{
 					field : 'indexId', 
 					title : '序号',
 					type: 'numbers',
 					sort : true,
 					width:80,
 				}
-				
-				, {
-					field : 'secretKey' ,
-					title : '秘钥' ,
+				,{
+					field : 'strJson' ,
+					title : 'json内容' ,
 				}
-				, {
-					field : 'status' ,
-					title : '状态' ,
-					templet : function(d) {
-					  if(d.status == 0){
-					  	return "未使用"
-					  }else if(d.status == 1){
-					  	return "已使用"
-					  }
-					}
-				}, {
-					field : 'siteName' ,
-					title : '已用项目名称' ,
-					hide: true,
-					templet : function(d) {
-					  if(d.siteName == 1){
-					  	return "绕线画项目"
-					  }else if(d.siteName == 2){
-					  	return "钉子画项目"
-					  }
-					}
-				}/* , {
-					field : 'insertFlag' ,
-					title : '操作标识' ,
-				} */
 				, {
 					field : 'createDate' ,
 					title : '创建时间' ,
 					templet : function(d) {
 					return date.toDateString(d.createDate, 'yyyy-MM-dd HH:mm:ss');
-				}, 
-				}, {
+				    }
+				}
+				, {
 					field : 'updateDate' ,
 					title : '更新时间' ,
 					templet : function(d) {
 					return date.toDateString(d.updateDate, 'yyyy-MM-dd HH:mm:ss');
-				}, 
-				}, {
+				    }
+				}
+				,{
 					align:'left', toolbar: '#rowBar',
 					title : '操作'
 				}
@@ -189,13 +140,14 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 		
 		//监听行工具条
 		table.on('tool(table_list)', function(obj) {
+		editRowObj = obj;
 			 var data = obj.data;
 			 switch(obj.event){
 			  case 'del': //删除
-				orderd_delete(obj,'/admin/center/secret/delete.do');
+				orderd_delete(obj,'/admin/center/nailH5Strjson/delete.do');
 		      break;
-		      case 'detail':// 详情
-				x_admin_show('详情','/admin/center/secret/detail/'+obj.data.siteName+'/'+obj.data.orderId+'.do');
+		      case 'edit':// 编辑
+				x_admin_show('编辑','/admin/center/nailH5Strjson/edit/'+obj.data.id+'.do');
 		      break;
 			 }
 		});
@@ -245,7 +197,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 
 
 // 批量删除
-function order_delAll(layfilterId,url) {
+function delAll(layfilterId,url) {
 	var selectData = layui.table.checkStatus(layfilterId).data;
 	if(selectData.length < 1){	
 		layer.msg('请选择要删除的数据！', {icon: 2});
@@ -293,6 +245,53 @@ function order_delAll(layfilterId,url) {
 	});
 		
    }
+   
+   //刷新
+	function reloadTable(id){
+		if(id){
+			editRelaod(id);
+		}else{
+		   addRelaod();
+		}
+	}
+	
+		function addRelaod(){
+				//获取当前页
+				// var pageNO = $(".layui-laypage-skip .layui-input").val();
+				//执行重载
+			     layui.table.reload('rendReloadId', {
+			       page: {
+			         curr:1 //重新从第 1 页开始
+			       }
+			     }, 'data'); 
+		}
+		
+		function editRelaod(id){
+				 $.ajax({
+					url : '/admin/center/nailH5Strjson/get.do',
+					type : "POST",
+					data :{
+				            "id": id,
+				            "page": "1",
+							"limit": 10,
+				        }, //这个是传给后台的值
+					dataType : "json",
+					success : function(resp) {
+					//console.info(data);
+					if(resp.code == 200){
+					editRowObj.update({
+							 createDate: resp.data.createDate,
+							 updateDate: resp.data.updateDate,
+						 
+						 });
+					}
+					
+					
+						
+					}, 
+					
+				});
+		}
 
 </script>
 </html>

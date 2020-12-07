@@ -302,7 +302,7 @@
 		t.update_date as updateDate
 		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
 		 left join  t_nail_pictureframe tnp on t.nail_pictureframe_Id = tnp.id
-		  left join  t_nail_secret tns on t.id = tns.order_id
+		  left join  t_secret tns on t.id = tns.order_id
 		<where>
 			<if test="null != keyword and '' != keyword">
 					t.image_name  = #{keyword}
@@ -334,7 +334,7 @@
 		t.update_date as updateDate
 		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
 		 left join  t_nail_pictureframe tnp on t.nail_pictureframe_Id = tnp.id
-		 left join  t_nail_secret tns on t.id = tns.order_id
+		 left join  t_secret tns on t.id = tns.order_id
 		<where>
 			<if test="null != keyword and '' != keyword">
 					t.mobile  = #{keyword}

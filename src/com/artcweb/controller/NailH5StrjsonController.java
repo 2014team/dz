@@ -1,8 +1,4 @@
-
 package com.artcweb.controller;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,21 +11,23 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.artcweb.bean.LayUiResult;
-import com.artcweb.bean.Secret;
-import com.artcweb.dto.SecretDto;
-import com.artcweb.service.SecretService;
-import com.artcweb.vo.SecretVo;
+import com.artcweb.bean.NailH5Strjson;
+import com.artcweb.service.NailH5StrjsonService;
+import com.artcweb.vo.NailH5StrjsonVo;
+
 
 /**
- * @ClassName: SecretController
- * @Description: 秘钥controller
+ * @ClassName: NailH5StrjsonController
+ * @Description: H5调用
+ * @author zhuzq
+ * @date 2020年12月07日 16:17:37
  */
 @Controller
-@RequestMapping("/admin/center/secret")
-public class SecretController {
+@RequestMapping("/admin/center/nailH5Strjson")
+public class NailH5StrjsonController {
 
 	@Autowired
-	private SecretService secretService;
+	private NailH5StrjsonService nailH5StrjsonService;
 
 	/**
 	 * @Title: toList
@@ -39,7 +37,7 @@ public class SecretController {
 	@RequestMapping(value = "/list/ui")
 	public String toList() {
 
-		return "/secret/list";
+		return "/nailH5Strjson/list";
 	}
 
 	/**
@@ -50,36 +48,46 @@ public class SecretController {
 	@RequestMapping(value = "/add")
 	public String toAdd(HttpServletRequest request) {
 
-		return "/secret/edit";
+		return "/nailH5Strjson/edit";
+	}
+	
+	/**
+	 * @Title: toEdit
+	 * @Description: 到编辑UI
+	 * @param id
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping(value = "/edit/{id}")
+	public String toEdit(@PathVariable Integer id, HttpServletRequest request) {
+		NailH5Strjson entity = nailH5StrjsonService.get(id);
+		request.setAttribute("entity", entity);
+		return "/nailH5Strjson/edit";
 	}
 
 	/**
 	 * @Title: save
 	 * @Description: 保存
-	 * @param adminCate
-	 * @param operator
+	 * @param entity
+	 * @param request
 	 * @return
-	 */
+	*/
 	@ResponseBody
 	@RequestMapping(value = "/save")
-	public LayUiResult save(SecretVo entity, HttpServletRequest request) {
+	public LayUiResult save(NailH5StrjsonVo entity, HttpServletRequest request) {
 		LayUiResult layUiResult = new LayUiResult();
 
 		// 参数验证
-		Integer secretNumber = entity.getSecretNumber();
-		if (null == secretNumber || secretNumber < 1) {
-			layUiResult.failure("生成秘钥数量不能为空");
+	    String strJson = entity.getStrJson();
+		if (StringUtils.isBlank(strJson)) {
+			layUiResult.failure("json内容不能为空");
 			return layUiResult;
 		}
-		Integer secretDigit = entity.getSecretDigit();
-		if (null == secretDigit || secretDigit < 1) {
-			layUiResult.failure("秘钥长度不能为空");
-			return layUiResult;
-		}
+		
 
 		// 保存秘钥
-		boolean result = secretService.saveSecret(entity);
-		if (result) {
+		Integer result = nailH5StrjsonService.saveOrUpdate(entity);
+		if (null != result && result > 0) {
 			layUiResult.success();
 		}
 		else {
@@ -98,13 +106,13 @@ public class SecretController {
 	@ResponseBody
 	@RequestMapping(value = "/list", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult list(SecretVo entity, HttpServletRequest request) {
+	public LayUiResult list(NailH5StrjsonVo entity, HttpServletRequest request) {
 
 		// 获取参数
 		Integer page = Integer.valueOf(request.getParameter("page"));
 		Integer limit = Integer.valueOf(request.getParameter("limit"));
 		LayUiResult result = new LayUiResult(page, limit);
-		result = secretService.findByPage(entity, result);
+		result = nailH5StrjsonService.findByPage(entity, result);
 		return result;
 	}
 
@@ -117,7 +125,7 @@ public class SecretController {
 	@ResponseBody
 	@RequestMapping(value = "/delete", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult delete(Secret entity, HttpServletRequest request) {
+	public LayUiResult delete(NailH5Strjson entity, HttpServletRequest request) {
 
 		LayUiResult result = new LayUiResult();
 		// 获取参数
@@ -127,7 +135,7 @@ public class SecretController {
 			return result;
 		}
 
-		Integer delResult = secretService.delete(id);
+		Integer delResult = nailH5StrjsonService.delete(id);
 		if (null != delResult && delResult > 0) {
 			result.success();
 			return result;
@@ -156,7 +164,7 @@ public class SecretController {
 
 		array = array.replace("[", "").replace("]", "");
 
-		boolean deleteResult = secretService.deleteByBatch(array);
+		boolean deleteResult = nailH5StrjsonService.deleteByBatch(array);
 		if (deleteResult) {
 			result.success();
 			return result;
@@ -166,22 +174,26 @@ public class SecretController {
 	}
 	
 	/**
-	* @Title: toEdit
-	* @Description: 获取详情
-	* @param siteName
+	* @Title: get
+	* @Description: 获取单个对象
 	* @param id
-	* @param request
 	* @return
 	*/
-	@RequestMapping(value = "/detail/{siteName}/{id}")
-	public String toEdit(@PathVariable("siteName") String siteName,@PathVariable("id") Integer id, HttpServletRequest request) {
-		Map<String,Object> paramMap = new HashMap<String,Object>();
-		paramMap.put("siteName", siteName);
-		paramMap.put("id", id);
-		SecretDto entity = secretService.getDetail(paramMap);
-		request.setAttribute("entity", entity);
-		return "/nailconfig/edit";
+	@ResponseBody
+	@RequestMapping(value = "/get", method = { RequestMethod.POST,
+					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
+	public LayUiResult get(Integer id) {
+		
+		LayUiResult result = new LayUiResult();
+		if (null == id || id < 1) {
+			result.failure("id不能为空");
+			return result;
+		}
+		NailH5Strjson entity = nailH5StrjsonService.get(id);
+		result.success(entity);
+		return result;
 	}
+	
 	
 
 }
