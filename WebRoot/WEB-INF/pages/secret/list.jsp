@@ -195,6 +195,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				orderd_delete(obj,'/admin/center/secret/delete.do');
 		      break;
 		      case 'detail':// 详情
+		      console.info(obj.data.siteName +"  "+obj.data.id)
 				x_admin_show('详情','/admin/center/secret/detail/'+obj.data.siteName+'/'+obj.data.id+'.do');
 		      break;
 			 }

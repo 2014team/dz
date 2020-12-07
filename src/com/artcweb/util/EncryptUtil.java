@@ -9,7 +9,7 @@ import sun.misc.BASE64Encoder;
 
 public class EncryptUtil {
 	public static void main(String[] args) {
-		Object plaintext = "1607352348535";//System.currentTimeMillis();
+		Object plaintext = System.currentTimeMillis();
 		System.out.println(plaintext);
 		String Key = "8NONwyJtHesysWpM";
 		String EncryptMode = "ECB";
