@@ -60,4 +60,9 @@ public class NailConfigServiceImpl extends BaseServiceImpl<NailConfig, Integer> 
 		}
 		return false;
 	}
+
+	@Override
+	public NailConfigDto selectByMap(Map<String, Object> paramMap) {
+		return nailConfigDao.selectByMap(paramMap);
+	}
 }

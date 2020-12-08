@@ -57,6 +57,19 @@
 		ORDER by id
 	</select>
 	
+	<select id="selectByMap" parameterType="Map" resultType="com.artcweb.dto.NailConfigDto">
+		SELECT * FROM t_nail_config t
+		<where>
+			<if test="id != null and '' != id">
+				id = #{id}
+			</if>
+			<if test="id != nailType and '' != nailType">
+				and nail_type = #{nailType}
+			</if>
+		</where>
+		ORDER by id limit 1
+	</select>
+	
 	<!-- 查询 -->
 	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.NailConfigDto">
 		SELECT t.id as id,

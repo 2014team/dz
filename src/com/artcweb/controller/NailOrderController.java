@@ -12,10 +12,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.http.entity.ContentType;
-import org.codehaus.jackson.mrbean.BeanUtil;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mock.web.MockMultipartFile;
@@ -210,11 +208,11 @@ public class NailOrderController {
 		if(null != file && !file.isEmpty()){
 			
 			// 图片尺寸验证
-//			String checkNialImageSise = nailOrderService.checkNialImageSise(file);
-//			if (StringUtils.isNotBlank(checkNialImageSise)) {
-//				layUiResult.failure(checkNialImageSise);
-//				return layUiResult;
-//			}
+			String checkNialImageSise = nailOrderService.checkNialImageSise(file);
+			if (StringUtils.isNotBlank(checkNialImageSise)) {
+				layUiResult.failure(checkNialImageSise);
+				return layUiResult;
+			}
 			// 图片验证
 			String errorMsg = imageService.checkImage(file);
 			if (StringUtils.isNotBlank(errorMsg)) {
@@ -358,11 +356,11 @@ public class NailOrderController {
 			
 
 			// 图片尺寸验证
-//			String checkNialImageSise = nailOrderService.checkNialImageSise(file);
-//			if (StringUtils.isNotBlank(checkNialImageSise)) {
-//				layUiResult.failure(checkNialImageSise);
-//				return layUiResult;
-//			}
+			String checkNialImageSise = nailOrderService.checkNialImageSise(file);
+			if (StringUtils.isNotBlank(checkNialImageSise)) {
+				layUiResult.failure(checkNialImageSise);
+				return layUiResult;
+			}
 			
 			// 图片验证
 			String errorMsg = imageService.checkImage(file);

@@ -1,7 +1,13 @@
 package com.artcweb.util;
 
 import java.awt.image.BufferedImage;
+import java.io.BufferedInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.Date;
 
@@ -89,6 +95,9 @@ public class ImageUtil {
 		// 新文件名称
 		
 		String newFileName = file.getOriginalFilename();
+		if(StringUtils.isEmpty(newFileName)){
+			newFileName = file.getName();
+		}
 		if(fileNameFlag){
 			newFileName = UploadUtil.getNewFileName(UploadUtil.getFileExt(file.getOriginalFilename()));
 		}
@@ -112,7 +121,7 @@ public class ImageUtil {
 		
 		try {
 			// 获取文件后缀名称
-			String ext = UploadUtil.getFileExt1(file.getOriginalFilename());
+			String ext = UploadUtil.getFileExt1(newFileName);
 			if(StringUtils.isNotEmpty(uploadPath) && StringUtils.isNotEmpty(ext)){
 				boolean writeResult = ImageIO.write(image, ext, new File(filePathAndName));
 				logger.info("writeResult="+writeResult);
@@ -144,5 +153,76 @@ public class ImageUtil {
         }  
         return null;
 	}
+	
+	public static String downloadImageFromURL(String strUrl,HttpServletRequest request,String uploadPath) {
+		InputStream in = null;
+		FileOutputStream fos = null;
+		try {
+			ByteArrayOutputStream out = new ByteArrayOutputStream();
+			URL url = new URL(strUrl);
+			in = new BufferedInputStream(url.openStream());
+			byte[] buf = new byte[2048];
+			int n = 0;
+			while (-1 != (n = in.read(buf))) {
+				out.write(buf, 0, n);
+			}
+			byte[] response = out.toByteArray();
+			
+			
+			
+			String year = String.valueOf(DataUtil.getYear(new Date()));
+			String month = String.valueOf(DataUtil.getMonth(new Date()));
+			String folder = year + "/" + month + "/";
+			uploadPath = uploadPath + folder;
+
+			// 获取文件后缀名称
+			String ext = UploadUtil.getFileExt(strUrl);
+			// 新文件名称
+			String newFileName = UploadUtil.getNewFileName(ext);
+			
+			// 存储文件目录
+			String realPath = request.getSession().getServletContext().getRealPath(uploadPath);
+			
+			// 创建目录
+			UploadUtil.mkdirs(realPath);
+			
+			
+			String filePathAndName = null;
+			if (realPath.endsWith(File.separator)) {
+				filePathAndName = realPath + newFileName;
+			} else {
+				filePathAndName = realPath + File.separator + newFileName;
+			}
+			
+			fos = new FileOutputStream(filePathAndName);
+			fos.write(response);
+			return uploadPath + newFileName;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			logger.error("请求图片异常");
+		}finally {
+			if(fos!= null ){
+				try {
+					fos.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+			if(in!= null ){
+				try {
+					in.close();
+				}
+				catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		return null;
+		
+	}
+
 
 }

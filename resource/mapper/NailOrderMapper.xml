@@ -90,6 +90,7 @@
 		,t.nail_count_detail AS nailCountDetail
 		,t.height AS height
 		,t.width AS width
+		,t.third_flag AS thirdFlag
 		,t.create_date AS createDate
 		,t.update_date AS updateDate
 		,nf.nail_type AS nailType

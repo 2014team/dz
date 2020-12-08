@@ -1,16 +1,21 @@
 package com.artcweb.controller;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,19 +23,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailCount;
 import com.artcweb.bean.NailDetailConfig;
 import com.artcweb.bean.NailH5Strjson;
 import com.artcweb.bean.Secret;
 import com.artcweb.bean.While;
+import com.artcweb.constant.NailOrderComeFromConstant;
+import com.artcweb.constant.UploadConstant;
+import com.artcweb.dto.NailConfigDto;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.SiteEnum;
 import com.artcweb.enums.StatusEnum;
-import com.artcweb.service.ImageService;
+import com.artcweb.enums.ThirdFlagEnum;
+import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailDetailConfigService;
 import com.artcweb.service.NailH5StrjsonService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.SecretService;
 import com.artcweb.service.WhileService;
+import com.artcweb.util.GsonUtil;
+import com.artcweb.util.ImageUtil;
+import com.artcweb.vo.NailH5StrjsonVo;
 import com.artcweb.vo.NailOrderVo;
 
 @Controller
@@ -50,9 +63,11 @@ public class ApiNailOrderController {
 	@Autowired
 	private WhileService whileService;
 	@Autowired
-	private ImageService imageService;
+	private NailConfigService nailConfigService;
 	@Autowired
 	private NailH5StrjsonService nailH5StrjsonService;
+	
+	
 	
 	/**
 	* @Title: indexSearch
@@ -224,143 +239,159 @@ public class ApiNailOrderController {
 	
 	
 	
+
+
+	
 	/**
-	 * 
 	* @Title: save
 	* @Description: H5调用保存
-	* @param entity
-	* @param sourceFile
-	* @param resultFile
+	* @param strJson
 	* @param request
-	* @param response
 	* @return
 	* @throws IOException
-	 */
-	
+	*/
 	@ResponseBody
 	@RequestMapping(value = "/order/save")
-	public LayUiResult save(String strJson) throws IOException {
+	public LayUiResult save(String strJson,HttpServletRequest request) throws IOException {
+		logger.info("参数strJson="+strJson);
+		
 		LayUiResult layUiResult = new LayUiResult();
+		if(StringUtils.isEmpty(strJson)){
+			layUiResult.failure("参数[strJson]不能为空");
+			return layUiResult;
+		}
 		
 		NailH5Strjson h5Strjson = new NailH5Strjson();
 		h5Strjson.setStrJson(strJson);
 		Integer save = nailH5StrjsonService.save(h5Strjson);
-		if(null != save && save > 0){
-			layUiResult.success();
-		}else{
+		
+		logger.info("save id="+h5Strjson.getId());
+		
+		NailOrderVo entity = new NailOrderVo();
+		try {
+			NailH5StrjsonVo nailH5StrjsonVo =( NailH5StrjsonVo ) GsonUtil.jsonToBean(strJson, NailH5StrjsonVo.class);
+				
+			if(null != nailH5StrjsonVo){
+				String output_url = nailH5StrjsonVo.getOutput_url();
+				String resultImageUrl =ImageUtil.downloadImageFromURL(output_url, request, UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+				// h5结果输出图片
+				if(StringUtils.isNotEmpty(resultImageUrl)){
+					entity.setResultImageUrl(resultImageUrl);
+				}
+				
+				String scale_url = nailH5StrjsonVo.getScale_url();
+				String imageUrl =ImageUtil.downloadImageFromURL(scale_url, request, UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+				// h5取色统计图片
+				if(StringUtils.isNotEmpty(imageUrl)){
+					entity.setImageUrl(imageUrl);
+				}
+				
+				String fileName = nailH5StrjsonVo.getOrder_sn();
+				
+				// 图片名称
+				entity.setImageName(fileName);
+				
+				//设置买家名称
+				entity.setUsername(fileName);
+				
+				//手机号码处理
+				if(StringUtils.isNotEmpty(fileName) && fileName.length() > 11){
+					entity.setMobile(fileName.substring(0, 11));
+					
+						String  nail= fileName.substring(fileName.length()-2, fileName.length());
+						Map <String,Object> paramMap = new HashMap<String, Object>();
+						paramMap.put("nailType", nail);
+						NailConfigDto nailConfigDto = nailConfigService.selectByMap(paramMap);
+						if(null != nailConfigDto){
+							entity.setNailConfigId(String.valueOf(nailConfigDto.getId()));
+					}
+				}
+				
+				
+			}
+		
+		
+		}
+		catch (Exception e) {
+			logger.error("json格式转换异常");
+			e.printStackTrace();
 			layUiResult.failure();
+			return layUiResult;
+		}
+		
+
+		
+		// 输出结果图片
+		String resultImageUrl = entity.getResultImageUrl();
+		if(StringUtils.isEmpty(resultImageUrl)){
+			layUiResult.failure("output_url参数转换获取为空");
+			logger.error("output_url参数转换获取为空");
+			return layUiResult;
 		}
 		
 		
-//		if(null == sourceFile || sourceFile.isEmpty() ){
-//			layUiResult.failure("[sourceFile]图片不能为空");
-//			return layUiResult;
-//		}
-//		if(null == resultFile || resultFile.isEmpty() ){
-//			layUiResult.failure("[resultFile]图片不能为空");
-//			return layUiResult;
-//		}
-//		
-//		// 图片验证
-//		String errorMsg = imageService.checkImage(sourceFile);
-//		if (StringUtils.isNotBlank(errorMsg)) {
-//			layUiResult.failure(errorMsg);
-//			logger.error("图片验证失败");
-//			return layUiResult;
-//		}
-//		
-//		errorMsg= imageService.checkImage(resultFile);
-//		if (StringUtils.isNotBlank(errorMsg)) {
-//			layUiResult.failure(errorMsg);
-//			logger.error("图片验证失败");
-//			return layUiResult;
-//		}
-//		
-//		// 图片尺寸验证
-//		String checkNialImageSise = nailOrderService.checkNialImageSise(sourceFile);
-//		if (StringUtils.isNotBlank(checkNialImageSise)) {
-//			layUiResult.failure(checkNialImageSise);
-//			logger.error("图片不是尺寸配置列表范围,不符合要求，请尺寸配置");
-//			return layUiResult;
-//		}
-//
-//		// 来源设置
-//		entity.setComefrom(String.valueOf(NailOrderComeFromConstant.H5));
-//		entity.setThirdFlag(ThirdFlagEnum.OFF.getDisplayName());
-//		entity.setCurrentStep("");
-//		
-//		
-//		// 设置图片名称
-//		String fileName = UploadUtil.getFileName(sourceFile);
-//		
-//		if(StringUtils.isEmpty(fileName)){
-//			layUiResult.failure("文件名称不能为空");
-//			logger.error("文件名称不能为空");
-//			return layUiResult;
-//		}
-//		
-//		// 图片名称
-//		entity.setImageName(fileName);
-//		
-//		//设置买家名称
-//		entity.setUsername(fileName);
-//		
-//		
-//		
-//		BufferedImage image = null;
-//		InputStream input = null;
-//		try {
-//			input = resultFile.getInputStream();
-//			image = ImageIO.read(input);
-//			String resultImageUrl = ImageUtil.getUploadPath(request, image,resultFile, UploadConstant.SAVE_UPLOAD_NAIL_PATH,true);
-//			entity.setResultImageUrl(resultImageUrl);
-//		}catch (Exception e) {
-//			e.printStackTrace();
-//			logger.error("处理resultFile失败");
-//		}finally{
-//			if(null != input){
-//				input.close();
-//			}
-//		}
-//		
-//		int len = fileName.length();
-////		if(len > 11){
-////			entity.setMobile(fileName.substring(0,11));
-////		}
-//		
-//		// 名称唯一性验证（只验证后台数据）
-//		Map<String,Object> paramMap  = new  HashMap<String, Object>();
-//		//paramMap.put("comefrom", NailOrderComeFromConstant.BACKSTAGE);
-//		paramMap.put("imageName", fileName);
-//		boolean checkExist = nailOrderService.checkExist(paramMap,null);
-//		if(checkExist){// 没有引用删除
-//			layUiResult.failure("图纸名称系统已存在");
-//			logger.error("图纸名称系统已存在");
-//			return layUiResult;
-//		}
-//		
-//		// 上传图片
-//		if(null != sourceFile && !sourceFile.isEmpty()){
-//			
-//			// 图片颜色统计
-//			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,sourceFile,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
-//	
-//			// 钉子颜色列表统计
-//			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
-//			
-//			// 钉子与重量总数统计
-//			nailOrderService.nailTotalCount(nailCountMap,entity);
-//		
-//		}
-//		// 保存
-//		Integer result = nailOrderService.saveNailOrder(entity);
-//		if (null != result && result > 0) {
-//			layUiResult.success(result);
-//		}
-//		else {
-//			layUiResult.failure();
-//		}
+		// 取色图片
+		String imageUrl = entity.getImageUrl();
+		if(StringUtils.isEmpty(imageUrl)){
+			layUiResult.failure("scale_url参数转换获取为空");
+			logger.error("scale_url参数转换获取为空");
+			return layUiResult;
+		}
 		
+		
+	   // 来源设置
+		entity.setComefrom(String.valueOf(NailOrderComeFromConstant.H5));
+		entity.setThirdFlag(ThirdFlagEnum.OFF.getDisplayName());
+		entity.setCurrentStep("");
+		
+		String realPath = request.getSession().getServletContext().getRealPath("/");
+		File imageUrlFile = new File(realPath+entity.getImageUrl());
+		
+		InputStream inputStream = new FileInputStream(imageUrlFile);
+	    MultipartFile multipartFileImageUrlFilelFile = new MockMultipartFile(imageUrlFile.getName(), inputStream);
+		
+	    
+	    // 图片尺寸验证
+		String checkNialImageSise = nailOrderService.checkNialImageSise(multipartFileImageUrlFilelFile);
+		if (StringUtils.isNotBlank(checkNialImageSise)) {
+			layUiResult.failure(checkNialImageSise);
+			logger.error("图片不是尺寸配置列表范围,不符合要求，请尺寸配置");
+			return layUiResult;
+		}
+	     
+		
+		// 名称唯一性验证（只验证后台数据）
+		Map<String,Object> paramMap  = new  HashMap<String, Object>();
+		//paramMap.put("comefrom", NailOrderComeFromConstant.BACKSTAGE);
+		paramMap.put("imageName", entity.getImageName());
+		boolean checkExist = nailOrderService.checkExist(paramMap,null);
+		if(checkExist){
+			layUiResult.failure("图纸名称系统已存在");
+			logger.error("图纸名称系统已存在");
+			return layUiResult;
+		}
+		
+		// 上传图片
+		if(null != multipartFileImageUrlFilelFile && !multipartFileImageUrlFilelFile.isEmpty()){
+			
+			// 图片颜色统计
+			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,multipartFileImageUrlFilelFile,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+	
+			// 钉子颜色列表统计
+			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
+			
+			// 钉子与重量总数统计
+			nailOrderService.nailTotalCount(nailCountMap,entity);
+		
+		}
+		// 保存
+		Integer result = nailOrderService.saveNailOrder(entity);
+		if (null != result && result > 0) {
+			layUiResult.success(result);
+		}
+		else {
+			layUiResult.failure();
+		}
 		
 		return layUiResult;
 	}
