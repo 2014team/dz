@@ -12,6 +12,7 @@ public class NailOrderDto extends NailOrder {
 	private String status;
 	
 	private String toDay;
+	private String siteName;
 
 	public String getNailType() {
 		return nailType;
@@ -43,6 +44,16 @@ public class NailOrderDto extends NailOrder {
 
 	public void setToDay(String toDay) {
 		this.toDay = toDay;
+	}
+
+	
+	public String getSiteName() {
+		return siteName;
+	}
+
+	
+	public void setSiteName(String siteName) {
+		this.siteName = siteName;
 	}
 	
 	

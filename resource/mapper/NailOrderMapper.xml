@@ -297,12 +297,14 @@
 		t.height as height, 
 		ifnull(nf.nail_type,'') as nailType,
 		ifnull(tnp.color_name,'')   as colorName,
-		ifnull(tns.status,0) as status,
+		ifnull(tns.site_name,'')   as siteName,
+		CASE WHEN (LENGTH(w.mobile) > 0)  THEN 1 ELSE (CASE WHEN tns.`status` =1 and tns.site_name = 2 then 1 else 0 END) END AS  status,
 		t.create_date as createDate,
 		t.update_date as updateDate
 		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
 		 left join  t_nail_pictureframe tnp on t.nail_pictureframe_Id = tnp.id
 		  left join  t_secret tns on t.id = tns.order_id
+		  LEFT JOIN  `t_while`  w ON t.mobile = w.mobile
 		<where>
 			<if test="null != keyword and '' != keyword">
 					t.image_name  = #{keyword}

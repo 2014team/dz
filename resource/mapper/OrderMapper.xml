@@ -169,7 +169,7 @@
 	<!-- API分页查找 -->
 	<select id="findPageByApi" parameterType="Map"
 		resultType="com.artcweb.bean.Order">
-			<![CDATA[ select t.*,CASE WHEN (LENGTH(w.mobile) > 0 || t.createDate  <= '2020-09-05 17:00:00')  THEN 1 ELSE IFNULL(ts.`status`,0) END AS `status` from 
+			<![CDATA[ select t.*,CASE WHEN (LENGTH(w.mobile) > 0 || (t.createDate  <= '2020-09-05 17:00:00' and ts.site_name = 1))  THEN 1 ELSE (CASE WHEN ts.`status` =1 and ts.site_name = 1 then 1 else 0 END) END AS `status` from 
 			(
 			SELECT o.id AS orderId ,o.sort ,o.mobile,p.`come_from` AS comeFrom, p.package_name AS packageName,
 			p.image_url AS imageUrl,p.`step` as step,p.`pins` AS pins,
@@ -188,7 +188,7 @@
 			</if>
 				ORDER BY o.sort ,o.`update_date` DESC limit  ${page.begin},${page.limit} 
 				) t LEFT JOIN `t_secret` ts ON t.orderId = ts.`order_id`
-				LEFT JOIN  `t_while`  w ON w.mobile = t.mobile
+				LEFT JOIN  `t_while`  w ON t.mobile = w.mobile
 	</select>
 
 	<!-- API分页数量 -->
