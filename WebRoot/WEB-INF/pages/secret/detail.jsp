@@ -20,7 +20,7 @@
 			</div>
 			
 		  <div class="layui-form-item">
-				<label for="L_pass" class="layui-form-label">秘钥
+				<label for="L_pass" class="layui-form-label">状态
 				</label>
 				<div class="layui-input-inline">
 					<input type="text"
