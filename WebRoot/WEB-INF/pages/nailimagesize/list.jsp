@@ -291,7 +291,9 @@ function order_delAll(layfilterId,url) {
 					//console.info(data);
 					if(resp.code == 200){
 					editRowObj.update({
-						 mobile: resp.data.mobile,
+						 size: resp.data.size,
+						 width: resp.data.width,
+						 height: resp.data.height,
 						 createDate: resp.data.createDate,
 						 updateDate: resp.data.updateDate
 						 
