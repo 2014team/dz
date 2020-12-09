@@ -337,8 +337,16 @@
    			formData.append('file', files);
    			
    			
-   			var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
-   			formData.append('resultImageFile', resultImage);
+   			
+   			 var id =  ${entity.id }+"";
+			      var comefrom =  ${entity.comefrom }+"";
+			     if(id == "" || (id != "" && 0==comefrom)){
+			       	
+		   			var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
+		   			formData.append('resultImageFile', resultImage);
+			     }
+   			
+   			
    				
           	
              //加载动画
@@ -427,10 +435,16 @@
    			formData.append('imageUrl', data.imageUrl);
    			formData.append('step', data.step);
    			formData.append('file', files);
-   			var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
-   			formData.append('resultImageFile', resultImage);
+   			//var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
+   			//formData.append('resultImageFile', resultImage);
    			
-   				
+   			 var id =  ${entity.id }+"";
+			      var comefrom =  ${entity.comefrom }+"";
+			     if(id == "" || (id != "" && 0==comefrom)){
+			       	
+		   			var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
+		   			formData.append('resultImageFile', resultImage);
+			     }	
           	
              //加载动画
 				/* var loading = layer.load(0, {
