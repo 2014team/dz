@@ -3,7 +3,6 @@
 <head>
 <%@include file="/WEB-INF/pages/common/head_layui.jsp"%>
 
-    
         <style>
             .img-container {
                 margin-top: 30px;
@@ -13,13 +12,13 @@
             .source-img {
                 float: left;
                 width: 49%;
-                border: 1px solid #000;
+               /*  border: 1px solid #000; */
             }
             
             .handle-img {
                 float: right;
                 width: 49%;
-                border: 1px solid #000;
+                /* border: 1px solid #000; */
             }
             
             .btn-block {
@@ -28,6 +27,7 @@
                 border: 1px solid #000;
             }
         </style>
+        
 </head>
 
 <body>
@@ -139,19 +139,23 @@
 			</div>
 			
 			  <div>
-            <input type="file" id="imgFile">
-            <div class="btn-block">
+			 
+			 
+            <!-- <input type="file" id="imgFile"> -->
+           <!--  <div class="btn-block">
                 <button id="btn_changemime">切换MIME</button>
                 <button id="btn_canvas">canvas自带</button>
             	<button id="btn_nearst">最邻近插值</button>
             	<button id="btn_bilinear">双线性差值</button>
             	<button id="btn_bicubic">三次卷积插值</button>
             	<button id="btn_bicubic2">三次卷积插值2</button>
-            </div>
+            </div> -->
             <div class="img-container">
                 <img class="source-img" data-preview-src="" data-preview-group="1" />
                 <canvas class="handle-img"></canvas>
             </div>
+            
+            
         </div>
 			
 		</form>
@@ -284,7 +288,12 @@
 			      files = file
 			        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'">'); //图片链接（base64）
 			     
+			     
+			     var id =  ${entity.id }+"";
+			      var comefrom =  ${entity.comefrom }+"";
+			     if(id == "" || (id != "" && 0==comefrom)){
 			       	loadImg(result);
+			     }
 			       
 			     
 			      });
@@ -303,11 +312,17 @@
           // 保存
           form.on('submit(save)', function(obj) {
           
-          processImg(sourceImage, 0);
+           var id =  ${entity.id }+"";
+			      var comefrom =  ${entity.comefrom }+"";
+			     if(id == "" || (id != "" && 0==comefrom)){
+			       	  processImg(sourceImage, 0);
+			     }
+          
+        
           
           
       
-          debugger
+          
           
           	data = JSON.parse(JSON.stringify(obj.field));
           	var formData = new FormData() 
@@ -320,6 +335,8 @@
    			formData.append('imageUrl', data.imageUrl);
    			formData.append('step', data.step);
    			formData.append('file', files);
+   			
+   			
    			var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
    			formData.append('resultImageFile', resultImage);
    				
@@ -392,6 +409,13 @@
     		
           // 保存
           form.on('submit(saveOrDownload)', function(obj) {
+          
+            var id =  ${entity.id }+"";
+			      var comefrom =  ${entity.comefrom }+"";
+			     if(id == "" || (id != "" && 0==comefrom)){
+			       	  processImg(sourceImage, 0);
+			     }
+          
           	data = JSON.parse(JSON.stringify(obj.field));
           	var formData = new FormData() 
    			formData.append('id', $('#id').val());
@@ -403,6 +427,8 @@
    			formData.append('imageUrl', data.imageUrl);
    			formData.append('step', data.step);
    			formData.append('file', files);
+   			var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
+   			formData.append('resultImageFile', resultImage);
    			
    				
           	
@@ -491,8 +517,7 @@
 
             function initPage() {
                 initParams();
-                //initListeners();
-                initImg();
+               // initImg();
             }
 
             function initParams() {
@@ -501,56 +526,16 @@
                 ctxHandle = canvasHandle.getContext('2d');
             }
             
-            /* function initListeners() {
-                document.getElementById('btn_canvas').addEventListener('click', function(e) {
-                    processImg(sourceImage, false);
-                });
-                document.getElementById('btn_nearst').addEventListener('click', function(e) {
-                    processImg(sourceImage, 0);
-                });
-                document.getElementById('btn_bilinear').addEventListener('click', function(e) {
-                    processImg(sourceImage, 1);
-                });
-                document.getElementById('btn_bicubic').addEventListener('click', function(e) {
-                    processImg(sourceImage, 2);
-                });
-                document.getElementById('btn_bicubic2').addEventListener('click', function(e) {
-                    processImg(sourceImage, 3);
-                });
-                document.getElementById('btn_changemime').addEventListener('click', function(e) {
-                    if (mime === 'image/png') {
-                        mime = 'image/jpeg';
-                    } else {
-                        mime = 'image/png';
-                    }
-                });
-            } */
-
-            function initImg() {
-                new FileInput({
-                    container: '#imgFile',
-                    isMulti: false,
-                    type: 'Image_Camera',
-                    success: function(b64, file, detail) {
-                        // console.log("选择:" + b64);
-                        console.log("fileName:" + file.name);
-                        loadImg(b64);
-                         processImg(sourceImage, 0);
-                    },
-                    error: function(error) {
-                        console.error(error);
-                    }
-                });
-            }
 
             function loadImg(b64) {
+            $(sourceImg).hide();
                 sourceImg.src = b64;
 
                 var img = new Image();
                 
                 img.src = b64;
 
-                img.onload = function() {
+               	 img.onload = function() {
                     sourceBase64 = b64;
                     sourceImage = img;
                 };
@@ -563,6 +548,7 @@
                     return;
                 }
                 var ratio = img.width / img.height;
+                
 
                 canvasHandle.width = canvasHandle.offsetWidth * 1;
                 canvasHandle.height = canvasHandle.width / ratio;
@@ -584,15 +570,15 @@
                 var newImg = new Image();
                 newImg.src = newBase64;
 
-                newImg.onload = function() {
+                /* newImg.onload = function() {
                     ctxHandle.drawImage(newImg,
                         0, 0,
                         canvasHandle.width, canvasHandle.height,
-                    );
+                    ); 
 
                     console.log('压缩前w:' + img.width + ',h:' + img.height);
                     console.log('压缩后w:' + newImg.width + ',h:' + newImg.height);
-                };
+                };*/
             }
         </script>
 </html>

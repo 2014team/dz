@@ -280,6 +280,9 @@ public class ApiNailOrderController {
 				}
 				
 				String scale_url = nailH5StrjsonVo.getScale_url();
+				if(StringUtils.isEmpty(scale_url)){
+					scale_url =scale_url+"?x-oss-process=image/auto-orient,1/resize,m_lfit,h_600/quality,q_100";
+				}
 				String imageUrl =ImageUtil.downloadImageFromURL(scale_url, request, UploadConstant.SAVE_UPLOAD_NAIL_PATH);
 				// h5取色统计图片
 				if(StringUtils.isNotEmpty(imageUrl)){

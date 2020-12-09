@@ -177,6 +177,9 @@ public class ImageUtil {
 
 			// 获取文件后缀名称
 			String ext = UploadUtil.getFileExt(strUrl);
+			if(StringUtils.isNotEmpty(ext) && ext.length() > 4){
+				ext = ext.substring(0,4);
+			}
 			// 新文件名称
 			String newFileName = UploadUtil.getNewFileName(ext);
 			

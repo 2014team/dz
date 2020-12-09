@@ -260,7 +260,7 @@ public class NailOrderController {
 	*/
 	@ResponseBody
 	@RequestMapping(value = "/update")
-	public LayUiResult update(NailOrderVo entity, MultipartFile file,HttpServletRequest request) throws IOException {
+	public LayUiResult update(NailOrderVo entity, MultipartFile file,MultipartFile resultImageFile,HttpServletRequest request) throws IOException {
 		LayUiResult layUiResult = new LayUiResult();
 		// 参数验证
 		Integer id = entity.getId();
@@ -395,6 +395,12 @@ public class NailOrderController {
 			nailOrder.setImageUrl(entity.getImageUrl());
 			nailOrder.setNailCountDetail(entity.getNailCountDetail());
 		
+		}
+		
+
+		if(null != resultImageFile && !resultImageFile.isEmpty()){
+			String resultImageUrl = imageService.uploadImage(request, resultImageFile,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+			nailOrder.setResultImageUrl(resultImageUrl);
 		}
 		
 		
