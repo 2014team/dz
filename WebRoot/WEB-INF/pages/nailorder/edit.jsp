@@ -2,6 +2,32 @@
 <!DOCTYPE html>
 <head>
 <%@include file="/WEB-INF/pages/common/head_layui.jsp"%>
+
+    
+        <style>
+            .img-container {
+                margin-top: 30px;
+                overflow: hidden;
+            }
+            
+            .source-img {
+                float: left;
+                width: 49%;
+                border: 1px solid #000;
+            }
+            
+            .handle-img {
+                float: right;
+                width: 49%;
+                border: 1px solid #000;
+            }
+            
+            .btn-block {
+                margin: 5px;
+                padding: 5px;
+                border: 1px solid #000;
+            }
+        </style>
 </head>
 
 <body>
@@ -112,10 +138,62 @@
 				<button class="layui-btn" lay-filter="save" lay-submit="">仅保存</button>
 			</div>
 			
+			  <div>
+            <input type="file" id="imgFile">
+            <div class="btn-block">
+                <button id="btn_changemime">切换MIME</button>
+                <button id="btn_canvas">canvas自带</button>
+            	<button id="btn_nearst">最邻近插值</button>
+            	<button id="btn_bilinear">双线性差值</button>
+            	<button id="btn_bicubic">三次卷积插值</button>
+            	<button id="btn_bicubic2">三次卷积插值2</button>
+            </div>
+            <div class="img-container">
+                <img class="source-img" data-preview-src="" data-preview-group="1" />
+                <canvas class="handle-img"></canvas>
+            </div>
+        </div>
+			
 		</form>
 	</div>
 	
 	<script>
+	
+	 
+	  var sourceImg;
+	  var canvasHandle;
+	  var ctxHandle;
+	   var sourceBase64;
+	   var w ;
+	   var h ;
+	   var mime = 'image/png/gif';
+	  initPage();
+
+        function initPage() {
+           initParams();
+         }
+
+            function initParams() {
+                sourceImg = document.querySelector('.source-img');
+                canvasHandle = document.querySelector('.handle-img');
+                ctxHandle = canvasHandle.getContext('2d');
+            }
+            
+            
+            
+             //将base64转换为文件
+   		 function dataURLtoFile (dataurl, filename) { 
+	    	var arr = dataurl.split(','),
+	        mime = arr[0].match(/:(.*?);/)[1],
+	        bstr = atob(arr[1]),
+	        n = bstr.length,
+	        u8arr = new Uint8Array(n);
+		    while (n--) {
+		        u8arr[n] = bstr.charCodeAt(n);
+		    }
+	    	return new File([u8arr], filename, { type: mime });
+            
+	}
 	
 	 $(function(){
 	    	var imageUrl = '${entity.imageUrl}';
@@ -195,25 +273,42 @@
 			      //预读本地文件示例，不支持ie8
 			      console.log(obj)
 			      obj.preview(function(index, file, result){
+			      
+			      
 			      if(file && file.name && file.name.lastIndexOf(".") != -1){
 			      	var fileNam = file.name.substring(0,file.name.lastIndexOf("."));
 			      	$("#imageName").val(fileNam);
 			      	$("#username").val(fileNam);
 			      }
 			      
-			      console.log(result,file)
 			      files = file
 			        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'">'); //图片链接（base64）
 			     
-			     	
+			       	loadImg(result);
+			       
+			     
 			      });
 			    }
 			  });
 		  }
 		  
+
+		   
+		 
+		   
+            
+            
+		  
         
           // 保存
           form.on('submit(save)', function(obj) {
+          
+          processImg(sourceImage, 0);
+          
+          
+      
+          debugger
+          
           	data = JSON.parse(JSON.stringify(obj.field));
           	var formData = new FormData() 
    			formData.append('id', $('#id').val());
@@ -225,6 +320,8 @@
    			formData.append('imageUrl', data.imageUrl);
    			formData.append('step', data.step);
    			formData.append('file', files);
+   			var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
+   			formData.append('resultImageFile', resultImage);
    				
           	
              //加载动画
@@ -306,6 +403,7 @@
    			formData.append('imageUrl', data.imageUrl);
    			formData.append('step', data.step);
    			formData.append('file', files);
+   			
    				
           	
              //加载动画
@@ -377,5 +475,124 @@
         });
     </script>
 </body>
+<script type="text/javascript" src="/js/fileinput.js"></script>
+    <script type="text/javascript" src="/js/image-scale.js"></script>
+    
+    
+    <script>
+            var sourceImg;
+            var canvasHandle;
+            var ctxHandle;
+            var sourceImage;
+            var sourceBase64;
+            var mime = 'image/png';
+			var newBase64;
+            initPage();
 
+            function initPage() {
+                initParams();
+                //initListeners();
+                initImg();
+            }
+
+            function initParams() {
+                sourceImg = document.querySelector('.source-img');
+                canvasHandle = document.querySelector('.handle-img');
+                ctxHandle = canvasHandle.getContext('2d');
+            }
+            
+            /* function initListeners() {
+                document.getElementById('btn_canvas').addEventListener('click', function(e) {
+                    processImg(sourceImage, false);
+                });
+                document.getElementById('btn_nearst').addEventListener('click', function(e) {
+                    processImg(sourceImage, 0);
+                });
+                document.getElementById('btn_bilinear').addEventListener('click', function(e) {
+                    processImg(sourceImage, 1);
+                });
+                document.getElementById('btn_bicubic').addEventListener('click', function(e) {
+                    processImg(sourceImage, 2);
+                });
+                document.getElementById('btn_bicubic2').addEventListener('click', function(e) {
+                    processImg(sourceImage, 3);
+                });
+                document.getElementById('btn_changemime').addEventListener('click', function(e) {
+                    if (mime === 'image/png') {
+                        mime = 'image/jpeg';
+                    } else {
+                        mime = 'image/png';
+                    }
+                });
+            } */
+
+            function initImg() {
+                new FileInput({
+                    container: '#imgFile',
+                    isMulti: false,
+                    type: 'Image_Camera',
+                    success: function(b64, file, detail) {
+                        // console.log("选择:" + b64);
+                        console.log("fileName:" + file.name);
+                        loadImg(b64);
+                         processImg(sourceImage, 0);
+                    },
+                    error: function(error) {
+                        console.error(error);
+                    }
+                });
+            }
+
+            function loadImg(b64) {
+                sourceImg.src = b64;
+
+                var img = new Image();
+                
+                img.src = b64;
+
+                img.onload = function() {
+                    sourceBase64 = b64;
+                    sourceImage = img;
+                };
+            }
+            
+            function processImg(img, processType) {
+                if (!img) {
+                    alert('请选择原图');
+                    
+                    return;
+                }
+                var ratio = img.width / img.height;
+
+                canvasHandle.width = canvasHandle.offsetWidth * 1;
+                canvasHandle.height = canvasHandle.width / ratio;
+
+                canvasHandle.style.width = canvasHandle.offsetWidth;
+                canvasHandle.style.height = canvasHandle.offsetWidth / ratio;
+                
+                
+                if (processType === false) {
+                    newBase64 = sourceBase64
+                } else {
+                    newBase64 = ImageScale.scaleImage(img, {
+                        mime: mime,
+                        width: canvasHandle.width,
+                        height: canvasHandle.height,
+                        processType: processType || 0,
+                    });
+                }
+                var newImg = new Image();
+                newImg.src = newBase64;
+
+                newImg.onload = function() {
+                    ctxHandle.drawImage(newImg,
+                        0, 0,
+                        canvasHandle.width, canvasHandle.height,
+                    );
+
+                    console.log('压缩前w:' + img.width + ',h:' + img.height);
+                    console.log('压缩后w:' + newImg.width + ',h:' + newImg.height);
+                };
+            }
+        </script>
 </html>

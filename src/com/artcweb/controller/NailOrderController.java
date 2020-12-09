@@ -4,6 +4,7 @@ package com.artcweb.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -152,8 +153,9 @@ public class NailOrderController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/save")
-	public LayUiResult save(NailOrderVo entity, MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public LayUiResult save(NailOrderVo entity, MultipartFile file,MultipartFile resultImageFile,HttpServletRequest request,HttpServletResponse response) throws IOException {
 		LayUiResult layUiResult = new LayUiResult();
+		
 		// 参数验证
 		String username = entity.getUsername();
 		if (StringUtils.isEmpty(username)) {
@@ -229,6 +231,12 @@ public class NailOrderController {
 			nailOrderService.nailTotalCount(nailCountMap,entity);
 		
 		}
+
+		if(null != resultImageFile && !resultImageFile.isEmpty()){
+			String resultImageUrl = imageService.uploadImage(request, resultImageFile,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+			entity.setResultImageUrl(resultImageUrl);
+		}
+		
 		// 保存
 		Integer result = nailOrderService.saveNailOrder(entity);
 		if (null != result && result > 0) {
