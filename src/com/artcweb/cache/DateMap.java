@@ -109,7 +109,7 @@ public class DateMap {
 		nailImageSizeMap.clear();
 		if (null != list && list.size() > 0) {
 			for (NailImageSize entity : list) {
-				String key = entity.getHeight()+"x"+entity.getWidth();
+				String key = entity.getWidth()+"x"+entity.getHeight();
 				nailImageSizeMap.put(key, entity);
 			}
 		}
