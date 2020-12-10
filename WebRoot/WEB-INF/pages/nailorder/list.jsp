@@ -157,6 +157,15 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				},  {
 					field : 'colorName' ,
 					title : '画框颜色' , 
+				},  {
+					field : 'width' ,
+					title : '宽' ,
+					width: 60 
+				},  {
+					field : 'height' ,
+					title : '高' , 
+					width: 60
+					
 				}, {
 					field : 'createDate' ,
 					title : '创建时间' ,
@@ -356,6 +365,8 @@ function order_delAll(layfilterId,url) {
 						 colorName: resp.data.colorName,
 						 createDate: resp.data.createDate,
 						 thirdFlag: resp.data.thirdFlag,
+						 width: resp.data.width,
+						 height: resp.data.height,
 						 
 						 });
 						 

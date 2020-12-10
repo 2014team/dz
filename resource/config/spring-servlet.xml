@@ -87,6 +87,7 @@
 		<mvc:interceptor>
 			<mvc:mapping path="/admin/center/nailimagesize/add**" />
 			<mvc:mapping path="/admin/center/nailimagesize/save**" />
+			<mvc:mapping path="/admin/center/nailimagesize/save**" />
 			<mvc:mapping path="/admin/center/nailimagesize/delete**" />
 			<mvc:mapping path="/admin/center/nailimagesize/delete/batch**" />
 			<bean class="com.artcweb.interceptor.NailImageSizeInterceptor"></bean>

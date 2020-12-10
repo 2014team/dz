@@ -198,9 +198,9 @@
 		t.comefrom as comefrom,
 		t.nail_config_id as nailConfigId,
 		t.nail_pictureframe_Id as nailPictureFrameId,
-		<!-- t.nail_count_detail as nailCountDetail,
+		<!-- t.nail_count_detail as nailCountDetail,-->
 		t.width as width,
-		t.height as height, -->
+		t.height as height, 
 		nf.nail_type as nailType,
 		ifnull(t.third_flag,0) as thirdFlag,
 		tnp.color_name   as colorName,
