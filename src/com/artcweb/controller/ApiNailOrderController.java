@@ -378,7 +378,7 @@ public class ApiNailOrderController {
 		if(null != multipartFileImageUrlFilelFile && !multipartFileImageUrlFilelFile.isEmpty()){
 			
 			// 图片颜色统计
-			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,multipartFileImageUrlFilelFile,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,multipartFileImageUrlFilelFile,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.H5);
 	
 			// 钉子颜色列表统计
 			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);

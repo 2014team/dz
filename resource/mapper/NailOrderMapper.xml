@@ -285,7 +285,7 @@
 		SELECT t.id as id,
 		t.username as username,
 		t.mobile as mobile,
-		t.step as step,
+		<!-- t.step as step, -->
 		 ifnull(t.current_step ,'') as currentStep,  
 		t.image_url as imageUrl,
 		t.result_image_url as resultImageUrl,

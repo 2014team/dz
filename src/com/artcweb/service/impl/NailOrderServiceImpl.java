@@ -1,6 +1,9 @@
 
 package com.artcweb.service.impl;
 
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,11 +36,11 @@ import com.artcweb.bean.NailImageSize;
 import com.artcweb.bean.NailOrder;
 import com.artcweb.bean.NailTotalCount;
 import com.artcweb.cache.DateMap;
+import com.artcweb.constant.NailOrderComeFromConstant;
+import com.artcweb.constant.UploadConstant;
 import com.artcweb.dao.NailOrderDao;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.NailImageTypeEnum;
-import com.artcweb.enums.SiteEnum;
-import com.artcweb.enums.StatusEnum;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.util.ExportExcelUtil;
 import com.artcweb.util.FileUtil;
@@ -137,7 +140,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	@Override
-	public ConcurrentHashMap<String, Integer> uploadImage(HttpServletRequest request,MultipartFile file, NailOrderVo entity,String uploadDirpath) {
+	public ConcurrentHashMap<String, Integer> uploadImage(HttpServletRequest request,MultipartFile file, NailOrderVo entity,String uploadDirpath,String comeFrom) {
 		// 钉子颜色统计
 		ConcurrentHashMap<String, Integer> nailColorMap = new ConcurrentHashMap<String, Integer>();
 		
@@ -153,6 +156,16 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			
 			stepList = new Vector<String>();
 			
+			// 画版设置
+			BufferedImage bi = null;
+			// 画笔
+			Graphics2D g2d = null;
+			if(StringUtils.isNotEmpty(comeFrom) && !comeFrom.equals(NailOrderComeFromConstant.H5)){
+				bi = new BufferedImage(iw*10, ih*10, BufferedImage.TYPE_4BYTE_ABGR);
+				g2d = bi.createGraphics();
+			}
+			
+		    Ellipse2D.Double circle = null;
 			long begin = System.currentTimeMillis();
 			for (int y = 0; y < ih; y++) {
 				for (int x = 0; x < iw; x++) {
@@ -162,6 +175,16 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 					int red = (pixel >> 16) & 0xFF;
 					int green = (pixel >> 8) & 0xFF;
 					int blue = pixel & 0xFF;
+					
+					System.out.println(red+"  "+green+" "+blue);
+					
+					// 画结果图片
+					if(StringUtils.isNotEmpty(comeFrom) && !comeFrom.equals(NailOrderComeFromConstant.H5)){
+						circle = new Ellipse2D.Double(x*10,y*10,10,10);
+				    	g2d.setPaint(new Color(red, green, blue));
+				    	g2d.fill(circle);
+				    	circle = null;
+					}
 					
 					 StringBuffer sb = new StringBuffer();
 					 sb.append(red);
@@ -184,6 +207,15 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 				}
 			}
 			
+			
+			// 结果图片处理
+			if(StringUtils.isNotEmpty(comeFrom) && !comeFrom.equals(NailOrderComeFromConstant.H5)){
+				g2d.dispose();
+		    	String resultImageUrl = ImageUtil.getUploadPath(request, bi, null, UploadConstant.SAVE_UPLOAD_NAIL_PATH, false);
+				if(StringUtils.isNotEmpty(resultImageUrl)){
+					entity.setResultImageUrl(resultImageUrl);
+				}
+			}
 			
 			// --------获取图片上传路径------------------
 			String uploadPath = ImageUtil.getUploadPath(request, image,file, uploadDirpath,false);

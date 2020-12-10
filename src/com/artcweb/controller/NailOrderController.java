@@ -4,7 +4,6 @@ package com.artcweb.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -153,7 +152,7 @@ public class NailOrderController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/save")
-	public LayUiResult save(NailOrderVo entity, MultipartFile file,MultipartFile resultImageFile,HttpServletRequest request,HttpServletResponse response) throws IOException {
+	public LayUiResult save(NailOrderVo entity, MultipartFile file,HttpServletRequest request,HttpServletResponse response) throws IOException {
 		LayUiResult layUiResult = new LayUiResult();
 		
 		// 参数验证
@@ -222,7 +221,7 @@ public class NailOrderController {
 				return layUiResult;
 			}
 			// 图片颜色统计
-			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.BACKSTAGE);
 	
 			// 钉子颜色列表统计
 			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
@@ -230,11 +229,6 @@ public class NailOrderController {
 			// 钉子与重量总数统计
 			nailOrderService.nailTotalCount(nailCountMap,entity);
 		
-		}
-
-		if(null != resultImageFile && !resultImageFile.isEmpty()){
-			String resultImageUrl = imageService.uploadImage(request, resultImageFile,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
-			entity.setResultImageUrl(resultImageUrl);
 		}
 		
 		// 保存
@@ -260,7 +254,7 @@ public class NailOrderController {
 	*/
 	@ResponseBody
 	@RequestMapping(value = "/update")
-	public LayUiResult update(NailOrderVo entity, MultipartFile file,MultipartFile resultImageFile,HttpServletRequest request) throws IOException {
+	public LayUiResult update(NailOrderVo entity, MultipartFile file,HttpServletRequest request) throws IOException {
 		LayUiResult layUiResult = new LayUiResult();
 		// 参数验证
 		Integer id = entity.getId();
@@ -377,7 +371,7 @@ public class NailOrderController {
 				return layUiResult;
 			}
 			// 图片颜色统计
-			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.BACKSTAGE);
 	
 			// 钉子颜色列表统计
 			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
@@ -393,14 +387,9 @@ public class NailOrderController {
 			nailOrder.setStep(entity.getStep());
 			// 设置上传图片
 			nailOrder.setImageUrl(entity.getImageUrl());
+			nailOrder.setResultImageUrl(entity.getResultImageUrl());
 			nailOrder.setNailCountDetail(entity.getNailCountDetail());
 		
-		}
-		
-
-		if(null != resultImageFile && !resultImageFile.isEmpty()){
-			String resultImageUrl = imageService.uploadImage(request, resultImageFile,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
-			nailOrder.setResultImageUrl(resultImageUrl);
 		}
 		
 		
@@ -495,7 +484,7 @@ public class NailOrderController {
 				return layUiResult;
 			}
 			// 图片颜色统计
-			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH);
+			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.BACKSTAGE);
 	
 			// 钉子颜色列表统计
 			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);

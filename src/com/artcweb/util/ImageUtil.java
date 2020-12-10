@@ -93,13 +93,18 @@ public class ImageUtil {
 	*/
 	public static String getUploadPath(HttpServletRequest request,BufferedImage image,MultipartFile file,String uploadPath,boolean fileNameFlag) {
 		// 新文件名称
-		
-		String newFileName = file.getOriginalFilename();
-		if(StringUtils.isEmpty(newFileName)){
-			newFileName = file.getName();
-		}
-		if(fileNameFlag){
-			newFileName = UploadUtil.getNewFileName(UploadUtil.getFileExt(file.getOriginalFilename()));
+		String newFileName = null;
+		if(null == file || file.isEmpty()){
+			newFileName = System.currentTimeMillis()+".gif";
+		}else{
+			
+			 newFileName = file.getOriginalFilename();
+			if(StringUtils.isEmpty(newFileName)){
+				newFileName = file.getName();
+			}
+			if(fileNameFlag){
+				newFileName = UploadUtil.getNewFileName(UploadUtil.getFileExt(file.getOriginalFilename()));
+			}
 		}
 		
 		String year = String.valueOf(DataUtil.getYear(new Date()));

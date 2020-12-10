@@ -3,31 +3,6 @@
 <head>
 <%@include file="/WEB-INF/pages/common/head_layui.jsp"%>
 
-        <style>
-            .img-container {
-                margin-top: 30px;
-                overflow: hidden;
-            }
-            
-            .source-img {
-                float: left;
-                width: 49%;
-               /*  border: 1px solid #000; */
-            }
-            
-            .handle-img {
-                float: right;
-                width: 49%;
-                /* border: 1px solid #000; */
-            }
-            
-            .btn-block {
-                margin: 5px;
-                padding: 5px;
-                border: 1px solid #000;
-            }
-        </style>
-        
 </head>
 
 <body>
@@ -141,19 +116,6 @@
 			  <div>
 			 
 			 
-            <!-- <input type="file" id="imgFile"> -->
-           <!--  <div class="btn-block">
-                <button id="btn_changemime">切换MIME</button>
-                <button id="btn_canvas">canvas自带</button>
-            	<button id="btn_nearst">最邻近插值</button>
-            	<button id="btn_bilinear">双线性差值</button>
-            	<button id="btn_bicubic">三次卷积插值</button>
-            	<button id="btn_bicubic2">三次卷积插值2</button>
-            </div> -->
-            <div class="img-container">
-                <img class="source-img" data-preview-src="" data-preview-group="1" />
-                <canvas class="handle-img"></canvas>
-            </div>
             
             
         </div>
@@ -163,27 +125,6 @@
 	
 	<script>
 	
-	 
-	  var sourceImg;
-	  var canvasHandle;
-	  var ctxHandle;
-	   var sourceBase64;
-	   var w ;
-	   var h ;
-	   var mime = 'image/png/gif';
-	  initPage();
-
-        function initPage() {
-           initParams();
-         }
-
-            function initParams() {
-                sourceImg = document.querySelector('.source-img');
-                canvasHandle = document.querySelector('.handle-img');
-                ctxHandle = canvasHandle.getContext('2d');
-            }
-            
-            
             
              //将base64转换为文件
    		 function dataURLtoFile (dataurl, filename) { 
@@ -197,7 +138,7 @@
 		    }
 	    	return new File([u8arr], filename, { type: mime });
             
-	}
+		}
 	
 	 $(function(){
 	    	var imageUrl = '${entity.imageUrl}';
@@ -288,12 +229,6 @@
 			      files = file
 			        $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+result+'">'); //图片链接（base64）
 			     
-			     
-			     var id =  ${entity.id }+"";
-			      var comefrom =  ${entity.comefrom }+"";
-			     if(id == "" || (id != "" && 0==comefrom)){
-			       	loadImg(result);
-			     }
 			       
 			     
 			      });
@@ -312,17 +247,6 @@
           // 保存
           form.on('submit(save)', function(obj) {
           
-           var id =  ${entity.id }+"";
-			      var comefrom =  ${entity.comefrom }+"";
-			     if(id == "" || (id != "" && 0==comefrom)){
-			       	  processImg(sourceImage, 0);
-			     }
-          
-        
-          
-          
-      
-          
           
           	data = JSON.parse(JSON.stringify(obj.field));
           	var formData = new FormData() 
@@ -337,17 +261,6 @@
    			formData.append('file', files);
    			
    			
-   			
-   			 var id =  ${entity.id }+"";
-			      var comefrom =  ${entity.comefrom }+"";
-			     if(id == "" || (id != "" && 0==comefrom)){
-			       	
-		   			var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
-		   			formData.append('resultImageFile', resultImage);
-			     }
-   			
-   			
-   				
           	
              //加载动画
 				/* var loading = layer.load(0, {
@@ -418,12 +331,6 @@
           // 保存
           form.on('submit(saveOrDownload)', function(obj) {
           
-            var id =  ${entity.id }+"";
-			      var comefrom =  ${entity.comefrom }+"";
-			     if(id == "" || (id != "" && 0==comefrom)){
-			       	  processImg(sourceImage, 0);
-			     }
-          
           	data = JSON.parse(JSON.stringify(obj.field));
           	var formData = new FormData() 
    			formData.append('id', $('#id').val());
@@ -438,13 +345,6 @@
    			//var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
    			//formData.append('resultImageFile', resultImage);
    			
-   			 var id =  ${entity.id }+"";
-			      var comefrom =  ${entity.comefrom }+"";
-			     if(id == "" || (id != "" && 0==comefrom)){
-			       	
-		   			var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
-		   			formData.append('resultImageFile', resultImage);
-			     }	
           	
              //加载动画
 				/* var loading = layer.load(0, {
@@ -515,84 +415,4 @@
         });
     </script>
 </body>
-<script type="text/javascript" src="/js/fileinput.js"></script>
-    <script type="text/javascript" src="/js/image-scale.js"></script>
-    
-    
-    <script>
-            var sourceImg;
-            var canvasHandle;
-            var ctxHandle;
-            var sourceImage;
-            var sourceBase64;
-            var mime = 'image/png';
-			var newBase64;
-            initPage();
-
-            function initPage() {
-                initParams();
-               // initImg();
-            }
-
-            function initParams() {
-                sourceImg = document.querySelector('.source-img');
-                canvasHandle = document.querySelector('.handle-img');
-                ctxHandle = canvasHandle.getContext('2d');
-            }
-            
-
-            function loadImg(b64) {
-            $(sourceImg).hide();
-                sourceImg.src = b64;
-
-                var img = new Image();
-                
-                img.src = b64;
-
-               	 img.onload = function() {
-                    sourceBase64 = b64;
-                    sourceImage = img;
-                };
-            }
-            
-            function processImg(img, processType) {
-                if (!img) {
-                    alert('请选择原图');
-                    
-                    return;
-                }
-                var ratio = img.width / img.height;
-                
-
-                canvasHandle.width = canvasHandle.offsetWidth * 1;
-                canvasHandle.height = canvasHandle.width / ratio;
-
-                canvasHandle.style.width = canvasHandle.offsetWidth;
-                canvasHandle.style.height = canvasHandle.offsetWidth / ratio;
-                
-                
-                if (processType === false) {
-                    newBase64 = sourceBase64
-                } else {
-                    newBase64 = ImageScale.scaleImage(img, {
-                        mime: mime,
-                        width: canvasHandle.width,
-                        height: canvasHandle.height,
-                        processType: processType || 0,
-                    });
-                }
-                var newImg = new Image();
-                newImg.src = newBase64;
-
-                /* newImg.onload = function() {
-                    ctxHandle.drawImage(newImg,
-                        0, 0,
-                        canvasHandle.width, canvasHandle.height,
-                    ); 
-
-                    console.log('压缩前w:' + img.width + ',h:' + img.height);
-                    console.log('压缩后w:' + newImg.width + ',h:' + newImg.height);
-                };*/
-            }
-        </script>
 </html>

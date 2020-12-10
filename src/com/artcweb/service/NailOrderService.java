@@ -14,6 +14,7 @@ import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailCount;
 import com.artcweb.bean.NailOrder;
 import com.artcweb.bean.NailTotalCount;
+import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.vo.NailOrderVo;
 
@@ -25,7 +26,7 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 
 	Integer saveNailOrder(NailOrderVo entity);
 
-	ConcurrentHashMap<String, Integer> uploadImage(HttpServletRequest request,MultipartFile file, NailOrderVo entity,String uploadDirpath);
+	ConcurrentHashMap<String, Integer> uploadImage(HttpServletRequest request,MultipartFile file, NailOrderVo entity,String uploadDirpath,String comeFrom);
 
 	ConcurrentHashMap<Integer, NailCount> nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity);
 
