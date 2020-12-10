@@ -79,7 +79,7 @@
 					and t.size = #{entity.size}
 			</if>
 		</where>
-		ORDER by t.id  limit ${page.begin},${page.limit} 
+		ORDER by t.size,id asc limit ${page.begin},${page.limit} 
 	</select>
 	
 	<select id="findByPageCount" parameterType="Map" resultType="int">
