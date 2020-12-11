@@ -161,7 +161,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			// 画笔
 			Graphics2D g2d = null;
 			if(StringUtils.isNotEmpty(comeFrom) && !comeFrom.equals(NailOrderComeFromConstant.H5)){
-				bi = new BufferedImage(iw*10, ih*10, BufferedImage.TYPE_4BYTE_ABGR);
+				bi = new BufferedImage(iw*10, ih*10, BufferedImage.TYPE_INT_RGB);
 				g2d = bi.createGraphics();
 			}
 			

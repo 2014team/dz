@@ -224,7 +224,7 @@ xblock{
 .container{
     width: 100%;
     height: 55px;
-    background-color:#111;
+    background-color: #23262E;
     border-bottom: 1px solid rgba(0, 0, 0, 0.8);
 }
 .container .logo a{
@@ -298,12 +298,12 @@ xblock{
     z-index: 2;
     top:50px;
     padding-top: 10px;
-    background-color: #222324;
+    background-color: #393D49!important;
     width: 220px;
     max-width: 220px;
     overflow: hidden;
     border-right: 1px solid #131e26;
-	overflow-y: hidden;
+    overflow-y: hidden;
     /*width: 0px;*/
     height:calc(100% - 50px);
 }
@@ -319,12 +319,12 @@ xblock{
 	transition:background-color ease .3s
 }
 .left-nav #nav > li:hover {
-	background:#181818;
+	background: #4E5465;
 	border-left:4px solid #42b8f1;
 }
 .left-nav #nav > li.open {
 	border-left:4px solid #42b8f1;
-	background:#181818;
+	background: #505565;
 }
 
 
@@ -339,8 +339,8 @@ xblock{
     padding: 12px 15px 12px 20px;
     display: block;
     cursor: pointer;
-	color:#8e8e8e;
-	transition:background-color ease .3s;
+    color: rgba(255, 255, 255, .7);
+    transition:background-color ease .3s;
 }
 
 .left-nav #nav li a cite{
@@ -366,7 +366,7 @@ xblock{
      /*background: #fff url() 0 0 no-repeat;*/
 }
 .left-nav #nav li .sub-menu li:hover{
-	background:#303235;
+	background:#1e2025;
     /*color: blue;*/
      /*background: #fff url() 0 0 no-repeat;*/
 }
