@@ -563,7 +563,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	
 	public String[][] getColumnNames(){
 		String[][] columnNames =  new String[][] {
-			{" ","编号","数据","重量","包数"}, 
+			{" ","编号","数量","重量","包数"}, 
 			{"","indexId","nailNumber","requreWeight","requrePieces"}
 			};
 		return columnNames;
