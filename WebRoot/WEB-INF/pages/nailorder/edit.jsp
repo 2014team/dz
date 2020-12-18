@@ -125,6 +125,10 @@
 	
 	<script>
 	
+	
+	
+	
+	
             
              //将base64转换为文件
    		 function dataURLtoFile (dataurl, filename) { 
@@ -145,6 +149,11 @@
 	    	if(imageUrl){
 	    	 $('.layui-upload-drag').html('<img class="layui-upload-img" src="'+imageUrl+'">'); //图片链接（base64）
 	    	}
+	    	
+	    	 $("#mobile").on("input",function(e){
+	    	 	$("#mobile").val(($("#mobile").val().replace(/\s+/g,"")))
+		    	});
+	    	
 	    });
     
  	    
