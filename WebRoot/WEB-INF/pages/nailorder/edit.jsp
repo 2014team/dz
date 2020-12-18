@@ -65,7 +65,7 @@
 				<div class="layui-input-inline">
 					<input type="text" id="mobile" name="mobile"
 						value="${empty entity.mobile ?'' : entity.mobile}"   lay-verify="required|number|phone"
-						autocomplete="off" class="layui-input" maxlength="11">
+						autocomplete="off" class="layui-input" maxlength="15">
 				</div>
 				<div class="layui-form-mid layui-word-aux">数字</div>
 			</div>

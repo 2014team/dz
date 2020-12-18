@@ -51,7 +51,7 @@
 				<div class="layui-input-inline">
 					<input type="text" id="mobile" name="mobile"
 						value="${order.mobile }"
-						lay-verify="required|number|phone" autocomplete="off" maxlength="11"
+						lay-verify="required|number|phone" autocomplete="off" maxlength="15"
 						class="layui-input">
 				</div>
 				<div class="layui-form-mid layui-word-aux">数字</div>
@@ -197,9 +197,9 @@
 			     
 			  });
 			  //电话号码去除空格
-	    	 $("#mobile").on("input",function(e){
-			     $("#mobile").val($("#mobile").val().replace(/\s+/g,""));
-			  });
+			  $("#mobile").on("input",function(e){
+	    	 	$("#mobile").val(($("#mobile").val().replace(/\s+/g,"")))
+		    	});
 	    });
     	
     	
