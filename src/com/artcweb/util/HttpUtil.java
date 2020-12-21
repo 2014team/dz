@@ -2,6 +2,7 @@ package com.artcweb.util;
 
 import java.io.BufferedReader;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,6 +15,7 @@ import java.net.Proxy;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
@@ -26,12 +28,20 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.mime.HttpMultipartMode;
+import org.apache.http.entity.mime.MultipartEntityBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicHeader;
 import org.apache.http.util.EntityUtils;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.alibaba.fastjson.JSONObject;
+import com.artcweb.generator.util.Tools;
 
 /**
  * @ClassName: HttpUtil
@@ -490,6 +500,59 @@ public class HttpUtil {
 			map.put(paramName, paramValue);
 		}
 		return map;
+	}
+	
+	
+	/**
+	* @Title: sendFile
+	* @Description: 发送到图片服务器
+	* @param tmpFile
+	* @return
+	*/
+	public static String sendFile(MultipartFile tmpFile) {
+		String resJson = "";
+		try {
+			//是否存在这个临时目录,不存在就创建
+			File fileTemp = new File(Tools.getWebRoot() + "/tempUpload");
+			if(!fileTemp.exists()){
+				fileTemp.mkdir();
+			}
+			File file = new File(Tools.getWebRoot() + "/tempUpload" + File.separator + tmpFile.getOriginalFilename());
+			tmpFile.transferTo(file);
+			
+			CloseableHttpClient httpclient = HttpClients.createDefault();
+			
+			String server = PropertiesUtils.getValue("aliyun_vod_server");
+			
+			HttpPost httppost = new HttpPost(server);
+
+			MultipartEntityBuilder mEntityBuilder = MultipartEntityBuilder.create();
+			mEntityBuilder.setMode(HttpMultipartMode.BROWSER_COMPATIBLE);
+			mEntityBuilder.setCharset(Charset.forName("UTF-8"));
+			mEntityBuilder.addBinaryBody("file", file);
+
+			HttpEntity reqEntity = mEntityBuilder.build();
+
+			httppost.setEntity(reqEntity);
+
+			CloseableHttpResponse response = httpclient.execute(httppost);
+			HttpEntity resEntity = response.getEntity();
+
+			if (resEntity == null) {
+				return resJson;
+			}
+			resJson = EntityUtils.toString(resEntity, "UTF-8");
+			EntityUtils.consume(resEntity);
+			response.close();
+			httpclient.close();
+			// 删除临时文件
+			file.delete();
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+		return resJson;
 	}
 
 

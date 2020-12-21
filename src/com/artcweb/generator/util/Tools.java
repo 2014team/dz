@@ -35,4 +35,25 @@ public class Tools {
 				return str;
 		}
 	}
+	
+	/**
+	 * 获取根路径
+	 * 
+	 * @return
+	 */
+	public static String getWebRoot() {
+		String classPath = getClassPath();
+		return classPath.substring(0, classPath.indexOf("WEB-INF/classes/"));
+	}
+	
+	/**
+	 * 获取classes目录路径 如:F:/email3/WebRoot/WEB-INF/classes/
+	 * 
+	 * @return
+	 */
+	public static String getClassPath() {
+		String classPath = Tools.class.getResource("").getPath().substring(1);
+		classPath = classPath.substring(0, classPath.indexOf("/WEB-INF/classes/")) + "/WEB-INF/classes/";
+		return classPath;
+	}
 }
