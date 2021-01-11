@@ -121,8 +121,7 @@
 		    </div>
 		  </div>
 		  
-		  <input type="hidden" id="step" name="step"
-					class="layui-textarea" value="${order.step }"></input>
+		  <span id="step" name="step" class="layui-textarea" style="display: none">${order.step}</span>
 		  
 		<div class="layui-form-item">
 			<label for="L_repass" class="layui-form-label"> 
@@ -297,7 +296,7 @@
         		
         		formData.append('idParam', ${idParam}+"");
         		formData.append('userId', ${user.id}+"");
-        		formData.append('step', $('#step').val());
+        		formData.append('step', $("#step").html());
         		formData.append('pins', $('#pins').val());
        			formData.append('packageName',obj.packageName);
        			formData.append('sort', obj.sort);
