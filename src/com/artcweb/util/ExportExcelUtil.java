@@ -203,7 +203,7 @@ public class ExportExcelUtil  {
 		dataStyle_p.setDataFormat(format.getFormat("@"));      //将数据单元格格式设置为文本类型  
 		// 数据字体
 		Font dataFont_p = workbook.createFont();
-		//dataFont_p.setFontHeightInPoints((short) 9);
+		dataFont_p.setFontHeightInPoints((short) 9);
 		dataFont_p.setFontName("宋体");
 		dataStyle_p.setFont(dataFont_p);
 		dataStyle_p.setWrapText(true);
