@@ -557,7 +557,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 
 	
 	public String[] getColumnWidth(){
-		String [] columnWidth ={"20","28","28","28","28"}; 
+		String [] columnWidth ={"20","15","15","15","15"}; 
 		return columnWidth;
 	}
 	

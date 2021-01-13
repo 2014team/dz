@@ -160,6 +160,7 @@ public class ExportExcelUtil  {
 		headerFont_b.setFontName("宋体");
 		headerFont_b.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
 		headerStyle_b.setFont(headerFont_b);
+		headerStyle_b.setWrapText(true);//强行换行
 
 		
 		CellStyle headerStyle = workbook.createCellStyle();
@@ -205,6 +206,7 @@ public class ExportExcelUtil  {
 		//dataFont_p.setFontHeightInPoints((short) 9);
 		dataFont_p.setFontName("宋体");
 		dataStyle_p.setFont(dataFont_p);
+		dataStyle_p.setWrapText(true);
 
 		CellStyle dataStyle = workbook.createCellStyle();
 		dataStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 水平居中
@@ -219,6 +221,7 @@ public class ExportExcelUtil  {
 		dataFont.setFontHeightInPoints((short) 9);
 		dataFont.setFontName("宋体");
 		dataStyle.setFont(dataFont);
+		dataStyle.setWrapText(true);
  
 		// 尾部样式
 		CellStyle footStyle = workbook.createCellStyle();
