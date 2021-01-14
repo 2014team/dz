@@ -517,10 +517,11 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 				 Map<String, Object> map = new HashMap<String, Object>();
 				 NailTotalCount nailTotalCount = getNailNailTotalCount(entity);
 				 if(null != nailTotalCount){
-					 map.put("indexId", "");
+					 map.put("indexId", "总计");
 					 map.put("nailNumber", nailTotalCount.getTotalNailNumber());
 					 map.put("requreWeight", nailTotalCount.getTotalWeight());
 					 map.put("requrePieces", nailTotalCount.getTotalrPieces());
+					 map.put("", "签字：");
 					 result.add(map);
 					 map = null;
 				 }
@@ -557,14 +558,14 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 
 	
 	public String[] getColumnWidth(){
-		String [] columnWidth ={"20","15","15","15","15"}; 
+		String [] columnWidth ={"20","12","12","12","12","15"}; 
 		return columnWidth;
 	}
 	
 	public String[][] getColumnNames(){
 		String[][] columnNames =  new String[][] {
-			{" ","编号","数量","重量","包数"}, 
-			{"","indexId","nailNumber","requreWeight","requrePieces"}
+			{" ","编号","数量","重量","包数","确认打钩"}, 
+			{"","indexId","nailNumber","requreWeight","requrePieces",""}
 			};
 		return columnNames;
 	}

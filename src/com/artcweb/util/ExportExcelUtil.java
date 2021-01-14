@@ -111,10 +111,10 @@ public class ExportExcelUtil  {
 		// 标题字体
 		Font titleFont = workbook.createFont();
 		titleFont.setFontHeightInPoints((short) 12); // 字体大小
-		titleFont.setFontName("宋体");
+		titleFont.setFontName("微软雅黑");
 		titleFont.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
 		titleStyle.setFont(titleFont);
- 
+		titleStyle.setWrapText(true);
 		
 		CellStyle titleStyle_2 = workbook.createCellStyle();
 		titleStyle_2.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 水平居中
@@ -127,7 +127,7 @@ public class ExportExcelUtil  {
 		// 表头字体
 		Font titleFont_2 = workbook.createFont();
 		titleFont_2.setFontHeightInPoints((short) 11);
-		titleFont_2.setFontName("宋体");
+		titleFont_2.setFontName("微软雅黑");
 		titleFont_2.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
 		titleStyle_2.setFont(titleFont_2);
 		
@@ -139,7 +139,7 @@ public class ExportExcelUtil  {
 		Font titleFont_u = workbook.createFont();
 		titleFont_u.setUnderline(XSSFFont.U_SINGLE);
 		titleFont_u.setFontHeightInPoints((short) 11);
-		titleFont_u.setFontName("宋体");
+		titleFont_u.setFontName("微软雅黑");
 		titleStyle_u.setFont(titleFont_u);
  
 		// 普通文本加粗样式
@@ -157,7 +157,7 @@ public class ExportExcelUtil  {
 		// 表头字体
 		Font headerFont_b = workbook.createFont();
 		headerFont_b.setFontHeightInPoints((short) 9);
-		headerFont_b.setFontName("宋体");
+		headerFont_b.setFontName("微软雅黑");
 		headerFont_b.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
 		headerStyle_b.setFont(headerFont_b);
 		headerStyle_b.setWrapText(true);//强行换行
@@ -174,7 +174,7 @@ public class ExportExcelUtil  {
 		// 表头字体
 		Font headerFont = workbook.createFont();
 		headerFont.setFontHeightInPoints((short) 9);
-		headerFont.setFontName("宋体");
+		headerFont.setFontName("微软雅黑");
 		headerStyle.setFont(headerFont);
  
 		// 数据样式
@@ -189,7 +189,7 @@ public class ExportExcelUtil  {
 		// 数据字体
 		Font dataFont_image = workbook.createFont();
 		//dataFont_image.setFontHeightInPoints((short) 9);
-		dataFont_image.setFontName("宋体");
+		dataFont_image.setFontName("微软雅黑");
 		dataStyle_image.setFont(dataFont_image);
 		
 		
@@ -204,7 +204,8 @@ public class ExportExcelUtil  {
 		// 数据字体
 		Font dataFont_p = workbook.createFont();
 		dataFont_p.setFontHeightInPoints((short) 9);
-		dataFont_p.setFontName("宋体");
+		dataFont_p.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
+		dataFont_p.setFontName("微软雅黑");
 		dataStyle_p.setFont(dataFont_p);
 		dataStyle_p.setWrapText(true);
 
@@ -219,9 +220,25 @@ public class ExportExcelUtil  {
 		// 数据字体
 		Font dataFont = workbook.createFont();
 		dataFont.setFontHeightInPoints((short) 9);
-		dataFont.setFontName("宋体");
+		dataFont.setFontName("微软雅黑");
 		dataStyle.setFont(dataFont);
 		dataStyle.setWrapText(true);
+		
+		CellStyle dataStyle_f = workbook.createCellStyle();
+		dataStyle_f.setAlignment(XSSFCellStyle.ALIGN_LEFT); // 水平居中
+		dataStyle_f.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER); // 垂直居中
+		dataStyle_f.setBorderBottom(XSSFCellStyle.BORDER_THIN); // 下边框
+		dataStyle_f.setBorderLeft(XSSFCellStyle.BORDER_THIN); // 左边框
+		dataStyle_f.setBorderTop(XSSFCellStyle.BORDER_THIN); // 上边框
+		dataStyle_f.setBorderRight(XSSFCellStyle.BORDER_THIN); // 右边框
+		dataStyle_f.setDataFormat(format.getFormat("@"));      //将数据单元格格式设置为文本类型  
+		// 数据字体
+		Font dataFont_f = workbook.createFont();
+		dataFont_f.setFontHeightInPoints((short) 9);
+		dataFont_f.setFontName("微软雅黑");
+		dataFont_f.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
+		dataStyle_f.setFont(dataFont_f);
+		dataStyle_f.setWrapText(true);
  
 		// 尾部样式
 		CellStyle footStyle = workbook.createCellStyle();
@@ -230,7 +247,7 @@ public class ExportExcelUtil  {
 		// 尾部字体
 		Font footFont = workbook.createFont();
 		footFont.setFontHeightInPoints((short) 11);
-		footFont.setFontName("宋体");
+		footFont.setFontName("微软雅黑");
 		footStyle.setFont(footFont);
  
 		CellStyle commonStyle = workbook.createCellStyle();
@@ -244,7 +261,7 @@ public class ExportExcelUtil  {
 		row0.setHeight((short)(3 * 256));
 		Cell cell0_0 = row0.createCell(0); // 创建单元格，参数说明的是第几个单元格
 		cell0_0.setCellStyle(titleStyle);
-		cell0_0.setCellValue(excelName+"("+DataUtil.format(new Date(), DataUtil.DATE_YYYY_MM_DD_HH_MM_SS)+")"); // 设置单元格 和里面的内容		
+		cell0_0.setCellValue(excelName+"数量清单\n"+DataUtil.format(new Date(), DataUtil.DATE_YYYY_MM_DD_HH_MM_SS)); // 设置单元格 和里面的内容		
 		
 		if(columnWidth.length>0){
 			Integer clWidth;
@@ -337,12 +354,40 @@ public class ExportExcelUtil  {
 			if(i ==0){
 				sheet.addMergedRegion(new CellRangeAddress(1, 11, 0, 0)); // 合并大标题行
 			}
+			if(rows.size() >= 13){
+				if(i ==12){
+					CellRangeAddress cra = new CellRangeAddress(12, 13, 0, 0);
+					sheet.addMergedRegion(cra); // 合并大标题行
+				}
+			}
+			
+			// 买家名称合并
+			if(rows.size() >= 18){
+				if(i ==17){
+					CellRangeAddress cra = new CellRangeAddress(17, 18, 0, 0);
+					sheet.addMergedRegion(cra); // 合并大标题行
+				}
+			}
+			
+			// 备注说明合并
+			if(rows.size() >= 19){
+				if(i ==19){
+					CellRangeAddress cra = new CellRangeAddress(19, rows.size()+2, 0, 0);
+					sheet.addMergedRegion(cra); // 合并大标题行
+				}
+			}
+			
+			// 设置最后一行行高
+			if(i ==rows.size()-1){
+				dataRow.setHeight((short)(4 * 256));
+			}
+		
 			Map<String,Object> project = rows.get(i);
 			for (int j = 0; j <names.length; j++) {
 				Cell dataCell = dataRow.createCell(j);
 				dataCell.setCellStyle(dataStyle);
 				// 第一和第二列处理
-				if(j == 1 || j == 2){
+				if(j == 0 || j == 1 || j == 2 || j == 4){
 					dataCell.setCellStyle(headerStyle_b);
 				}
 				
@@ -374,9 +419,19 @@ public class ExportExcelUtil  {
 					dataCell.setCellValue(entity.getUsername());
 				}
 				
+				if((i == 16 &&j == 0) ){
+					String describe="请亲在第一时间内核对包数； 使用秘钥解锁清单上的图纸； 有疑问及时联系客服";
+					dataCell.setCellValue(describe);
+				}
+				
 				if(i==1 && j==0){
 					// 图片样式设置
 					cell.setCellStyle(dataStyle_image);
+				}
+				
+				 // 签名单元格样式
+				if(j==names.length-1){
+					dataCell.setCellStyle(dataStyle_f);
 				}
 				
 			}
