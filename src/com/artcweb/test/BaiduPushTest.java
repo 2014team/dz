@@ -26,7 +26,7 @@ public class BaiduPushTest {
 		String postUrl ="https://dz.artcweb.com/admin/login.do";
 		String domain ="https://dz.artcweb.com";
 		String bdToken ="P0qP5zknvJwHw07n";
-		t.pushPost(postUrl, domain, bdToken);
+		t.postUrl(postUrl, domain, bdToken);
 	}
 
 
@@ -37,7 +37,7 @@ public class BaiduPushTest {
      * @param bdToken 百度主动推送链接准入密钥
      * @return
      */
-    public String pushPost(String PostUrl,String domain, String bdToken){
+    public String postUrl(String PostUrl,String domain, String bdToken){
         String linkSubmitUrl="http://data.zz.baidu.com/urls";
         String host="data.zz.baidu.com";
         linkSubmitUrl+="?site="+domain+"&token="+bdToken;
@@ -46,7 +46,6 @@ public class BaiduPushTest {
         //HttpClient
         CloseableHttpClient client = httpClientBuilder.build();
         client = (CloseableHttpClient) wrapClient(client);
-        Map<String, String> msg=new HashMap<>();
         HttpPost post = new HttpPost(linkSubmitUrl);
         //发送请求参数
         try
