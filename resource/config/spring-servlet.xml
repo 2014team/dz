@@ -37,7 +37,7 @@
 	<mvc:resources location="/fonts/" mapping="/fonts/**" />
 	<mvc:resources location="/lib/" mapping="/lib/**" />
 	<mvc:resources location="/upload/" mapping="/upload/**" />
-	<mvc:resources location="/html/" mapping="/html/**" />
+	<mvc:resources location="/baidu_verify_code-tosLGkowd4.html" mapping="/baidu_verify_code-tosLGkowd4.html" />
 
 
 	<!--拦截器  -->
