@@ -28,7 +28,7 @@ public class NailCount implements Serializable{
 	// rgb值
 	private String rgb;
 	
-	
+	private int sort;
 	
 
 	public NailCount() {
@@ -90,6 +90,14 @@ public class NailCount implements Serializable{
 		this.rgb = rgb;
 	}
 
+	public int getSort() {
+		return sort;
+	}
+
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+	
 	/*@Override
 	public int compareTo(NailCount o) {
 		return this.indexId.compareTo(o.getIndexId());

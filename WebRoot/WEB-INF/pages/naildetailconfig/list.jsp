@@ -101,9 +101,8 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 			cols : [ [
 				 {checkbox: true, fixed: true},
 				{
-					field : 'indexId', 
-					title : '序号',
-					type: 'numbers',
+					field : 'sort', 
+					title : '排序号',
 					sort : true,
 					width:80,
 				}
@@ -311,6 +310,7 @@ function order_delAll(layfilterId,url) {
 					editRowObj.update({
 						 rgb1: resp.data.rgb,
 						 rgb: resp.data.rgb,
+						 sort: resp.data.sort,
 						 newSerialNumber: resp.data.newSerialNumber,
 						 oldSerialNumber: resp.data.oldSerialNumber,
 						 nailSmallWeight: resp.data.nailSmallWeight,

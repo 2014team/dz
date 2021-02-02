@@ -12,6 +12,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -23,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.xmlbeans.impl.jam.annotation.LineDelimitedTagParser;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +49,7 @@ import com.artcweb.util.ExportExcelUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
 import com.artcweb.util.ImageUtil;
+import com.artcweb.util.MapUtil;
 import com.artcweb.vo.NailOrderVo;
 
 @Service
@@ -140,9 +144,9 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	@Override
-	public ConcurrentHashMap<String, Integer> uploadImage(HttpServletRequest request,MultipartFile file, NailOrderVo entity,String uploadDirpath,String comeFrom) {
+	public LinkedHashMap<String, Integer> uploadImage(HttpServletRequest request,MultipartFile file, NailOrderVo entity,String uploadDirpath,String comeFrom) {
 		// 钉子颜色统计
-		ConcurrentHashMap<String, Integer> nailColorMap = new ConcurrentHashMap<String, Integer>();
+		LinkedHashMap<String, Integer> nailColorMap = new LinkedHashMap<String, Integer>();
 		
 		BufferedImage image = null;
 		InputStream input = null;
@@ -254,7 +258,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	@Override
-	public ConcurrentHashMap<Integer, NailCount> nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity) {
+	public LinkedHashMap<String, NailCount> nailCount(LinkedHashMap<String, Integer> nailColorMap, NailOrderVo entity) {
 		if(nailColorMap == null || nailColorMap.size() < 1 ){
 			logger.error("nailColorMap为空");
 			return null;
@@ -269,7 +273,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		
 		
 		// 数量统计集合
-		ConcurrentHashMap<Integer, NailCount> nailCountMap = new ConcurrentHashMap<Integer, NailCount>();
+		LinkedHashMap<Integer, NailCount> nailCountMap = new LinkedHashMap<Integer, NailCount>();
 		
 		
 		// 详细配置,判断大小图钉
@@ -307,6 +311,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			NailCount nailCount = new NailCount();
 			nailCount.setIndexId(nailDetailConfig.getNewSerialNumber());
 			nailCount.setNailNumber(String.valueOf(value));
+			nailCount.setSort(nailDetailConfig.getSort());
 
 			
 			// 小钉重量计算公式： 重量计算（数量/3600）=公斤（小数点4位）
@@ -330,14 +335,9 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			
 			nailCount.setRgb(key);
 			
-			nailCountMap.put(Integer.valueOf(nailCount.getIndexId()), nailCount);
+			nailCountMap.put(nailCount.getSort(), nailCount);
 			
-			 List<Map.Entry<Integer, NailCount>> list = new ArrayList<Map.Entry<Integer, NailCount>>(nailCountMap.entrySet());
-		        Collections.sort(list, new Comparator<Map.Entry<Integer, NailCount>>() {
-		            public int compare(Map.Entry<Integer, NailCount> o1, Map.Entry<Integer, NailCount> o2) {
-		                return o1.getKey().compareTo(o2.getKey());
-		            }
-		        });
+			
 		        
 		        
 
@@ -353,8 +353,10 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		logger.info("统计钉子配置详情耗时："+((end-begin)/1000)+" 秒");
 		  
 		
+		// 排序
+		LinkedHashMap<String, NailCount> result = MapUtil.mapSortForIntegerKey(nailCountMap);
 		
-		return nailCountMap;
+		return result;
 	}
 
 	@Override
@@ -393,7 +395,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	@Override
-	public void nailTotalCount(ConcurrentHashMap<Integer, NailCount> nailCountMap, NailOrderVo entity) {
+	public void nailTotalCount(LinkedHashMap<String, NailCount> nailCountMap, NailOrderVo entity) {
 		
 		NailTotalCount nailTotalCount =  new NailTotalCount();
 		
@@ -411,7 +413,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		BigDecimal nDecimal = new BigDecimal(0);
 		BigDecimal pDecimal = new BigDecimal(0);
 		//BigDecimal bigDecimal = new BigDecimal(0);
-		for (Map.Entry<Integer,NailCount> map: nailCountMap.entrySet()) {
+		for (Map.Entry<String,NailCount> map: nailCountMap.entrySet()) {
 			NailCount nailCount = map.getValue();
 			BigDecimal requreWeightBigDecimal = new BigDecimal(nailCount.getRequreWeight());
 			
@@ -459,19 +461,26 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 				
 				// 详细列表
 				if(null != nailTotalCount && null != nailTotalCount.getNailCountDetailMap() && nailTotalCount.getNailCountDetailMap().size() > 0){
-					List<Map.Entry<Integer, NailCount>> list = new ArrayList<Map.Entry<Integer, NailCount>>(nailTotalCount.getNailCountDetailMap().entrySet());
-			        Collections.sort(list, new Comparator<Map.Entry<Integer, NailCount>>() {
-			            public int compare(Map.Entry<Integer, NailCount> o1, Map.Entry<Integer, NailCount> o2) {
-			                return o1.getKey().compareTo(o2.getKey());
-			            }
-			        });
-			        
-			        nailCountList = new ArrayList<NailCount>();
-			        if(null != list && list.size() > 0){
-			        	for (Entry<Integer, NailCount> entry : list) {
-			        		nailCountList.add(entry.getValue());
-						}
+//					List<Map.Entry<String, NailCount>> list = new ArrayList<Map.Entry<String, NailCount>>(nailTotalCount.getNailCountDetailMap().entrySet());
+//			        Collections.sort(list, new Comparator<Map.Entry<String, NailCount>>() {
+//			            public int compare(Map.Entry<String, NailCount> o1, Map.Entry<String, NailCount> o2) {
+//			                return o1.getKey().compareTo(o2.getKey());
+//			            }
+//			        });
+//			        
+			        nailCountList = new LinkedList<NailCount>();
+//			        if(null != list && list.size() > 0){
+//			        	for (Entry<String, NailCount> entry : list) {
+//			        		nailCountList.add(entry.getValue());
+//						}
+//			        }
+			        LinkedHashMap<String, NailCount> nailCountDetailMap =  MapUtil.mapSortForStringKey(nailTotalCount.getNailCountDetailMap());
+			        if(null != nailCountDetailMap){
+			        	 for(Entry<String, NailCount> mapping:nailCountDetailMap.entrySet()){ 
+			        		 nailCountList.add(mapping.getValue());
+			            } 
 			        }
+				
 				}
 			}
 		}

@@ -25,6 +25,8 @@ public class NailDetailConfig extends BaseBean {
 
 	// （大钉）每包克数
 	private String nailBigWeight;
+	
+	private int sort;
 
 	public String getRgb() {
 		return rgb;
@@ -66,8 +68,13 @@ public class NailDetailConfig extends BaseBean {
 		this.nailBigWeight = nailBigWeight;
 	}
 
-	public static long getSerialversionuid() {
-		return serialVersionUID;
+
+	public int getSort() {
+		return sort;
 	}
 
+	public void setSort(int sort) {
+		this.sort = sort;
+	}
+	
 }

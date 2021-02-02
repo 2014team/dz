@@ -63,7 +63,7 @@
 			<if test="id != null and '' != id">
 				id = #{id}
 			</if>
-			<if test="id != nailType and '' != nailType">
+			<if test="null != nailType and '' != nailType">
 				and nail_type = #{nailType}
 			</if>
 		</where>

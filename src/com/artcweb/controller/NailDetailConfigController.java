@@ -1,6 +1,9 @@
 
 package com.artcweb.controller;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -13,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailDetailConfig;
+import com.artcweb.dto.NailDetailConfigDto;
 import com.artcweb.service.NailDetailConfigService;
 import com.artcweb.vo.NailDetailConfigVo;
 
@@ -101,6 +105,34 @@ public class NailDetailConfigController {
 			return layUiResult;
 		}
 	
+		int sort = entity.getSort();
+		Integer id = entity.getId();
+		if(id == null ){
+			// 新增
+			Map<String,Object> paramMap = new HashMap<String,Object>();
+			paramMap.put("sort", sort);
+			
+			NailDetailConfigDto nailDetailConfigDto = naildetailconfigService.selectByMap(paramMap);
+			if(null != nailDetailConfigDto){
+				layUiResult.failure("排序号已经存在请更换");
+				return layUiResult;
+			}
+		
+		}else{
+			// 修改
+			Map<String,Object> paramMap = new HashMap<String,Object>();
+			paramMap.put("sort", sort);
+			NailDetailConfigDto nailDetailConfigDto = naildetailconfigService.selectByMap(paramMap);
+			if(null != nailDetailConfigDto){
+				Integer sourceId = nailDetailConfigDto.getId();
+				if(!id.equals(sourceId)){
+					layUiResult.failure("排序号已经存在请更换");
+					return layUiResult;
+				}
+			}
+		}
+		
+		
 		Integer result = naildetailconfigService.saveOrUpdate(entity);
 		if (null != result && result > 0) {
 			layUiResult.success();

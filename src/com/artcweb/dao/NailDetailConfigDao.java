@@ -16,5 +16,7 @@ public interface NailDetailConfigDao extends BaseDao<NailDetailConfig, Integer> 
 
 	Integer deleteByBatch(String array);
 	
+	NailDetailConfigDto selectByMap(Map<String, Object> paramMap);
+	
 
 }

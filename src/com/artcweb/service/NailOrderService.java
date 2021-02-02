@@ -1,6 +1,7 @@
 
 package com.artcweb.service;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -14,7 +15,6 @@ import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailCount;
 import com.artcweb.bean.NailOrder;
 import com.artcweb.bean.NailTotalCount;
-import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.vo.NailOrderVo;
 
@@ -26,16 +26,16 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 
 	Integer saveNailOrder(NailOrderVo entity);
 
-	ConcurrentHashMap<String, Integer> uploadImage(HttpServletRequest request,MultipartFile file, NailOrderVo entity,String uploadDirpath,String comeFrom);
+	LinkedHashMap<String, Integer> uploadImage(HttpServletRequest request,MultipartFile file, NailOrderVo entity,String uploadDirpath,String comeFrom);
 
-	ConcurrentHashMap<Integer, NailCount> nailCount(ConcurrentHashMap<String, Integer> nailColorMap, NailOrderVo entity);
+	LinkedHashMap<String, NailCount> nailCount(LinkedHashMap<String, Integer> nailColorMap, NailOrderVo entity);
 
 	NailOrderDto getById(Integer id);
 	
 	boolean checkExist(Map<String,Object> paramMap,String id);
 	boolean checkImageExist(Map<String,Object> paramMap,String id);
 
-	void nailTotalCount(ConcurrentHashMap<Integer, NailCount> nailCountMap, NailOrderVo entity);
+	void nailTotalCount(LinkedHashMap<String, NailCount> nailCountMap, NailOrderVo entity);
 	
 	NailOrderDto getNailOrder(Map<String, Object> paramMap);
 

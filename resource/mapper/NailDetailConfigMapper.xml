@@ -11,13 +11,14 @@
 		<result property="oldSerialNumber" column="old_serial_number" />
 		<result property="nailSmallWeight" column="nail_small_weight" />
 		<result property="nailBigWeight" column="nail_big_weight" />
+		<result property="sort" column="sort" />
 		<result property="createDate" column="create_date" />
 		<result property="updateDate" column="update_date" />
 	</resultMap>
 	
 	<insert id="save" parameterType="com.artcweb.bean.NailDetailConfig" useGeneratedKeys="true" keyProperty="id">
-      INSERT INTO t_nail_detail_config(rgb,new_serial_number,old_serial_number,nail_small_weight,nail_big_weight,create_date,update_date)
-      VALUE (#{rgb},#{newSerialNumber},#{oldSerialNumber},#{nailSmallWeight},#{nailBigWeight},now(),now())
+      INSERT INTO t_nail_detail_config(rgb,new_serial_number,old_serial_number,nail_small_weight,nail_big_weight,sort,create_date,update_date)
+      VALUE (#{rgb},#{newSerialNumber},#{oldSerialNumber},#{nailSmallWeight},#{nailBigWeight},#{sort},now(),now())
      </insert>
 
 	<!--删除 -->
@@ -44,6 +45,7 @@
 		old_serial_number=#{oldSerialNumber},
 		nail_small_weight=#{nailSmallWeight},
 		nail_big_weight=#{nailBigWeight},
+		sort=#{sort},
 		update_date = now()
 		where
 		id=#{id}
@@ -63,6 +65,22 @@
 		ORDER by id
 	</select>
 	
+	
+	<select id="selectByMap" parameterType="Map" resultType="com.artcweb.dto.NailDetailConfigDto">
+		SELECT * FROM t_nail_detail_config t
+		<where>
+			<if test="id != null and '' != id">
+				id = #{id}
+			</if>
+			<if test="null != sort and '' != sort">
+				and sort = #{sort}
+			</if>
+		</where>
+		ORDER by id limit 1
+	</select>
+	
+	
+	
 	<!-- 查询 -->
 	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.NailDetailConfigDto">
 		SELECT t.id as id,
@@ -71,6 +89,7 @@
 		t.old_serial_number as oldSerialNumber,
 		t.nail_small_weight as nailSmallWeight,
 		t.nail_big_weight as nailBigWeight,
+		t.sort as sort,
 		t.create_date as createDate,
 		t.update_date as updateDate
 		 FROM t_nail_detail_config t
@@ -85,7 +104,7 @@
 					and t.rgb = #{entity.rgb}
 			</if>
 		</where>
-		ORDER by t.id limit ${page.begin},${page.limit} 
+		ORDER by t.sort , t.update_date desc limit ${page.begin},${page.limit} 
 	</select>
 	
 	<select id="findByPageCount" parameterType="Map" resultType="int">

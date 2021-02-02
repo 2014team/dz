@@ -27,7 +27,7 @@
 				</label>
 				<div class="layui-input-inline">
 					<input type="text" id="newSerialNumber" name="newSerialNumber"
-						value="${entity.newSerialNumber}"   lay-verify="required|number"
+						value="${entity.newSerialNumber}"   lay-verify="required"
 						autocomplete="off" class="layui-input" maxlength="10">
 				</div>
 				<div class="layui-form-mid layui-word-aux">数字  建议10字符以内</div>
@@ -59,8 +59,18 @@
 					class="x-red">*</span>（大钉）每包克数
 				</label>
 				<div class="layui-input-inline">
-					<input type="text" id=nailBigWeight name="nailBigWeight"
+					<input type="text" id="nailBigWeight" name="nailBigWeight"
 						value="${empty entity.nailBigWeight ?'' : entity.nailBigWeight}"   lay-verify="required|number"
+						autocomplete="off" class="layui-input" maxlength="10">
+				</div>
+			</div>
+		  <div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label"> <span
+					class="x-red">*</span>排序号
+				</label>
+				<div class="layui-input-inline">
+					<input type="text" id="sort" name="sort"
+						value="${empty entity.sort ?'' : entity.sort}"   lay-verify="required|number"
 						autocomplete="off" class="layui-input" maxlength="10">
 				</div>
 			</div>

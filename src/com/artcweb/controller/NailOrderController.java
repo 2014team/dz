@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,6 +41,7 @@ import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailPictureFrameService;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
+import com.artcweb.util.MapUtil;
 import com.artcweb.vo.NailOrderVo;
 
 
@@ -120,13 +122,16 @@ public class NailOrderController {
 		if(StringUtils.isNotBlank(entity.getNailCountDetail())){
 			NailTotalCount nailTotalCount = ( NailTotalCount ) GsonUtil.jsonToBean(entity.getNailCountDetail(),NailTotalCount.class);
 			
-			ConcurrentHashMap<Integer, NailCount> nailCountDetailMap= nailTotalCount.getNailCountDetailMap();
+			LinkedHashMap<String, NailCount> nailCountDetailMap= nailTotalCount.getNailCountDetailMap();
+			
+			nailCountDetailMap = MapUtil.mapSortForStringKey(nailCountDetailMap);
+			
 			if(null != nailCountDetailMap && nailCountDetailMap.size() > 0){
 				// 4取模处理
 				int size = (nailCountDetailMap.size()+1)%4;
 				if(size != 0){
 					for(int i=0;i<(4-size);i++){
-						nailCountDetailMap.put(100+i, new NailCount());
+						nailCountDetailMap.put(100+i+"", new NailCount());
 					}
 					nailTotalCount.setNailCountDetailMap(nailCountDetailMap);
 				}
@@ -221,10 +226,10 @@ public class NailOrderController {
 				return layUiResult;
 			}
 			// 图片颜色统计
-			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.BACKSTAGE);
+			LinkedHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.BACKSTAGE);
 	
 			// 钉子颜色列表统计
-			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
+			LinkedHashMap<String, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
 			
 			// 钉子与重量总数统计
 			nailOrderService.nailTotalCount(nailCountMap,entity);
@@ -371,10 +376,10 @@ public class NailOrderController {
 				return layUiResult;
 			}
 			// 图片颜色统计
-			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.BACKSTAGE);
+			LinkedHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.BACKSTAGE);
 	
 			// 钉子颜色列表统计
-			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
+			LinkedHashMap<String, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
 			
 			// 钉子与重量总数统计
 			nailOrderService.nailTotalCount(nailCountMap,entity);
@@ -484,10 +489,10 @@ public class NailOrderController {
 				return layUiResult;
 			}
 			// 图片颜色统计
-			ConcurrentHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.BACKSTAGE);
+			LinkedHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.BACKSTAGE);
 	
 			// 钉子颜色列表统计
-			ConcurrentHashMap<Integer, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
+			LinkedHashMap<String, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
 			
 			// 钉子与重量总数统计
 			nailOrderService.nailTotalCount(nailCountMap,entity);

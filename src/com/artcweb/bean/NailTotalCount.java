@@ -1,6 +1,7 @@
 package com.artcweb.bean;
 
 import java.io.Serializable;
+import java.util.LinkedHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class NailTotalCount implements Serializable {
@@ -17,7 +18,7 @@ public class NailTotalCount implements Serializable {
 	// 总包数
 	private String totalrPieces;
 	// 详细列表
-	ConcurrentHashMap<Integer, NailCount> nailCountDetailMap;
+	LinkedHashMap<String, NailCount> nailCountDetailMap;
 
 	public String getTotalNailNumber() {
 		return totalNailNumber;
@@ -34,10 +35,10 @@ public class NailTotalCount implements Serializable {
 	public void setTotalWeight(String totalWeight) {
 		this.totalWeight = totalWeight;
 	}
-	public ConcurrentHashMap<Integer, NailCount> getNailCountDetailMap() {
+	public LinkedHashMap<String, NailCount> getNailCountDetailMap() {
 		return nailCountDetailMap;
 	}
-	public void setNailCountDetailMap(ConcurrentHashMap<Integer, NailCount> nailCountDetailMap) {
+	public void setNailCountDetailMap(LinkedHashMap<String, NailCount> nailCountDetailMap) {
 		this.nailCountDetailMap = nailCountDetailMap;
 	}
 
