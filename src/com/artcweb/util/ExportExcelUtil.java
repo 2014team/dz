@@ -17,11 +17,13 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.poi.hssf.usermodel.HSSFFont;
+import org.apache.poi.hssf.usermodel.HSSFRichTextString;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.DataFormat;
 import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.ss.usermodel.PrintSetup;
+import org.apache.poi.ss.usermodel.RichTextString;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.util.CellRangeAddress;
@@ -208,6 +210,34 @@ public class ExportExcelUtil  {
 		dataFont_p.setFontName("微软雅黑");
 		dataStyle_p.setFont(dataFont_p);
 		dataStyle_p.setWrapText(true);
+		
+		
+		
+		// checkbox 处理
+		RichTextString nailType = new HSSFRichTextString(entity.getNailType()+"\u25A1");
+		CellStyle dataStyle_ck = workbook.createCellStyle();
+		dataStyle_ck.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 水平居中
+		dataStyle_ck.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER); // 垂直居中
+		dataStyle_ck.setBorderBottom(XSSFCellStyle.BORDER_THIN); // 下边框
+		dataStyle_ck.setBorderLeft(XSSFCellStyle.BORDER_THIN); // 左边框
+		dataStyle_ck.setBorderTop(XSSFCellStyle.BORDER_THIN); // 上边框
+		dataStyle_ck.setBorderRight(XSSFCellStyle.BORDER_THIN); // 右边框
+		dataStyle_ck.setDataFormat(format.getFormat("@"));      //将数据单元格格式设置为文本类型  
+		// 数据字体
+		Font dataFont_ck = workbook.createFont();
+		dataFont_ck.setFontHeightInPoints((short) 18);
+		dataFont_ck.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
+		dataFont_ck.setFontName("Wingdings 2");
+		dataStyle_ck.setFont(dataFont_ck);
+		dataStyle_ck.setWrapText(true);
+
+		RichTextString colorName = new HSSFRichTextString(entity.getColorName()+"\u25A1");
+
+		
+		
+		
+		
+		
 
 		CellStyle dataStyle = workbook.createCellStyle();
 		dataStyle.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 水平居中
@@ -361,18 +391,32 @@ public class ExportExcelUtil  {
 				}
 			}
 			
+			if(rows.size() >= 15){
+				if(i ==14){
+					CellRangeAddress cra = new CellRangeAddress(14, 15, 0, 0);
+					sheet.addMergedRegion(cra); // 合并大标题行
+				}
+			}
+			
+			if(rows.size() >= 17){
+				if(i ==16){
+					CellRangeAddress cra = new CellRangeAddress(16, 17, 0, 0);
+					sheet.addMergedRegion(cra); // 合并大标题行
+				}
+			}
+			
 			// 买家名称合并
-			if(rows.size() >= 18){
-				if(i ==17){
-					CellRangeAddress cra = new CellRangeAddress(17, 18, 0, 0);
+			if(rows.size() >= 19){
+				if(i ==18){
+					CellRangeAddress cra = new CellRangeAddress(18, 19, 0, 0);
 					sheet.addMergedRegion(cra); // 合并大标题行
 				}
 			}
 			
 			// 备注说明合并
-			if(rows.size() >= 19){
-				if(i ==19){
-					CellRangeAddress cra = new CellRangeAddress(19, rows.size()+2, 0, 0);
+			if(rows.size() >= 20){
+				if(i ==20){
+					CellRangeAddress cra = new CellRangeAddress(20, rows.size()+2, 0, 0);
 					sheet.addMergedRegion(cra); // 合并大标题行
 				}
 			}
@@ -407,19 +451,21 @@ public class ExportExcelUtil  {
 				}
 				
 				// 图钉类型
-				if((i == 12 &&j == 0) ){
-					dataCell.setCellValue(entity.getNailType());
+				if((i == 11 &&j == 0) ){
+					dataCell.setCellValue(nailType);
+					dataCell.setCellStyle(dataStyle_ck);
 				} 
 				// 相框颜色
 				if((i == 13 &&j == 0) ){
-					dataCell.setCellValue(entity.getColorName());
+					dataCell.setCellValue(colorName);
+					dataCell.setCellStyle(dataStyle_ck);
 				}
 				// 买家名称
-				if((i == 14 &&j == 0) ){
+				if((i == 15 &&j == 0) ){
 					dataCell.setCellValue(entity.getUsername());
 				}
 				
-				if((i == 16 &&j == 0) ){
+				if((i == 17 &&j == 0) ){
 					String describe="请亲在第一时间内核对包数； 使用秘钥解锁清单上的图纸； 有疑问及时联系客服";
 					dataCell.setCellValue(describe);
 				}
