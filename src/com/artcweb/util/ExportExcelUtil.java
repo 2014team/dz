@@ -225,7 +225,7 @@ public class ExportExcelUtil  {
 		dataStyle_ck.setDataFormat(format.getFormat("@"));      //将数据单元格格式设置为文本类型  
 		// 数据字体
 		Font dataFont_ck = workbook.createFont();
-		dataFont_ck.setFontHeightInPoints((short) 18);
+		dataFont_ck.setFontHeightInPoints((short) 20);
 		dataFont_ck.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
 		dataFont_ck.setFontName("Wingdings 2");
 		dataStyle_ck.setFont(dataFont_ck);
@@ -384,6 +384,7 @@ public class ExportExcelUtil  {
 			if(i ==0){
 				sheet.addMergedRegion(new CellRangeAddress(1, 11, 0, 0)); // 合并大标题行
 			}
+			// 买家名称
 			if(rows.size() >= 13){
 				if(i ==12){
 					CellRangeAddress cra = new CellRangeAddress(12, 13, 0, 0);
@@ -391,32 +392,33 @@ public class ExportExcelUtil  {
 				}
 			}
 			
-			if(rows.size() >= 15){
+			// 图钉类型
+			if(rows.size() >= 17){
 				if(i ==14){
-					CellRangeAddress cra = new CellRangeAddress(14, 15, 0, 0);
+					CellRangeAddress cra = new CellRangeAddress(14, 17, 0, 0);
 					sheet.addMergedRegion(cra); // 合并大标题行
 				}
 			}
-			
-			if(rows.size() >= 17){
-				if(i ==16){
-					CellRangeAddress cra = new CellRangeAddress(16, 17, 0, 0);
+			// 画框颜色
+			if(rows.size() >= 21){
+				if(i ==18){
+					CellRangeAddress cra = new CellRangeAddress(18, 21, 0, 0);
 					sheet.addMergedRegion(cra); // 合并大标题行
 				}
 			}
 			
 			// 买家名称合并
-			if(rows.size() >= 19){
+			/*if(rows.size() >= 19){
 				if(i ==18){
 					CellRangeAddress cra = new CellRangeAddress(18, 19, 0, 0);
 					sheet.addMergedRegion(cra); // 合并大标题行
 				}
-			}
+			}*/
 			
 			// 备注说明合并
-			if(rows.size() >= 20){
-				if(i ==20){
-					CellRangeAddress cra = new CellRangeAddress(20, rows.size()+2, 0, 0);
+			if(rows.size() >= 22){
+				if(i ==22){
+					CellRangeAddress cra = new CellRangeAddress(22, rows.size()+2, 0, 0);
 					sheet.addMergedRegion(cra); // 合并大标题行
 				}
 			}
@@ -445,6 +447,7 @@ public class ExportExcelUtil  {
 				
 				
 				//数据处理
+				//图纸名称
 				if((i == 9 &&j == 0) || (i == 8 &&j == 0) ){
 					dataCell.setCellValue(excelName);
 					dataCell.setCellStyle(dataStyle_p);
@@ -456,16 +459,16 @@ public class ExportExcelUtil  {
 					dataCell.setCellStyle(dataStyle_ck);
 				} 
 				// 相框颜色
-				if((i == 13 &&j == 0) ){
+				if((i == 15 &&j == 0) ){
 					dataCell.setCellValue(colorName);
 					dataCell.setCellStyle(dataStyle_ck);
 				}
 				// 买家名称
-				if((i == 15 &&j == 0) ){
+				/*if((i == 15 &&j == 0) ){
 					dataCell.setCellValue(entity.getUsername());
-				}
+				}*/
 				
-				if((i == 17 &&j == 0) ){
+				if((i == 19 &&j == 0) ){
 					String describe="请亲在第一时间内核对包数； 使用秘钥解锁清单上的图纸； 有疑问及时联系客服";
 					dataCell.setCellValue(describe);
 				}
