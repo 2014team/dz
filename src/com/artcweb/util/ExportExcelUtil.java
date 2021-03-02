@@ -232,6 +232,26 @@ public class ExportExcelUtil  {
 		dataStyle_ck.setWrapText(true);
 
 		RichTextString colorName = new HSSFRichTextString(entity.getColorName()+"\u25A1");
+		
+		
+		
+		CellStyle dataStyle_fzh = workbook.createCellStyle();
+		dataStyle_fzh.setAlignment(XSSFCellStyle.ALIGN_CENTER); // 水平居中
+		dataStyle_fzh.setVerticalAlignment(XSSFCellStyle.VERTICAL_CENTER); // 垂直居中
+		dataStyle_fzh.setBorderBottom(XSSFCellStyle.BORDER_THIN); // 下边框
+		dataStyle_fzh.setBorderLeft(XSSFCellStyle.BORDER_THIN); // 左边框
+		dataStyle_fzh.setBorderTop(XSSFCellStyle.BORDER_THIN); // 上边框
+		dataStyle_fzh.setBorderRight(XSSFCellStyle.BORDER_THIN); // 右边框
+		dataStyle_fzh.setDataFormat(format.getFormat("@"));      //将数据单元格格式设置为文本类型  
+		// 数据字体
+		Font dataFont_fzh = workbook.createFont();
+		dataFont_fzh.setFontHeightInPoints((short) 20);
+		//dataFont_fzh.setBoldweight(HSSFFont.BOLDWEIGHT_BOLD);//粗体显示
+		dataFont_fzh.setFontName("Wingdings 2");
+		dataStyle_fzh.setFont(dataFont_fzh);
+		dataStyle_fzh.setWrapText(true);
+		
+		RichTextString fenzhuanghe = new HSSFRichTextString("分装盒"+"\u25A1");
 
 		
 		
@@ -406,6 +426,12 @@ public class ExportExcelUtil  {
 					sheet.addMergedRegion(cra); // 合并大标题行
 				}
 			}
+			if(rows.size() >= 25){
+				if(i ==22){
+					CellRangeAddress cra = new CellRangeAddress(22, 25, 0, 0);
+					sheet.addMergedRegion(cra); // 合并大标题行
+				}
+			}
 			
 			// 买家名称合并
 			/*if(rows.size() >= 19){
@@ -416,9 +442,9 @@ public class ExportExcelUtil  {
 			}*/
 			
 			// 备注说明合并
-			if(rows.size() >= 22){
-				if(i ==22){
-					CellRangeAddress cra = new CellRangeAddress(22, rows.size()+2, 0, 0);
+			if(rows.size() >= 26){
+				if(i ==23){
+					CellRangeAddress cra = new CellRangeAddress(26, rows.size()+2, 0, 0);
 					sheet.addMergedRegion(cra); // 合并大标题行
 				}
 			}
@@ -468,7 +494,12 @@ public class ExportExcelUtil  {
 					dataCell.setCellValue(entity.getUsername());
 				}*/
 				
+				// 分装盒
 				if((i == 19 &&j == 0) ){
+					dataCell.setCellValue(fenzhuanghe);
+					dataCell.setCellStyle(dataStyle_fzh);
+				}
+				if((i == 23 &&j == 0) ){
 					String describe="请亲在第一时间内核对包数； 使用秘钥解锁清单上的图纸； 有疑问及时联系客服";
 					dataCell.setCellValue(describe);
 				}
