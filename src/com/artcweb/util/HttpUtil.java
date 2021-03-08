@@ -425,25 +425,25 @@ public class HttpUtil {
 		// 如果所有请求都经过我们自己的nginx才进入到我们后端服务器，才需要通过获取代理列表"X-Forwarded-For"获取到真正的客户端ip。
 		// 即使我们用了nginx，如果有人故意构造了X-Forwarded-For请求头，也是无法获取到用户的真正ip的，其实我们只要获取跟nginx通信的那个客户端ip就可以了，没必要获取坏人的那个真正ip
 		// 获取客户端ip可以参考：https://imququ.com/post/x-forwarded-for-header-in-http.html
-		return request.getRemoteAddr();// 这个方法并不能确保是用户真正的ip，在现在我们没用nginx的情况下，直接获取跟我们服务器通信的客户端ip就好了
+		//return request.getRemoteAddr();// 这个方法并不能确保是用户真正的ip，在现在我们没用nginx的情况下，直接获取跟我们服务器通信的客户端ip就好了
 
-//		String ip = request.getHeader("X-Forwarded-For");
-//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//			ip = request.getHeader("Proxy-Client-IP");
-//		}
-//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//			ip = request.getHeader("WL-Proxy-Client-IP");
-//		}
-//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//			ip = request.getHeader("HTTP_CLIENT_IP");
-//		}
-//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
-//		}
-//		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
-//			ip = request.getRemoteAddr();
-//		}
-//		return ip;
+		String ip = request.getHeader("X-Forwarded-For");
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("WL-Proxy-Client-IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_CLIENT_IP");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getHeader("HTTP_X_FORWARDED_FOR");
+		}
+		if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+			ip = request.getRemoteAddr();
+		}
+		return ip;
 	}
 	
 	
