@@ -14,7 +14,7 @@ public class AdminUser extends BaseBean {
 	// 邮箱
 	private String email;
 
-	// 有效表识 1:有效 0无效
+	// 有效表识 0:有效 有效
 	private Integer vaild;
 
 	public String getUserName() {
