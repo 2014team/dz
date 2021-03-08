@@ -32,8 +32,8 @@
      <!-- 头部工具条 -->
 	<script type="text/html" id="toolbar">
   		<div class="layui-btn-container">
-   			 <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/package/add.do')"><i class="layui-icon"></i>增加</button>
    			 <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="package_delAll('rendReloadId','/admin/center/package/delete/batch.do')">批量删除</button>
+   			 <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/package/add.do')"><i class="layui-icon"></i>增加</button>
   		</div>
 	</script>
      
