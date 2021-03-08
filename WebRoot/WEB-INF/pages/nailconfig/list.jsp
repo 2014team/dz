@@ -95,7 +95,6 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 
 			},
 			cols : [ [
-				/*  {checkbox: true, fixed: true}, */
 				{
 					field : 'indexId', 
 					title : '序号',

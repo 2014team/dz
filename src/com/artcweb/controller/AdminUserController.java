@@ -153,11 +153,6 @@ public class AdminUserController {
 	public LayUiResult save(AdminUser adminUser, HttpServletRequest request) {
 
 		LayUiResult result = new LayUiResult();
-		String errMsg = adminUserService.checkAdmin(request);
-		if (StringUtils.isNotBlank(errMsg)) {
-			result.failure(errMsg);
-			return result;
-		}
 
 		// 参数验证
 		String userName = adminUser.getUserName();
@@ -171,31 +166,18 @@ public class AdminUserController {
 			return result;
 		}
 
-		Integer id = adminUser.getId();
-		Integer operate = 0;
-		if (null != id && id > 0) {// 修改
-			AdminUser user = adminUserService.getById(id);
-			if (null != user) {
-				user.setUserName(userName);
-				user.setPassword(password);
-				operate = adminUserService.update(user);
-			}
-		}
-		else {// 保存
-			adminUser.setVaild(0);
-			adminUser.setEmail("");
+		adminUser.setEmail("");
 
-			// 唯一性验证
-			Map<String, Object> paramMap = new HashMap<String, Object>();
-			paramMap.put("userName", userName);
-			List<AdminUser> list = adminUserService.checkUnique(paramMap);
-			if (null != list && list.size() > 0) {
-				result.failure("用户已存在!");
-				return result;
-			}
-
-			operate = adminUserService.save(adminUser);
+		// 唯一性验证
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userName", userName);
+		List<AdminUser> list = adminUserService.checkUnique(paramMap);
+		if (null != list && list.size() > 0) {
+			result.failure("用户已存在!");
+			return result;
 		}
+
+		Integer operate = adminUserService.save(adminUser);
 
 		if (null != operate && operate > 0) {
 			result.success();
@@ -205,6 +187,54 @@ public class AdminUserController {
 		result.failure();
 		return result;
 	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/center/account/update")
+	public LayUiResult update(AdminUser adminUser, HttpServletRequest request) {
+
+		LayUiResult result = new LayUiResult();
+
+		// 参数验证
+		String userName = adminUser.getUserName();
+		if (StringUtils.isBlank(userName)) {
+			result.failure("用户名不能为空!");
+			return result;
+		}
+		String password = adminUser.getPassword();
+		if (StringUtils.isBlank(password)) {
+			result.failure("密码不能为空!");
+			return result;
+		}
+		
+		
+		Integer id = adminUser.getId();
+		adminUser.setEmail("");
+
+		// 唯一性验证
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		paramMap.put("userName", userName);
+		List<AdminUser> list = adminUserService.checkUnique(paramMap);
+		if (null != list && list.size() > 0) {
+			for (AdminUser adminUser2 : list) {
+				Integer idDB = adminUser2.getId();
+				if(!id.equals(idDB)){
+					result.failure("用户已存在!");
+					return result;
+				}
+			}
+		}
+		Integer operate = adminUserService.update(adminUser);
+
+		if (null != operate && operate > 0) {
+			result.success();
+			return result;
+		}
+		result.failure();
+		return result;
+	}
+	
+	
 
 	/**
 	 * @Title: list
@@ -287,6 +317,22 @@ public class AdminUserController {
 			return result;
 		}
 		result.failure();
+		return result;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/center/account/get", method = { RequestMethod.POST,
+					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
+	public LayUiResult get(Integer id) {
+		
+		LayUiResult result = new LayUiResult();
+		if (null == id || id < 1) {
+			result.failure("id不能为空");
+			return result;
+		}
+		AdminUser entity = adminUserService.getById(id);
+		result.success(entity);
 		return result;
 	}
 

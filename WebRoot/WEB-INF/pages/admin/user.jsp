@@ -31,31 +31,29 @@
      <table class="layui-hide" id="table_list" lay-filter="table_list" ></table>
      
      <!-- 头部工具条 -->
-	<!-- 
+	 
 	<script type="text/html" id="toolbar">
   		<div class="layui-btn-container">
    			 <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="crup_delAll('tableReload','/admin/center/account/delete/batch.do')">批量删除</button>
-   			 <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/account/add.do',600,260)"><i class="layui-icon"></i>增加</button>
+   			 <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/account/add.do',600,400)"><i class="layui-icon"></i>增加</button>
   		</div>
 	</script>
-    -->	 
+    
      <!--列表行Bar  -->
      
      <script type="text/html" id="rowBar">
 		 <a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
- 		 <!-- <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> -->
+ 		 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a> 
 	</script>
   
   </body>
-  
-  <!-- 序号模板 -->
-<script type="text/html" id="indexTpl">
-   {{d.LAY_TABLE_INDEX+1}}
-</script>
+
 
 
 
 <script type="text/javascript">
+
+var editRowObj;
 	layui.use('table', function() {
 		var table = layui.table;
 
@@ -79,13 +77,13 @@
 
 			},
 			cols : [ [
-				/*  {checkbox: true, fixed: true}, */
+				 {checkbox: true, fixed: true}, 
 				{
 					field : 'indexId', 
 					title : '序号',
-					templet: '#indexTpl',
-					width:75,
-					sort : true,					
+					type: 'numbers',
+					sort : true,
+					width:80,
 				}
 				, {
 					field : 'userName',
@@ -95,6 +93,17 @@
 				, {
 					field : 'password',
 					title : '密码'
+				}
+				, {
+					field : 'vaild',
+					title : '状态',
+					templet : function(d) {
+					  if(d.vaild == 0){
+					  	return "有效"
+					  }else if(d.vaild == 1){
+					  	return "禁用"
+					  }else{return""}
+					}
 				}
 				 , {
 					align:'center', toolbar: '#rowBar',
@@ -123,13 +132,14 @@
 		
 		//监听行工具条
 		table.on('tool(table_list)', function(obj) {
+			editRowObj = obj;
 			 var data = obj.data;
 			 switch(obj.event){
 			  case 'del': //删除
 				crup_delete(obj,'/admin/center/account/delete.do',data.id);
 		      break;
 		      case 'edit':// 编辑
-				x_admin_show('编辑','/admin/center/account/edit/'+obj.data.id+'.do',600,260);
+				x_admin_show('编辑','/admin/center/account/edit/'+obj.data.id+'.do',600,400);
 		      break;
 			 }
 		});
@@ -139,6 +149,58 @@
 	$("#clean_search_input").on('click',function(){
 			$("#userName").val('');
 	});
+	
+	
+	
+	
+	//刷新
+	function reloadTable(id){
+		if(id){
+			editRelaod(id);
+		}else{
+		   addRelaod();
+		}
+	}
+	
+		function addRelaod(){
+				//获取当前页
+				// var pageNO = $(".layui-laypage-skip .layui-input").val();
+				//执行重载
+			     layui.table.reload('tableReload', {
+			       page: {
+			         curr:1 //重新从第 1 页开始
+			       }
+			     }, 'data'); 
+		}
+		
+		function editRelaod(id){
+				 $.ajax({
+					url : '/admin/center/account/get.do',
+					type : "POST",
+					data :{
+				            "id": id,
+				            "page": "1",
+							"limit": 10,
+				        }, //这个是传给后台的值
+					dataType : "json",
+					success : function(resp) {
+					//console.info(data);
+					if(resp.code == 200){
+					editRowObj.update({
+						 userName: resp.data.userName,
+						 password: resp.data.password,
+						 vaild: resp.data.vaild
+						 });
+					}
+					
+					
+						
+					}, 
+					
+				});
+		}
+   
+	
 	
 </script>
 
