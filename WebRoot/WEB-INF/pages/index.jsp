@@ -128,6 +128,12 @@
                             <cite>管理员列表</cite>
                         </a>
                     </li > 
+                   <!--  <li>
+                        <a _href="/admin/center/role/list/ui.do">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>角色列表</cite>
+                        </a>
+                    </li >  -->
                  <!--    <li>
                         <a _href="html/admin-role.html">
                             <i class="iconfont">&#xe6a7;</i>
@@ -191,8 +197,30 @@
                             
                         </a>
                     </li>
+                    <li>
+                        <a _href="/admin/center/nailWeightStock/list/ui.do">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>重量库存</cite>
+                            
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="/admin/center/nailWeightStockHistory/list/ui.do">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>重量库存记录</cite>
+                            
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="/admin/center/nailDrawingStock/list/ui.do">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>图纸库存</cite>
+                            
+                        </a>
+                    </li>
+                    
                    <!--  <li>
-                        <a _href="/admin/center/nailsecret/list/ui.do">
+                        <a _href="/admin/center/nailWeightStock/list/ui.do">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>秘钥列表</cite>
                             
@@ -207,7 +235,11 @@
                     </li> -->
                     
                 </ul>
-            </li>              
+            </li>    
+            
+            
+            
+                   
 
 <!-- <li>
                 <a href="javascript:;">

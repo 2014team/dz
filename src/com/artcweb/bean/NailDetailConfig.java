@@ -13,6 +13,7 @@ public class NailDetailConfig extends BaseBean {
 
 	// RGB值
 	private String rgb;
+	private String rgbName;
 
 	// 新编号
 	private String newSerialNumber;
@@ -27,6 +28,15 @@ public class NailDetailConfig extends BaseBean {
 	private String nailBigWeight;
 	
 	private int sort;
+	
+
+	public String getRgbName() {
+		return rgbName;
+	}
+
+	public void setRgbName(String rgbName) {
+		this.rgbName = rgbName;
+	}
 
 	public String getRgb() {
 		return rgb;

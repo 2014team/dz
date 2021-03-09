@@ -55,7 +55,7 @@
 <!--图片模板  -->
 <script type="text/html" id="rgbTemplet">
 
-<button w style='background-color:rgb({{d.rgb}});width: 80px;height: 25px;border: 0px'></button>
+<button w style='background-color:rgb({{d.rgbName}});width: 80px;height: 25px;border: 0px'></button>
 </script>
 
 
@@ -108,7 +108,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}
 				
 				, {
-					field : 'rgb1' ,
+					field : 'rgbName' ,
 					title : '颜色' ,
 					templet: '#rgbTemplet' 
 				},
@@ -308,7 +308,7 @@ function order_delAll(layfilterId,url) {
 					//console.info(data);
 					if(resp.code == 200){
 					editRowObj.update({
-						 rgb1: resp.data.rgb,
+						 rgbName: resp.data.rgbName,
 						 rgb: resp.data.rgb,
 						 sort: resp.data.sort,
 						 newSerialNumber: resp.data.newSerialNumber,

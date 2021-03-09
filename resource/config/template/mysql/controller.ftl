@@ -96,7 +96,7 @@ public class ${table.className?cap_first}Controller {
 		</#list>
 		
 
-		// 保存秘钥
+		// 保存
 		Integer result = ${table.className?uncap_first}Service.saveOrUpdate(entity);
 		if (null != result && result > 0) {
 			layUiResult.success();

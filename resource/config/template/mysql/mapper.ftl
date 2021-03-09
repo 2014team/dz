@@ -149,11 +149,11 @@
  		<#list table.key_fields + table.common_fields as field>
  			<#if (field_index  == 0 )>
  			<if test="null != entity.${field.java_field_Name} <#if field.java_type != 'Integer'>and ''!= entity.${field.java_field_Name}</#if>">
-				${field.field_name} = ${"#"}{${table.className?uncap_first +"Vo."+ field.java_field_Name}} 
+				t.${field.field_name} = ${"#"}{${table.className?uncap_first +"Vo."+ field.java_field_Name}} 
 			</if>	
 			<#else>
 			<if test="null != entity.${field.java_field_Name} <#if field.java_type != 'Integer'>and ''!= entity.${field.java_field_Name}</#if>">
-				and ${field.field_name} = ${"#"}{entity.${field.java_field_Name}}
+				and t.${field.field_name} = ${"#"}{entity.${field.java_field_Name}}
 			</if> 
 			</#if>
  		</#list>
