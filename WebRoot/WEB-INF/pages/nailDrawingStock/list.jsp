@@ -56,6 +56,7 @@
      <script type="text/html" id="rowBar">
 		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
  		 <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
+		<a class="layui-btn layui-btn-warm layui-btn-xs" lay-event="add_stock">添加库存</a>
 	</script>
   </body>
   
@@ -151,7 +152,8 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}
 				,{
 					align:'left', toolbar: '#rowBar',
-					title : '操作'
+					title : '操作',
+					width: 200
 				}
 
 			] ]
@@ -182,6 +184,9 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 		      break;
 		      case 'edit':// 编辑
 				x_admin_show('编辑','/admin/center/nailDrawingStock/edit/'+obj.data.id+'.do');
+		        break;
+		      case 'add_stock'://添加库存
+				x_admin_show('添加库存','/admin/center/nailDrawingStock/addStock/'+obj.data.id+'.do');
 		      break;
 			 }
 		});

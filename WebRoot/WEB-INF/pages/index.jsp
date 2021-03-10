@@ -200,14 +200,14 @@
                     <li>
                         <a _href="/admin/center/nailWeightStock/list/ui.do">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>重量库存</cite>
+                            <cite>图钉库存</cite>
                             
                         </a>
                     </li>
                     <li>
                         <a _href="/admin/center/nailWeightStockHistory/list/ui.do">
                             <i class="iconfont">&#xe6a7;</i>
-                            <cite>重量库存记录</cite>
+                            <cite>图钉库存记录</cite>
                             
                         </a>
                     </li>
@@ -215,6 +215,13 @@
                         <a _href="/admin/center/nailDrawingStock/list/ui.do">
                             <i class="iconfont">&#xe6a7;</i>
                             <cite>图纸库存</cite>
+                            
+                        </a>
+                    </li>
+                    <li>
+                        <a _href="/admin/center/nailDrawingStockHistory/list/ui.do">
+                            <i class="iconfont">&#xe6a7;</i>
+                            <cite>图纸库存记录</cite>
                             
                         </a>
                     </li>

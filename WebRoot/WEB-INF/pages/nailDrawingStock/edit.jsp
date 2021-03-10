@@ -59,17 +59,33 @@
 		</div>
           
 		
-			<div class="layui-form-item">
-			<label for="L_pass" class="layui-form-label"> 
-			<span class="x-red">*</span>数量：
-			</label>
-			<div class="layui-input-inline">
-				<input type="text" id="number" name="number"
-					value="${entity.number}"   lay-verify="required"
-					autocomplete="off" class="layui-input">
-			</div>
-			<div class="layui-form-mid layui-word-aux">必选项</div>
-		</div>
+		<c:choose>
+			<c:when test="${not empty entity.id }">
+				
+					<div class="layui-form-item">
+					<label for="L_pass" class="layui-form-label"> 
+					<span class="x-red">*</span>数量：
+					</label>
+					<div class="layui-input-inline">
+						<input type="text" id="number" name="number"
+							value="${entity.number}"   lay-verify="required"
+							autocomplete="off" class="layui-input">
+					</div>
+					<div class="layui-form-mid layui-word-aux">必选项</div>
+				</div>
+			</c:when>
+				
+			<c:otherwise>
+			
+				<div class="layui-input-inline">
+						<input type="hidden" id="number" name="number"
+							value="${entity.number}"   lay-verify="required"
+							autocomplete="off" class="layui-input">
+					</div>
+			</c:otherwise>
+		
+		</c:choose>
+		
 		
 			
 			<div class="layui-form-item">

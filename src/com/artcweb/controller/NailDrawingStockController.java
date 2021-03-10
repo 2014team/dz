@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailDrawingStock;
 import com.artcweb.service.NailDrawingStockService;
+import com.artcweb.vo.NailDrawingStockHistoryVo;
 import com.artcweb.vo.NailDrawingStockVo;
+import com.artcweb.vo.NailWeightStockHistoryVo;
 
 
 /**
@@ -50,6 +52,21 @@ public class NailDrawingStockController {
 
 		return "/nailDrawingStock/edit";
 	}
+	
+	/**
+	* @Title: addStock
+	* @Description: 添加库存
+	* @author zhuzq
+	* @date  2021年3月9日 下午2:35:08
+	* @param request
+	* @return
+	*/
+	@RequestMapping(value = "/addStock/{id}")
+	public String addStock(HttpServletRequest request,@PathVariable Integer id) {
+		request.setAttribute("id", id);
+		return "/nailDrawingStock/add_stock";
+	}
+	
 	
 	/**
 	 * @Title: toEdit
@@ -107,6 +124,55 @@ public class NailDrawingStockController {
 
 		// 保存秘钥
 		Integer result = nailDrawingStockService.saveOrUpdate(entity);
+		if (null != result && result > 0) {
+			layUiResult.success();
+		}
+		else {
+			layUiResult.failure();
+		}
+		return layUiResult;
+	}
+	
+	/**
+	* @Title: addStockSave
+	* @Description: 库存保存
+	* @author zhuzq
+	* @date  2021年3月9日 下午2:43:32
+	* @param entity
+	* @param request
+	* @return
+	*/
+	@ResponseBody
+	@RequestMapping(value = "/addStock/save")
+	public LayUiResult addStockSave(NailDrawingStockHistoryVo entity, HttpServletRequest request) {
+		LayUiResult layUiResult = new LayUiResult();
+		
+
+		// 参数验证
+		Integer nailDrawingStockId = entity.getNailDrawingStockId();
+		if (null == nailDrawingStockId) {
+			layUiResult.failure("图纸库存ID不能为空");
+			return layUiResult;
+		}
+	    String stock = entity.getStock();
+		if (StringUtils.isBlank(stock)) {
+			layUiResult.failure("库存量不能为空");
+			return layUiResult;
+		}
+	    String price = entity.getPrice();
+		if (StringUtils.isBlank(price)) {
+			layUiResult.failure("单价不能为空");
+			return layUiResult;
+		}
+	    String total = entity.getTotal();
+		if (StringUtils.isBlank(total)) {
+			layUiResult.failure("总价不能为空");
+			return layUiResult;
+		}
+		
+
+		// 保存
+		Integer result = nailDrawingStockService.saveStock(entity);
 		if (null != result && result > 0) {
 			layUiResult.success();
 		}

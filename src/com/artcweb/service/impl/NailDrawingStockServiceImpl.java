@@ -1,5 +1,6 @@
 package com.artcweb.service.impl;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,9 +11,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.artcweb.dao.NailDrawingStockDao;
+import com.artcweb.dao.NailDrawingStockHistoryDao;
 import com.artcweb.bean.NailDrawingStock;
+import com.artcweb.bean.NailWeightStock;
 import com.artcweb.service.NailDrawingStockService;
 import com.artcweb.service.impl.BaseServiceImpl;
+import com.artcweb.vo.NailDrawingStockHistoryVo;
 import com.artcweb.vo.NailDrawingStockVo;
 import com.artcweb.dto.NailDrawingStockDto;
 import com.artcweb.bean.LayUiResult;
@@ -30,7 +34,8 @@ public class NailDrawingStockServiceImpl extends BaseServiceImpl<NailDrawingStoc
 	
 	@Autowired
 	private NailDrawingStockDao nailDrawingStockDao;
-
+	@Autowired
+	private NailDrawingStockHistoryDao nailDrawingStockHistoryDao;
 	/**
 	 * @Title: findByPage
 	 * @Description: 分页查询
@@ -40,6 +45,7 @@ public class NailDrawingStockServiceImpl extends BaseServiceImpl<NailDrawingStoc
 	 */
 	@Override
 	public LayUiResult findByPage(NailDrawingStockVo entity, LayUiResult result) {
+		
 
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("entity", entity);
@@ -67,6 +73,30 @@ public class NailDrawingStockServiceImpl extends BaseServiceImpl<NailDrawingStoc
 			return true;
 		}
 		return false;
+	}
+
+	@Override
+	public Integer saveStock(NailDrawingStockHistoryVo entity) {
+		Integer id = entity.getNailDrawingStockId();
+		NailDrawingStock nailDrawingStock = nailDrawingStockDao.get(id);
+		
+		Integer update = null;
+		if(null != nailDrawingStock){
+			
+			// 库存相加
+			 Integer numbeDB  = nailDrawingStock.getNumber();
+			 Integer tatalNumbe = numbeDB+Integer.parseInt(entity.getStock());
+			 nailDrawingStock.setNumber(tatalNumbe);
+			 
+			 update = nailDrawingStockDao.update(nailDrawingStock);
+			 
+			 if(null != update && update > 0){
+				 // 库存添加记录
+				 Integer addStockHistory = nailDrawingStockHistoryDao.save(entity);
+				 logger.info("addStockHistory==>"+addStockHistory);
+			 }
+		}
+		return update;
 	}
 	
 }

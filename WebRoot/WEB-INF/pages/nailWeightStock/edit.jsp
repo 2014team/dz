@@ -46,17 +46,31 @@
 			<div class="layui-form-mid layui-word-aux">必选项</div>
 		</div>
 		
-			<div class="layui-form-item">
-			<label for="L_pass" class="layui-form-label"> 
-			<span class="x-red">*</span>库存(单位克)：
-			</label>
-			<div class="layui-input-inline">
-				<input type="text" id="stock" name="stock"
-					value="${entity.stock}"   lay-verify="required"
-					autocomplete="off" class="layui-input">
-			</div>
-			<div class="layui-form-mid layui-word-aux">必选项</div>
-		</div>
+		
+		<c:choose>
+			<c:when test="${not empty entity.id }">
+				
+				<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label"> 
+				<span class="x-red">*</span>库存(单位克)：
+				</label>
+				<div class="layui-input-inline">
+					<input type="text" id="stock" name="stock"
+						value="${entity.stock}"   lay-verify="required"
+						autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">必选项</div>
+			</div> 
+			</c:when>
+			<c:otherwise>
+				<input type="hidden" id="stock" name="stock"
+						value="0"   lay-verify="required"
+						autocomplete="off" class="layui-input">
+			</c:otherwise>
+		
+		</c:choose>
+		
+		
 		
 			<div class="layui-form-item">
 			<label for="L_pass" class="layui-form-label"> 
