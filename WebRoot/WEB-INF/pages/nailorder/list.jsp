@@ -2,6 +2,7 @@
 <!DOCTYPE html>
   <head>
   	<%@include file="/WEB-INF/pages/common/head_layui.jsp" %>
+  		<%@ taglib uri="/WEB-INF/tag/nailDrawingStock.tld" prefix="ns" %>
   </head>
   
    <body>
@@ -37,6 +38,16 @@
 	                   <option value="1" >H5</option>
 	             </select>
 	    	</div>
+	    	
+		款式：
+          <div class="layui-inline">
+		   		 <select id="nailDrawingStockId" name="nailDrawingStockId" lay-search>
+	                <option value="">全部</option>
+		          	<c:forEach items="${ns:getList() }" var="item">
+		          		<option value="${item.id }" >${item.style }</option>
+		          	</c:forEach>
+	            </select>
+		  </div>
 		  
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
       </div>
@@ -62,7 +73,21 @@
 
 		{{#  if(d.thirdFlag==1 || d.comefrom == 0){ }}
 		<a class="layui-btn layui-btn-xs" lay-event="detail">清单</a>
+
+			
+			{{#  if(d.checkoutFlag == 1){ }}
+			 <input type="checkbox" id="checkoutFlag_{{= d.id }}" name="checkoutFlag_{{= d.id }}" value='{{= d.id }}' lay-skin="switch" lay-filter="switchTest" lay-text="出库|退库" checked>
+			{{# }else{ }}
+			 <input type="checkbox" id="checkoutFlag_{{= d.id }}" name="checkoutFlag_{{= d.id }}" value='{{= d.id }}' lay-skin="switch" lay-filter="switchTest" lay-text="出库|退库">
+			{{# }}}
+
+
 		{{# } }}
+
+
+		
+		
+
 
 	</script>
   </body>
@@ -167,6 +192,10 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					width: 60
 					
 				}, {
+					field : 'style' ,
+					title : '款式' , 
+					
+				}, {
 					field : 'createDate' ,
 					title : '创建时间' ,
 					hide:true,
@@ -183,13 +212,75 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}, {
 					align:'left', toolbar: '#rowBar',
 					title : '操作',
-					width: 180
+					width: 240
 					
 				}
 
 			] ]
 			  ,id: 'rendReloadId'
 		});
+		
+		
+		
+		
+		//出库与入口控制
+	  form.on('switch(switchTest)', function(data){
+	  debugger
+	    var checkoutFlag = 0;
+	     var id = data.value;
+	    
+	    var checked = (this.checked ? true : false);
+	    if(checked){
+	    	checkoutFlag = 1;
+	    }
+	   
+		$.ajax({
+			url : '/admin/center/nailorder/checkout',
+			type : "POST",
+			data : {
+				"id" : id,
+				"checkoutFlag":checkoutFlag
+			}, //这个是传给后台的值
+			dataType : "json",
+			success : function(data) {
+				if (data.code == 200) { //这个是从后台取回来的状态值
+					layer.msg(data.msg, {
+						icon : 1,
+						time : 1000,
+					});
+					
+					
+				} else {
+					layer.msg(data.msg, {
+						icon : 2,
+						time : 1000
+					});
+					var checkoutFlag = data.data.checkoutFlag;
+					if(checkoutFlag && checkoutFlag==1){
+				      $("#checkoutFlag_"+id+"").next("div").addClass("layui-form-onswitch").children("em").html("出库");
+				     }else{
+				      $("#checkoutFlag_"+id+"").next("div").removeClass("layui-form-onswitch").children("em").html("退库");
+				     }
+				     
+					
+					
+				}
+			},
+			error : function(e) {
+				console.log(e);
+				layer.msg("系统异常，稍后再试!", {
+					icon : 2,
+					time : 1000
+				});
+			}
+		});
+	
+	    
+	   
+	    
+	    
+	  });
+  	
 		
         /*搜索*/
 	 form.on('submit(searchFilter)', function (data) {
@@ -367,6 +458,7 @@ function order_delAll(layfilterId,url) {
 						 thirdFlag: resp.data.thirdFlag,
 						 width: resp.data.width,
 						 height: resp.data.height,
+						 style: resp.data.style,
 						 
 						 });
 						 

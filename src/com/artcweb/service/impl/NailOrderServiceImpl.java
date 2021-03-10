@@ -636,4 +636,11 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		return nailOrderDao.apiUpdateCurrentStep(paramMap);
 	}
 
+	
+	@Override
+	public Integer saveCheckoutFlag(NailOrder nailOrder) {
+		Integer result  = nailOrderDao.update(nailOrder);
+		return result;
+	}
+
 }

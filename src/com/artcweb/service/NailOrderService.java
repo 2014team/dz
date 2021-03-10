@@ -53,5 +53,7 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 	
 	Integer apiUpdateCurrentStep(Map<String, Object> paramMap);
 
+	Integer saveCheckoutFlag(NailOrder nailOrder);
+
 
 }

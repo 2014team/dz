@@ -46,6 +46,11 @@ public class NailOrder extends BaseBean {
 	// H5传值1:订单已经生成
 	private String thirdFlag;
 
+	// 款式Id
+	private String nailDrawingStockId;
+	// 出库标识1:出库
+	private int checkoutFlag;
+	
 	public String getUsername() {
 		return username;
 	}
@@ -156,6 +161,22 @@ public class NailOrder extends BaseBean {
 
 	public void setResultImageUrl(String resultImageUrl) {
 		this.resultImageUrl = resultImageUrl;
+	}
+
+	public String getNailDrawingStockId() {
+		return nailDrawingStockId;
+	}
+
+	public void setNailDrawingStockId(String nailDrawingStockId) {
+		this.nailDrawingStockId = nailDrawingStockId;
+	}
+
+	public int getCheckoutFlag() {
+		return checkoutFlag;
+	}
+
+	public void setCheckoutFlag(int checkoutFlag) {
+		this.checkoutFlag = checkoutFlag;
 	}
 	
 	

@@ -8,7 +8,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,6 +27,8 @@ import org.springframework.web.multipart.MultipartFile;
 import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailConfig;
 import com.artcweb.bean.NailCount;
+import com.artcweb.bean.NailDrawingStock;
+import com.artcweb.bean.NailDrawingStockHistory;
 import com.artcweb.bean.NailOrder;
 import com.artcweb.bean.NailPictureFrame;
 import com.artcweb.bean.NailTotalCount;
@@ -37,6 +38,7 @@ import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.ThirdFlagEnum;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
+import com.artcweb.service.NailDrawingStockService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailPictureFrameService;
 import com.artcweb.util.FileUtil;
@@ -57,6 +59,8 @@ public class NailOrderController {
 	private NailPictureFrameService nailPictureFrameService;
 	@Autowired
 	private ImageService imageService;
+	@Autowired
+	private NailDrawingStockService nailDrawingStockService;
 
 	/**
 	 * @Title: toList
@@ -84,6 +88,10 @@ public class NailOrderController {
 		List<NailPictureFrame> nailPictureFrameList = nailPictureFrameService.select(paramMap);
 		request.setAttribute("nailPictureFrameList", nailPictureFrameList);
 		
+		
+		//图纸款式
+		List<NailDrawingStock> nailDrawingStockServiceList = nailDrawingStockService.select(paramMap);
+		request.setAttribute("nailDrawingStockServiceList", nailDrawingStockServiceList);
 		return "/nailorder/edit";
 	}
 	
@@ -106,6 +114,11 @@ public class NailOrderController {
 		
 		List<NailPictureFrame> nailPictureFrameList = nailPictureFrameService.select(paramMap);
 		request.setAttribute("nailPictureFrameList", nailPictureFrameList);
+		
+		
+		//图纸款式
+		List<NailDrawingStock> nailDrawingStockServiceList = nailDrawingStockService.select(paramMap);
+		request.setAttribute("nailDrawingStockServiceList", nailDrawingStockServiceList);
 				
 		return "/nailorder/edit";
 	}
@@ -146,6 +159,49 @@ public class NailOrderController {
 		return "/nailorder/detail";
 	}
 	
+	
+	
+	/**
+	* @Title: checkout
+	* @Description: 出库与退库
+	* @author zhuzq
+	* @date  2021年3月10日 下午4:37:56
+	* @param entity
+	* @return
+	*/
+	@ResponseBody
+	@RequestMapping(value = "/checkout")
+	public LayUiResult checkout(NailOrderVo entity){
+		LayUiResult layUiResult = new LayUiResult();
+		Integer id = entity.getId();
+		// 判断是否分款式
+		NailOrder nailOrder = nailOrderService.get(id);
+		
+		if(null == id){
+			layUiResult.failure("id不能为空");
+			layUiResult.setData(nailOrder);
+			return layUiResult;
+		}
+		
+		String nailDrawingStockId = nailOrder.getNailDrawingStockId();
+		if(StringUtils.isEmpty(nailDrawingStockId)){
+			layUiResult.failure("该订单没有选择图纸款式,出库失败!");
+			layUiResult.setData(nailOrder);
+			return layUiResult;
+		}
+		
+		Integer checkoutFlag = entity.getCheckoutFlag();
+		nailOrder.setCheckoutFlag(checkoutFlag);
+		Integer result = nailOrderService.saveCheckoutFlag(nailOrder);
+		
+		if (null != result && result > 0) {
+			layUiResult.success(result);
+		}
+		else {
+			layUiResult.failure();
+		}
+		return layUiResult;
+	}
 
 	/**
 	 * @Title: save
@@ -333,6 +389,8 @@ public class NailOrderController {
 		nailOrder.setMobile(mobile);
 		// 图纸名称
 		nailOrder.setImageName(imageName);
+		// 款式
+		nailOrder.setNailDrawingStockId(entity.getNailDrawingStockId());
 		
 		
 		String sourceImageUrl = nailOrder.getImageUrl();

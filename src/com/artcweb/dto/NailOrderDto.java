@@ -13,6 +13,8 @@ public class NailOrderDto extends NailOrder {
 	
 	private String toDay;
 	private String siteName;
+	
+	private String style;
 
 	public String getNailType() {
 		return nailType;
@@ -54,6 +56,14 @@ public class NailOrderDto extends NailOrder {
 	
 	public void setSiteName(String siteName) {
 		this.siteName = siteName;
+	}
+
+	public String getStyle() {
+		return style;
+	}
+
+	public void setStyle(String style) {
+		this.style = style;
 	}
 	
 	

@@ -17,6 +17,8 @@
 		<result property="width" column="width" />
 		<result property="height" column="height" />
 		<result property="step" column="step" />
+		<result property="nailDrawingStockId" column="nail_drawing_stock_id" />
+		<result property="checkoutFlag" column="checkout_flag" />
 		<result property="thirdFlag" column="third_flag" />
 		<result property="nailCountDetail" column="nail_count_detail" />
 		<result property="imageName" column="image_name" />
@@ -25,8 +27,8 @@
 	</resultMap>
 	
 	<insert id="save" parameterType="com.artcweb.bean.NailOrder" useGeneratedKeys="true" keyProperty="id">
-      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,result_image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,third_flag,create_date,update_date)
-      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{resultImageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},#{thirdFlag},now(),now())
+      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,result_image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,third_flag,nail_drawing_stock_id,create_date,checkout_flag,update_date)
+      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{resultImageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},#{thirdFlag},#{nailDrawingStockId},#{checkoutFlag},now(),now())
      </insert>
 
 	<!--删除 -->
@@ -69,6 +71,8 @@
 		height=#{height},
 		width=#{width},
 		third_flag=#{thirdFlag},
+		nail_drawing_stock_id=#{nailDrawingStockId},
+		checkout_flag=#{checkoutFlag},
 		update_date = now()
 		where
 		id=#{id}
@@ -93,6 +97,8 @@
 		,t.third_flag AS thirdFlag
 		,t.create_date AS createDate
 		,t.update_date AS updateDate
+		,t.nail_drawing_stock_id AS nailDrawingStockId
+		,t.checkout_flag AS checkoutFlag
 		,nf.nail_type AS nailType
 		,tnp.color_name   AS colorName
 		 FROM t_nail_order t LEFT JOIN t_nail_config nf ON t.nail_config_id = nf.id
@@ -173,9 +179,12 @@
 		,t.create_date AS createDate
 		,t.update_date AS updateDate
 		,nf.nail_type AS nailType
-		,tnp.color_name   AS colorName
+		,tnp.color_name   AS colorName,
+		t.nail_drawing_stock_id as nailDrawingStockId,
+		tds.style AS style
 		 FROM t_nail_order t LEFT JOIN t_nail_config nf ON t.nail_config_id = nf.id
 		 LEFT JOIN  t_nail_pictureframe tnp ON t.nail_pictureframe_Id = tnp.id
+		 LEFT JOIN t_nail_drawing_stock tds ON t.nail_drawing_stock_id = tds.id
 		where t.id = #{id}
 		order by t.id limit 1
 	</select>
@@ -205,9 +214,13 @@
 		ifnull(t.third_flag,0) as thirdFlag,
 		tnp.color_name   as colorName,
 		t.create_date as createDate,
-		t.update_date as updateDate
+		t.update_date as updateDate,
+		t.nail_drawing_stock_id AS nailDrawingStockId,
+		t.checkout_flag AS checkoutFlag,
+		tds.style AS style
 		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
 		 left join  t_nail_pictureframe tnp on t.nail_pictureframe_Id = tnp.id
+		  LEFT JOIN t_nail_drawing_stock tds ON t.nail_drawing_stock_id = tds.id
 		<where>
 		
 			<choose>
@@ -239,6 +252,9 @@
 			</if>
 			<if test="null != entity and  null != entity.nailPictureFrameId and '' != entity.nailPictureFrameId">
 					and t.nail_pictureframe_Id = #{entity.nailPictureFrameId}
+			</if>
+			<if test="null != entity and  null != entity.nailDrawingStockId and '' != entity.nailDrawingStockId">
+					and t.nail_drawing_stock_id = #{entity.nailDrawingStockId}
 			</if>
 		</where>
 		ORDER by t.id desc limit ${page.begin},${page.limit} 
@@ -275,6 +291,9 @@
 			</if>
 			<if test="null != entity and  null != entity.nailPictureFrameId and '' != entity.nailPictureFrameId">
 					and t.nail_pictureframe_Id = #{entity.nailPictureFrameId}
+			</if>
+			<if test="null != entity and  null != entity.nailDrawingStockId and '' != entity.nailDrawingStockId">
+					and t.nail_drawing_stock_id = #{entity.nailDrawingStockId}
 			</if>
 		</where>
 	</select>

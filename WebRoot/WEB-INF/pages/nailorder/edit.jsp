@@ -106,6 +106,27 @@
 				<div class="layui-form-mid layui-word-aux">此值自动获取GIF图片名,创建之后不可修改,具有唯一性(建议100字符以内)。</div>
 			</div>
 			
+			
+			
+			<div class="layui-form-item">
+			<label class="layui-form-label">图纸款式</label>
+			<div class="layui-input-inline">
+				<select  id="nailDrawingStockId" name="nailDrawingStockId"  lay-search>
+			      	<option value=""></option>
+			      	<c:forEach items="${nailDrawingStockServiceList }" var="item">
+			      		<c:choose>
+			      			<c:when test="${entity.nailDrawingStockId eq item.id}">
+			      				<option value="${item.id }" selected="selected">${item.style }</option>
+			      			</c:when>
+			      			<c:otherwise>
+			      				<option value="${item.id }">${item.style }</option>
+			      			</c:otherwise>
+			      		</c:choose>
+			      	</c:forEach>
+		      </select>
+			</div>
+		</div>
+			
 
 			<div class="layui-form-item">
 				<label for="L_repass" class="layui-form-label"> </label>
@@ -266,6 +287,7 @@
    			formData.append('imageName',data.imageName);
    			formData.append('mobile', data.mobile);
    			formData.append('imageUrl', data.imageUrl);
+   			formData.append('nailDrawingStockId', data.nailDrawingStockId);
    			formData.append('step', data.step);
    			formData.append('file', files);
    			
