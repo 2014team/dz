@@ -225,7 +225,6 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 		
 		//出库与入口控制
 	  form.on('switch(switchTest)', function(data){
-	  debugger
 	    var checkoutFlag = 0;
 	     var id = data.value;
 	    
