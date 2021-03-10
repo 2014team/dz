@@ -42,9 +42,9 @@ public class Start {
 			paramMap.put("basePackageName","com.artcweb");
 			//dao、service、实体类继承父类包
 			paramMap.put("commonPackage","com.artcweb");
-			paramMap.put("description","图钉重量库存记录");//表名
+			paramMap.put("description","图纸库存记录");//表名
 
-			paramMap.put("tableName","t_nail_weight_stock_history");//表名
+			paramMap.put("tableName","t_nail_drawing_stock_history");//表名
 			generator.createCode(paramMap);//第一个表
 			
 			//第二个表
