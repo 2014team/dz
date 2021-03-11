@@ -132,7 +132,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}
 				,{
 					field : 'number' ,
-					title : '数量' ,
+					title : '库存量' ,
 				}
 				, {
 					field : 'createDate' ,

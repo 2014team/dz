@@ -53,7 +53,27 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 	
 	Integer apiUpdateCurrentStep(Map<String, Object> paramMap);
 
-	Integer saveCheckoutFlag(NailOrder nailOrder);
+
+	/**
+	* @Title: updateCheckout
+	* @Description: 更新库存
+	* @author zhuzq
+	* @date  2021年3月11日 下午2:47:59
+	* @param array
+	* @return
+	*/
+	String updateCheckout(String array);
+
+	/**
+	* @Title: updateCancelCheckout
+	* @Description: 取消库存
+	* @author zhuzq
+	* @date  2021年3月11日 下午5:30:12
+	* @param array
+	* @return
+	*/
+	String updateCancelCheckout(String array);
+
 
 
 }

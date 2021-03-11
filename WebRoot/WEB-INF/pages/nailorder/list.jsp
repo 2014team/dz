@@ -63,6 +63,14 @@
   		<div class="layui-btn-container">
    			    <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/nailorder/delete/batch.do')">批量删除</button>
    			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailorder/add.do')"><i class="layui-icon"></i>增加</button>
+   			  <button class="layui-btn layui-btn-sm"  onclick="checkout('rendReloadId','/admin/center/nailorder/checkout.do','出库')">
+				<i class="layui-icon">&#xe605;</i>
+				出库
+			 </button>
+   			  <button class="layui-btn layui-btn-sm"  onclick="checkout('rendReloadId','/admin/center/nailorder/cancel/checkout.do','退库')">
+				<i class="layui-icon">&#x1006;</i>
+				退库
+			 </button>
   		</div>
 	</script>
      
@@ -72,15 +80,7 @@
  		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
 
 		{{#  if(d.thirdFlag==1 || d.comefrom == 0){ }}
-		<a class="layui-btn layui-btn-xs" lay-event="detail">清单</a>
-
-			
-			{{#  if(d.checkoutFlag == 1){ }}
-			 <input type="checkbox" id="checkoutFlag_{{= d.id }}" name="checkoutFlag_{{= d.id }}" value='{{= d.id }}' lay-skin="switch" lay-filter="switchTest" lay-text="出库|退库" checked>
-			{{# }else{ }}
-			 <input type="checkbox" id="checkoutFlag_{{= d.id }}" name="checkoutFlag_{{= d.id }}" value='{{= d.id }}' lay-skin="switch" lay-filter="switchTest" lay-text="出库|退库">
-			{{# }}}
-
+			<a class="layui-btn layui-btn-xs" lay-event="detail">清单</a>
 
 		{{# } }}
 
@@ -196,6 +196,16 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					title : '款式' , 
 					
 				}, {
+					field : 'checkoutFlag' ,
+					title : '出库' , 	
+					templet : function(d) {
+						if(d.checkoutFlag ==  1){
+							return '<label style="color: red;">是</label>'
+						}else{
+							return '否'
+						}
+					}
+				}, {
 					field : 'createDate' ,
 					title : '创建时间' ,
 					hide:true,
@@ -212,7 +222,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}, {
 					align:'left', toolbar: '#rowBar',
 					title : '操作',
-					width: 240
+					width: 180
 					
 				}
 
@@ -220,65 +230,6 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 			  ,id: 'rendReloadId'
 		});
 		
-		
-		
-		
-		//出库与入口控制
-	  form.on('switch(switchTest)', function(data){
-	    var checkoutFlag = 0;
-	     var id = data.value;
-	    
-	    var checked = (this.checked ? true : false);
-	    if(checked){
-	    	checkoutFlag = 1;
-	    }
-	   
-		$.ajax({
-			url : '/admin/center/nailorder/checkout',
-			type : "POST",
-			data : {
-				"id" : id,
-				"checkoutFlag":checkoutFlag
-			}, //这个是传给后台的值
-			dataType : "json",
-			success : function(data) {
-				if (data.code == 200) { //这个是从后台取回来的状态值
-					layer.msg(data.msg, {
-						icon : 1,
-						time : 1000,
-					});
-					
-					
-				} else {
-					layer.msg(data.msg, {
-						icon : 2,
-						time : 1000
-					});
-					var checkoutFlag = data.data.checkoutFlag;
-					if(checkoutFlag && checkoutFlag==1){
-				      $("#checkoutFlag_"+id+"").next("div").addClass("layui-form-onswitch").children("em").html("出库");
-				     }else{
-				      $("#checkoutFlag_"+id+"").next("div").removeClass("layui-form-onswitch").children("em").html("退库");
-				     }
-				     
-					
-					
-				}
-			},
-			error : function(e) {
-				console.log(e);
-				layer.msg("系统异常，稍后再试!", {
-					icon : 2,
-					time : 1000
-				});
-			}
-		});
-	
-	    
-	   
-	    
-	    
-	  });
   	
 		
         /*搜索*/
@@ -406,6 +357,77 @@ function order_delAll(layfilterId,url) {
 		
    }
    
+   
+  //出库与退库
+  function checkout(layfilterId,url,msg) {
+	var selectData = layui.table.checkStatus(layfilterId).data;
+	if(selectData.length < 1){	
+		layer.msg('请选择要'+msg+'的数据！', {icon: 2});
+		return false;
+	}
+	layer.confirm('确认要'+msg+'吗？', function(index) {
+	
+			//加载动画
+   		var loading = layer.load(2, { //icon支持传入0-2
+   		    shade: [0.5, 'gray'], //0.5透明度的灰色背景
+   		    content: '订单出库中,请稍等操作...',
+   		    success: function (layero) {
+   		        layero.find('.layui-layer-content').css({
+   		            'padding-top': '39px',
+   		            'width': '60px'
+   		        });
+   		    }
+   		});
+	
+	
+		var array = new Array();
+		$.each(selectData,function(i,e){
+			array.push(e.id);
+		 })
+		$.ajax({
+			url : url,
+			type : "POST",
+			data : {"array":JSON.stringify(array)},
+			dataType : "json",
+			success : function(data) {
+			
+				//关闭动画
+				layer.close(loading);
+					
+				if (data.code == 200) { //这个是从后台取回来的状态值
+					layer.close(index);
+					layer.msg(data.msg, {
+						icon : 1,
+						time : 2000
+					},function(){
+						
+						//刷新列表
+						window.location.reload();
+					});
+					
+					
+				} else {
+					layer.msg(data.msg, {
+						icon : 2,
+						time : 2500
+					});
+				}
+			},
+			error : function(e) {
+				console.error(e);
+				layer.msg("系统异常，稍后再试!", {
+					icon : 2,
+					time : 2000
+				});
+			}
+		});
+		
+	});
+		
+   }
+   
+   
+   
     //刷新
 	function reloadTable(id,resp){
 		
@@ -458,6 +480,7 @@ function order_delAll(layfilterId,url) {
 						 width: resp.data.width,
 						 height: resp.data.height,
 						 style: resp.data.style,
+						 checkoutFlag: resp.data.checkoutFlag,
 						 
 						 });
 						 

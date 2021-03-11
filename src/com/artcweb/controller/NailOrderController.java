@@ -163,7 +163,7 @@ public class NailOrderController {
 	
 	/**
 	* @Title: checkout
-	* @Description: 出库与退库
+	* @Description: 出库
 	* @author zhuzq
 	* @date  2021年3月10日 下午4:37:56
 	* @param entity
@@ -171,37 +171,62 @@ public class NailOrderController {
 	*/
 	@ResponseBody
 	@RequestMapping(value = "/checkout")
-	public LayUiResult checkout(NailOrderVo entity){
-		LayUiResult layUiResult = new LayUiResult();
-		Integer id = entity.getId();
-		// 判断是否分款式
-		NailOrder nailOrder = nailOrderService.get(id);
+	public LayUiResult checkout(String array, HttpServletRequest request){
 		
-		if(null == id){
-			layUiResult.failure("id不能为空");
-			layUiResult.setData(nailOrder);
-			return layUiResult;
-		}
+		LayUiResult result = new LayUiResult();
 		
-		String nailDrawingStockId = nailOrder.getNailDrawingStockId();
-		if(StringUtils.isEmpty(nailDrawingStockId)){
-			layUiResult.failure("该订单没有选择图纸款式,出库失败!");
-			layUiResult.setData(nailOrder);
-			return layUiResult;
+		if (StringUtils.isBlank(array)) {
+			result.failure();
+			return result;
 		}
+
+		array = array.replace("[", "").replace("]", "");
 		
-		Integer checkoutFlag = entity.getCheckoutFlag();
-		nailOrder.setCheckoutFlag(checkoutFlag);
-		Integer result = nailOrderService.saveCheckoutFlag(nailOrder);
 		
-		if (null != result && result > 0) {
-			layUiResult.success(result);
+		String checkOutCondition = nailOrderService.updateCheckout(array);
+		if(StringUtils.isNotEmpty(checkOutCondition)){
+			result.failure(checkOutCondition);
+			return result;
 		}
-		else {
-			layUiResult.failure();
-		}
-		return layUiResult;
+		// 更新库存
+		result.success("出库成功");
+		return result;
 	}
+	
+	/**
+	* @Title: cancelCheckout
+	* @Description: 取消出库
+	* @author zhuzq
+	* @date  2021年3月11日 下午4:49:00
+	* @param array
+	* @param request
+	* @return
+	*/
+	@ResponseBody
+	@RequestMapping(value = "/cancel/checkout")
+	public LayUiResult cancelCheckout(String array, HttpServletRequest request){
+		
+		LayUiResult result = new LayUiResult();
+		
+		if (StringUtils.isBlank(array)) {
+			result.failure();
+			return result;
+		}
+		
+		array = array.replace("[", "").replace("]", "");
+		
+		
+		String checkOutCondition = nailOrderService.updateCancelCheckout(array);
+		if(StringUtils.isNotEmpty(checkOutCondition)){
+			result.failure(checkOutCondition);
+			return result;
+		}
+		// 更新库存
+		result.success("出库成功");
+		return result;
+	}
+	
+
 
 	/**
 	 * @Title: save
@@ -390,7 +415,12 @@ public class NailOrderController {
 		// 图纸名称
 		nailOrder.setImageName(imageName);
 		// 款式
-		nailOrder.setNailDrawingStockId(entity.getNailDrawingStockId());
+		
+		String nailDrawingStockId = entity.getNailDrawingStockId();
+		if(StringUtils.isEmpty(nailDrawingStockId)){
+			nailDrawingStockId = "0";
+		}
+		nailOrder.setNailDrawingStockId(nailDrawingStockId);
 		
 		
 		String sourceImageUrl = nailOrder.getImageUrl();

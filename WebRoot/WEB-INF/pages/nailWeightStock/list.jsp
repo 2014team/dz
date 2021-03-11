@@ -128,7 +128,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}
 				,{
 					field : 'stock' ,
-					title : '库存(单位克)' ,
+					title : '库存量(单位克)' ,
 				}
 				,{
 					field : 'sort' ,

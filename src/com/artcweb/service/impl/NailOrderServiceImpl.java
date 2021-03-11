@@ -9,8 +9,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -18,32 +16,37 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.xmlbeans.impl.jam.annotation.LineDelimitedTagParser;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.artcweb.bean.Inventory;
 import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailConfig;
 import com.artcweb.bean.NailCount;
 import com.artcweb.bean.NailDetailConfig;
+import com.artcweb.bean.NailDrawingStock;
 import com.artcweb.bean.NailImageSize;
 import com.artcweb.bean.NailOrder;
 import com.artcweb.bean.NailTotalCount;
+import com.artcweb.bean.NailWeightStock;
 import com.artcweb.cache.DateMap;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
+import com.artcweb.dao.NailDrawingStockDao;
 import com.artcweb.dao.NailOrderDao;
+import com.artcweb.dao.NailWeightStockDao;
 import com.artcweb.dto.NailOrderDto;
+import com.artcweb.enums.CheckoutFlagEnum;
 import com.artcweb.enums.NailImageTypeEnum;
+import com.artcweb.enums.ThirdFlagEnum;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.util.ExportExcelUtil;
 import com.artcweb.util.FileUtil;
@@ -58,6 +61,10 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(NailOrderServiceImpl.class);
 	@Autowired
 	private NailOrderDao nailOrderDao;
+	@Autowired
+	private NailDrawingStockDao nailDrawingStockDao;
+	@Autowired
+	private NailWeightStockDao nailWeightStockDao;
 
 	/**
 	 * @Title: findByPage
@@ -637,10 +644,358 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 
 	
+	/**
+	* @Title: updateCheckout
+	* @Description: 更新库存
+	* @author zhuzq
+	* @date  2021年3月11日 下午2:47:59
+	* @param array
+	* @return
+	*/
 	@Override
-	public Integer saveCheckoutFlag(NailOrder nailOrder) {
-		Integer result  = nailOrderDao.update(nailOrder);
-		return result;
+	public String updateCheckout(String array) {
+		// 验证订单是否生成、款式是否分类
+		List<NailOrder> list = nailOrderDao.getByBatch(array);
+		if(null != list && list.size() > 0){
+			for (NailOrder nailOrder : list) {
+				String comefrom = nailOrder.getComefrom();
+				String thirdFlag = nailOrder.getThirdFlag();
+				
+				int checkoutFlag = nailOrder.getCheckoutFlag();
+				if(checkoutFlag == 1 ){
+					return "选择数据已经出库，出库失败!";
+				}
+				
+				// 验证有没有款式分类
+				String nailDrawingStockId = nailOrder.getNailDrawingStockId();
+				if(StringUtils.isEmpty(nailDrawingStockId) || "0".equals(nailDrawingStockId)){
+					return "选择数据图纸款式没填，出库失败!";
+				}
+				
+				// 没有清单
+				if((StringUtils.isEmpty(thirdFlag) || !ThirdFlagEnum.OK.getDisplayName().equals(comefrom))
+						&& 
+						(StringUtils.isEmpty(comefrom) || !String.valueOf(NailOrderComeFromConstant.BACKSTAGE).equals(comefrom))
+						){
+							return "选择数据有清单没有生成，出库失败!";
+						}
+				
+			}
+			
+			// 检查库存与更新库存
+			String ckeckInventory = ckeckInventory(list, array,true);
+			if(StringUtils.isNotEmpty(ckeckInventory)){
+				return ckeckInventory;
+			}
+			
+			
+			
+		}
+		return null;
 	}
+	
+
+	private String ckeckInventory(List<NailOrder> list,String array,boolean ckeckOutFlag) {
+
+		Map<String, Inventory> nailInventoryMap = getNailInventory(list,ckeckOutFlag);
+		
+		// 检查图纸
+		Map<String, Inventory> drawInventoryMap = getDrawInventory(list,ckeckOutFlag);
+					
+		// 出库验证,退库不需要验证
+		if(ckeckOutFlag){
+			// 检查图钉
+			if (null != nailInventoryMap && nailInventoryMap.size() > 0) {
+				for (Entry<String, Inventory> mapping : nailInventoryMap.entrySet()) {
+					Inventory inventory = mapping.getValue();
+
+					String newSerialNumber = inventory.getNewSerialNumber();
+
+					String stock = inventory.getStock();
+
+					BigDecimal stockBG = new BigDecimal(stock);
+
+					// 库存<出库
+					if (stockBG.compareTo(BigDecimal.ZERO) < 0) {
+
+						return "新编号【"+newSerialNumber + "】库存不足,出库失败!";
+					}
+				}
+			}
+			
+			
+			if (null != drawInventoryMap && drawInventoryMap.size() > 0) {
+				for (Entry<String, Inventory> mapping : drawInventoryMap.entrySet()) {
+					Inventory inventory = mapping.getValue();
+
+					String style = inventory.getStyle();
+
+					Integer number = inventory.getNumber();
+
+					BigDecimal numberBG = new BigDecimal(number);
+
+					// 库存<出库
+					if (numberBG.compareTo(BigDecimal.ZERO) < 0) {
+
+						return "图纸【"+style + "】库存不足,出库失败!";
+					}
+				}
+			}
+			
+		}
+		
+		
+		// 更新库存
+		Integer updateCheckOut = updateCheckOut(array, nailInventoryMap,drawInventoryMap, ckeckOutFlag);
+		if(null == updateCheckOut || updateCheckOut < 1){
+			return "出库失败！";
+		}
+					
+		return null;
+	}
+	
+	/**
+	* @Title: getNailInventory
+	* @Description: 统计图钉重量
+	* @author zhuzq
+	* @date  2021年3月11日 下午1:50:05
+	* @param list
+	* @return
+	*/
+	private Map<String,Inventory> getNailInventory(List<NailOrder> list,boolean ckeckOutFlag){
+
+		// 查看库图钉条目
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		List<NailWeightStock> nailWeightStockList = nailWeightStockDao.select(paramMap);
+		
+		Map<String,Inventory> rgbMap = new HashMap<String, Inventory>();
+		if(null != nailWeightStockList && nailWeightStockList.size() > 0){
+			for (NailWeightStock nailWeightStock : nailWeightStockList) {
+				Integer id = nailWeightStock.getId();
+				String rgb = nailWeightStock.getRgb();
+				String newSerialNumber = nailWeightStock.getNewSerialNumber();
+				String stock = nailWeightStock.getStock();
+				Inventory inventory = new Inventory(id,rgb, newSerialNumber, stock);
+				rgbMap.put(rgb, inventory);
+			}
+		}
+		
+		
+		// 统计出库图钉重量
+		if(null != list && list.size() > 0){
+			for (NailOrder nailOrder : list) {
+				String nailCountDetail = nailOrder.getNailCountDetail();
+				// 钉子统计详情信息
+				if(StringUtils.isNotBlank(nailCountDetail)){
+					NailTotalCount nailTotalCount = ( NailTotalCount ) GsonUtil.jsonToBean(nailCountDetail,NailTotalCount.class);
+					
+					
+					// 详细列表
+					if(null != nailTotalCount && null != nailTotalCount.getNailCountDetailMap() && nailTotalCount.getNailCountDetailMap().size() > 0){
+				        LinkedHashMap<String, NailCount> nailCountDetailMap =  MapUtil.mapSortForStringKey(nailTotalCount.getNailCountDetailMap());
+				        for(Entry<String, NailCount> mapping:nailCountDetailMap.entrySet()){ 
+				        	NailCount nailCount = mapping.getValue();
+				        	// 重量
+				        	
+				        	String rgb = nailCount.getRgb();
+				        	String requreWeight = nailCount.getRequreWeight();
+				        	
+				        	Inventory inventory = rgbMap.get(rgb);
+				        	if(null != inventory){
+				        		// 统计库存重量
+				        		String ckeckOutNumberDeal =StringUtils.isEmpty(inventory.getCkeckOutNumber())?"0":inventory.getCkeckOutNumber();
+				        		BigDecimal ckeckOutNumberMap = new BigDecimal(ckeckOutNumberDeal);
+				        		BigDecimal weight = new BigDecimal(requreWeight);
+				        		BigDecimal  ckeckOutNumber = ckeckOutNumberMap.add(weight);
+				        		
+				        		
+				        		
+				        		BigDecimal stockMap = null;
+				        		BigDecimal  stock = null;
+				        		if(ckeckOutFlag){
+				        			stockMap = new BigDecimal(inventory.getStock());
+				        			stock = stockMap.subtract(weight);
+				        		}else{
+				        			stockMap = new BigDecimal(inventory.getStock());
+				        			stock = stockMap.add(weight);
+				        		}
+				        		
+				        		inventory.setStock(stock.toString());
+				        		inventory.setCkeckOutNumber(ckeckOutNumber.toString());
+				        		
+				        		rgbMap.put(rgb, inventory);
+				        	}
+			            } 
+					}	
+				
+				}
+			}
+		}
+		return rgbMap;
+		
+	}
+	
+	
+	/**
+	* @Title: getDrawInventory
+	* @Description: 统计图纸
+	* @author zhuzq
+	* @date  2021年3月11日 下午3:30:54
+	* @param list
+	* @return
+	*/
+	private Map<String, Inventory> getDrawInventory(List<NailOrder> list,boolean ckeckOutFlag) {
+
+		// 查看库图钉条目
+		Map<String, Object> paramMap = new HashMap<String, Object>();
+		List<NailDrawingStock> nailDrawingStockList = nailDrawingStockDao.select(paramMap);
+
+		Map<String, Inventory> rgbMap = new HashMap<String, Inventory>();
+		if (null != nailDrawingStockList && nailDrawingStockList.size() > 0) {
+			for (NailDrawingStock nailWeightStock : nailDrawingStockList) {
+				Integer nailDrawingId = nailWeightStock.getId();
+				String style = nailWeightStock.getStyle();
+				Integer number = nailWeightStock.getNumber();
+				Inventory inventory = new Inventory(nailDrawingId, style, number);
+				rgbMap.put(String.valueOf(nailDrawingId), inventory);
+			}
+		}
+
+		// 统计出库图纸
+		if (null != list && list.size() > 0) {
+			for (NailOrder nailOrder : list) {
+				String nailDrawingStockId = nailOrder.getNailDrawingStockId();
+				// 图纸
+
+				Inventory inventory = rgbMap.get(nailDrawingStockId);
+				if (null != inventory) {
+					//
+					String drawCkeckOutNumber = StringUtils.isEmpty(inventory.getDrawCkeckOutNumber()) ? "0"
+							: inventory.getDrawCkeckOutNumber();
+					if(ckeckOutFlag){
+						inventory.setNumber(inventory.getNumber()-1);
+						inventory.setDrawCkeckOutNumber(drawCkeckOutNumber+1);
+						
+					}else{
+						inventory.setNumber(inventory.getNumber()+1);
+						inventory.setDrawCkeckOutNumber(drawCkeckOutNumber+1);
+					}
+					rgbMap.put(nailDrawingStockId, inventory);
+
+				}
+			}
+		}
+		return rgbMap;
+
+	}
+
+	public Integer updateCheckOut(String array,Map<String, Inventory> nailInventoryMap,Map<String, Inventory> drawInventoryMap,boolean ckeckOutFlag) {
+		// 更新出库标识
+		Map<String,Object> paramMap  = new HashMap<String,Object>();
+		
+		paramMap.put("id",array);
+		
+		if(ckeckOutFlag){
+			paramMap.put("checkoutFlag",CheckoutFlagEnum.OK.getDisplayName());
+		}else{
+			paramMap.put("checkoutFlag",CheckoutFlagEnum.OFF.getDisplayName());
+		}
+		
+		Integer updateCheckoutFlag = nailOrderDao.updateCheckoutFlag(paramMap);
+		if(null != updateCheckoutFlag && updateCheckoutFlag > 0){
+			//图钉操作
+			//Map<String,Inventory> nailInventoryMap = getNailInventory(list);
+			 for(Entry<String, Inventory> mapping:nailInventoryMap.entrySet()){ 
+				 Inventory inventory = mapping.getValue();
+				 String stock = inventory.getStock();
+				 Integer primaryKey = inventory.getId();
+				 NailWeightStock nailWeightStock = nailWeightStockDao.get(primaryKey);
+				 if(null != nailWeightStock){
+					 nailWeightStock.setStock(stock);
+					 Integer update = nailWeightStockDao.update(nailWeightStock);
+					 //logger.info("更新库存"+update);
+				 }
+			 }
+			 
+			//图纸库存操作
+			// Map<String,Inventory> drawInventoryMap = getDrawInventory(list);
+			 for(Entry<String, Inventory> mapping:drawInventoryMap.entrySet()){ 
+				 Inventory inventory = mapping.getValue();
+				 Integer number = inventory.getNumber();
+				 Integer primaryKey = inventory.getDrawDrawingId();
+				 NailDrawingStock nailDrawingStock = nailDrawingStockDao.get(primaryKey);
+				 if(null != nailDrawingStock){
+					 nailDrawingStock.setNumber(number);
+					 Integer update = nailDrawingStockDao.update(nailDrawingStock);
+					 //logger.info("更新库存"+update);
+				 }
+			 }
+			 
+			 
+		}
+		return updateCheckoutFlag;
+	}
+
+	/**
+	* @Title: updateCancelCheckout
+	* @Description: 取消库存
+	* @author zhuzq
+	* @date  2021年3月11日 下午5:30:12
+	* @param array
+	* @return
+	*/
+	@Override
+	public String updateCancelCheckout(String array) {
+		// 验证订单是否生成、款式是否分类
+		List<NailOrder> list = nailOrderDao.getByBatch(array);
+		if (null != list && list.size() > 0) {
+			for (NailOrder nailOrder : list) {
+				String comefrom = nailOrder.getComefrom();
+				String thirdFlag = nailOrder.getThirdFlag();
+
+				int checkoutFlag = nailOrder.getCheckoutFlag();
+				if (checkoutFlag == 0) {
+					return "选择数据未出库，退库失败!";
+				}
+
+				// 验证有没有款式分类
+				String nailDrawingStockId = nailOrder.getNailDrawingStockId();
+				if (StringUtils.isEmpty(nailDrawingStockId) || "0".equals(nailDrawingStockId)) {
+					return "选择数据图纸款式没填，退库失败!";
+				}
+
+				// 没有清单
+				if ((StringUtils.isEmpty(thirdFlag) || !ThirdFlagEnum.OK.getDisplayName().equals(comefrom))
+						&& (StringUtils.isEmpty(comefrom)
+								|| !String.valueOf(NailOrderComeFromConstant.BACKSTAGE).equals(comefrom))) {
+					return "选择数据有清单没有生成，退库失败!";
+				}
+
+			}
+
+			// 检查库存与更新库存
+			String ckeckInventory = cancelCkeckInventory(list, array);
+			if (StringUtils.isNotEmpty(ckeckInventory)) {
+				return ckeckInventory;
+			}
+
+		}
+		return null;
+	}
+	
+	private String cancelCkeckInventory(List<NailOrder> list,String array) {
+		Map<String, Inventory> nailInventoryMap = getNailInventory(list,false);
+		
+		Map<String, Inventory> drawInventoryMap = getDrawInventory(list,false);
+		// 更新库存
+		Integer updateCheckOut = updateCheckOut(array, nailInventoryMap,drawInventoryMap,false);
+		if(null == updateCheckOut || updateCheckOut < 1){
+			return "退库失败！";
+		}
+					
+		return null;
+	}
+	
+	
 
 }

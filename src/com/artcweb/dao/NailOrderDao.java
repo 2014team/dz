@@ -24,10 +24,19 @@ public interface NailOrderDao extends BaseDao<NailOrder, Integer> {
 	
 	NailOrderDto getNailOrder(Map<String, Object> paramMap);
 	
-
 	List<NailOrderDto> apiSelect(Map<String, Object> paramMap);
 	
 	NailOrderDto apiGet(Map<String, Object> paramMap);
 	Integer apiUpdateCurrentStep(Map<String, Object> paramMap);
+	
+	/**
+	* @Title: updateCheckoutFlag
+	* @Description: 更新出库标识
+	* @author zhuzq
+	* @date  2021年3月11日 下午1:34:21
+	* @param paramMap
+	* @return
+	*/
+	Integer updateCheckoutFlag (Map<String, Object> paramMap);
 
 }
