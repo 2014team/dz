@@ -30,10 +30,18 @@
 				<th style="text-align: center;">包数</th>
 			</tr>
 		</thead>
-				<c:forEach items="${nailTotalCount.nailCountDetailMap }" var="item" varStatus="xh">
-					<tr align="center">
-						<td><button style='background-color:rgb(${item.value.rgb});width: 80px;height: 25px;border: 0px'>
+				<c:forEach items="${analysMap}" var="item" varStatus="xh" >
+					
+					<c:choose>
+						<c:when test="${!xh.last}">
+							<td><button style='background-color:rgb(${item.value.rgb});width: 80px;height: 25px;border: 0px'>
 							</button></td>
+						</c:when>
+						<c:otherwise>
+							<td></td>
+						</c:otherwise>
+					</c:choose>
+							
 						<td>${item.value.indexId}</td>
 						<td>${item.value.nailNumber}</td>
 						<td>${item.value.requreWeight}</td>
