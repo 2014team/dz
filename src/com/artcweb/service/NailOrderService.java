@@ -22,7 +22,7 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 
 	LayUiResult findByPage(NailOrderVo entity, LayUiResult result);
 
-	boolean deleteByBatch(String array,HttpServletRequest request);
+	String deleteByBatch(String array,HttpServletRequest request);
 
 	Integer saveNailOrder(NailOrderVo entity);
 
@@ -73,6 +73,16 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 	* @return
 	*/
 	String updateCancelCheckout(String array);
+
+	/**
+	* @Title: analys
+	* @Description: 统计分析
+	* @author zhuzq
+	* @date  2021年3月12日 下午2:54:50
+	* @param entity
+	* @return
+	*/
+	NailTotalCount analys(NailOrderVo entity);
 
 
 

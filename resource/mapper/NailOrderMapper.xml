@@ -205,8 +205,10 @@
 	</select>
 	
 	
-	<select id="select" parameterType="Map" resultMap="result">
-		SELECT * FROM t_nail_order t
+	<select id="select" parameterType="Map" resultType="com.artcweb.bean.NailOrder">
+		SELECT t.id
+			   ,t.nail_count_detail AS  nailCountDetail
+			   FROM t_nail_order t
 		ORDER by id desc
 	</select>
 	

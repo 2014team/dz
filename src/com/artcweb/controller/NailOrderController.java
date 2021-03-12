@@ -35,6 +35,7 @@ import com.artcweb.bean.NailTotalCount;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
 import com.artcweb.dto.NailOrderDto;
+import com.artcweb.enums.CheckoutFlagEnum;
 import com.artcweb.enums.ThirdFlagEnum;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
@@ -61,6 +62,7 @@ public class NailOrderController {
 	private ImageService imageService;
 	@Autowired
 	private NailDrawingStockService nailDrawingStockService;
+	
 
 	/**
 	 * @Title: toList
@@ -157,6 +159,28 @@ public class NailOrderController {
 		request.setAttribute("entity", entity);
 		
 		return "/nailorder/detail";
+	}
+	
+	
+	/**
+	* @Title: analys
+	* @Description: 统计分析
+	* @author zhuzq
+	* @date  2021年3月12日 下午2:54:27
+	* @param entity
+	* @param request
+	* @return
+	*/
+	@RequestMapping(value = "/analys")
+	public String analys(NailOrderVo entity, HttpServletRequest request) {
+		
+		NailTotalCount nailTotalCount = nailOrderService.analys(entity);
+		request.setAttribute("nailTotalCount", nailTotalCount);
+		
+		// 获取图片类型
+		List<NailConfig> nailconfigList = nailconfigService.select(new HashMap<String, Object>());
+		request.setAttribute("nailconfigList", nailconfigList);
+		return "/nailorder/analys";
 	}
 	
 	
@@ -400,6 +424,14 @@ public class NailOrderController {
 			layUiResult.failure("数据不存在");
 			return layUiResult;
 		}
+		
+		int checkoutFlag = nailOrder.getCheckoutFlag();
+		if(String.valueOf(checkoutFlag).equals(CheckoutFlagEnum.OK.getDisplayName())){
+			layUiResult.failure("选择的数据已经出库，修改失败!");
+			return layUiResult;
+		}
+		
+		
 		
 		String nailConfigId_s = nailOrder.getNailConfigId();
 		
@@ -679,6 +711,13 @@ public class NailOrderController {
 			result.failure("系统没有查询要删除数据");
 			return result;
 		}
+		
+		int checkoutFlag = e.getCheckoutFlag();
+		if(String.valueOf(checkoutFlag).equals(CheckoutFlagEnum.OK.getDisplayName())){
+			result.failure("选择的数据已经出库，删除失败!");
+			return result;
+		}
+		
 		String sourceImageUrl =e.getImageUrl();
 		String resultImageUrl =e.getResultImageUrl();
 
@@ -729,12 +768,12 @@ public class NailOrderController {
 
 		array = array.replace("[", "").replace("]", "");
 
-		boolean deleteResult = nailOrderService.deleteByBatch(array,request);
-		if (deleteResult) {
+		String deleteResult = nailOrderService.deleteByBatch(array,request);
+		if (StringUtils.isEmpty(deleteResult)) {
 			result.success();
 			return result;
 		}
-		result.failure();
+		result.failure(deleteResult);
 		return result;
 	}
 	

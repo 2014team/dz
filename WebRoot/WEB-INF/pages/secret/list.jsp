@@ -17,6 +17,15 @@
     </div>
     <div class="x-body">
       <div class="layui-form layui-row demoTable">
+      
+        <div class="layui-inline">
+					<label class="layui-form-label">创建时间：</label>
+					<div class="layui-input-inline">
+						<input type="text" name="createDateStr" id="createDateStr" placeholder="请选择开始时间 - 结束时间"
+							autocomplete="off" class="layui-input" readonly="readonly" style="width: 360px;">
+					</div>
+				</div>
+				
            	秘钥：
           <div class="layui-inline">
 		    <input class="layui-input" name="secretKey" id=secretKey autocomplete="off">
@@ -31,13 +40,7 @@
 	            </select>
 		  </div>
 		  
-		  <div class="layui-inline">
-					<label class="layui-form-label">创建时间：</label>
-					<div class="layui-input-inline">
-						<input type="text" name="createDateStr" id="createDateStr" placeholder="请选择开始时间 - 结束时间"
-							autocomplete="off" class="layui-input" readonly="readonly" style="width: 360px;">
-					</div>
-				</div>
+		
 				
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
       </div>

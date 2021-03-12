@@ -16,7 +16,26 @@
       <a class="layui-btn layui-btn-primary layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:38px">&#xe669;</i></a>
     </div>
+    
     <div class="x-body">
+    
+
+	<form class="layui-form layui-form-pane" action="">
+		<div class="layui-form-item">
+			<div class="layui-inline" style="width: 400px">
+				<label class="layui-form-label">日期选择</label>
+				<div class="layui-input-block">
+					<input type="text" name="createDateStr" id="createDateStr" autocomplete="off"
+						class="layui-input">
+				</div>
+			</div>
+			<button type="button" class="layui-btn layui-btn-normal"
+				style="position: absolute;" lay-submit lay-filter="dateRangeFilter" >统计分析</button>
+
+		</div>
+	</form>	
+	
+    
       <div class="layui-form layui-row demoTable">
           <div class="layui-inline">
 		   		 <select id="searchKey" name="searchKey" lay-search>
@@ -52,16 +71,16 @@
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
       </div>
       
-       
-      
-   	
    	 <!-- 列表 -->	
      <table class="layui-hide" id="table_list" lay-filter="table_list" ></table>
+     
+     
+	
      
        <!-- 头部工具条 -->
 	<script type="text/html" id="toolbar">
   		<div class="layui-btn-container">
-   			    <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/nailorder/delete/batch.do')">批量删除</button>
+   			   <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/nailorder/delete/batch.do')">批量删除</button>
    			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailorder/add.do')"><i class="layui-icon"></i>增加</button>
    			  <button class="layui-btn layui-btn-sm"  onclick="checkout('rendReloadId','/admin/center/nailorder/checkout.do','出库')">
 				<i class="layui-icon">&#xe605;</i>
@@ -245,6 +264,24 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 		      }, 'data');
   
     });  
+    
+    
+     form.on('submit(searchFilter)', function (data) {
+			data = JSON.parse(JSON.stringify(data.field));
+		      //执行重载
+		      table.reload( 'rendReloadId',{
+		      	method:"post",
+		        page: {
+		          curr: 1 //重新从第 1 页开始
+		        }
+		        ,where: data
+		      }, 'data');
+  
+    });
+     form.on('submit(dateRangeFilter)', function (data) {
+			data = JSON.parse(JSON.stringify(data.field));
+		   x_admin_show('统计分析','/admin/center/nailorder/analys.do');
+    });
 		
 		//监听行工具条
 		table.on('tool(table_list)', function(obj) {

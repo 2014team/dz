@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.artcweb.bean.Analys;
 import com.artcweb.bean.Inventory;
 import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailConfig;
@@ -40,6 +41,7 @@ import com.artcweb.bean.NailWeightStock;
 import com.artcweb.cache.DateMap;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
+import com.artcweb.dao.NailDetailConfigDao;
 import com.artcweb.dao.NailDrawingStockDao;
 import com.artcweb.dao.NailOrderDao;
 import com.artcweb.dao.NailWeightStockDao;
@@ -66,6 +68,10 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	private NailDrawingStockDao nailDrawingStockDao;
 	@Autowired
 	private NailWeightStockDao nailWeightStockDao;
+	@Autowired
+	private NailDetailConfigDao nailDetailConfigDao;
+	
+	
 
 	/**
 	 * @Title: findByPage
@@ -97,8 +103,21 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	 * @return
 	 */
 	@Override
-	public boolean deleteByBatch(String array,HttpServletRequest request) {
+	public String deleteByBatch(String array,HttpServletRequest request) {
 		List<NailOrder> list = nailOrderDao.getByBatch(array);
+		
+		// 已经出库不可以删除
+		if(null != list && list.size() > 0){
+			for (NailOrder nailOrder : list) {
+
+				int checkoutFlag = nailOrder.getCheckoutFlag();
+				if(String.valueOf(checkoutFlag).equals(CheckoutFlagEnum.OK.getDisplayName())){
+					return  "选择数据已经出库，删除失败!";
+				}
+			}
+			
+		}
+		
 		
 		Integer delete = nailOrderDao.deleteByBatch(array);
 		if (null != delete && delete > 0) {
@@ -137,9 +156,9 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			
 			
 			
-			return true;
+			return null;
 		}
-		return false;
+		return "删除失败";
 	}
 
 	@Override
@@ -663,7 +682,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 				String thirdFlag = nailOrder.getThirdFlag();
 				
 				int checkoutFlag = nailOrder.getCheckoutFlag();
-				if(checkoutFlag == 1 ){
+				if(String.valueOf(checkoutFlag).equals(CheckoutFlagEnum.OK.getDisplayName())){
 					return "选择数据已经出库，出库失败!";
 				}
 				
@@ -955,7 +974,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 				String thirdFlag = nailOrder.getThirdFlag();
 
 				int checkoutFlag = nailOrder.getCheckoutFlag();
-				if (checkoutFlag == 0) {
+				if(String.valueOf(checkoutFlag).equals(CheckoutFlagEnum.OFF.getDisplayName())){
 					return "选择数据未出库，退库失败!";
 				}
 
@@ -995,6 +1014,102 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		}
 					
 		return null;
+	}
+
+	
+	/**
+	* @Title: analys
+	* @Description: 统计分析
+	* @author zhuzq
+	* @date  2021年3月12日 下午2:54:50
+	* @param entity
+	* @return
+	*/
+	@Override
+	public NailTotalCount analys(NailOrderVo entity) {
+		
+		
+		Map<String,Object> paramMap = new HashMap<String,Object>();
+		// 获取订单
+		List<NailOrder> nailOrderList = nailOrderDao.select(paramMap);
+		
+		if(null != nailOrderList && nailOrderList.size() > 0){
+
+			// 获取图钉
+			Map<String,Analys>  nailDetailConfigMapMap = getNailDetailConfigMap();
+			
+			for (NailOrder nailOrder : nailOrderList) {
+				String nailCountDetail = nailOrder.getNailCountDetail();
+				if(StringUtils.isNotEmpty(nailCountDetail)){
+					NailTotalCount nailTotalCount = ( NailTotalCount ) GsonUtil.jsonToBean(nailCountDetail,NailTotalCount.class);
+					if(null != nailTotalCount){
+						LinkedHashMap<String, NailCount> nailCountMap = nailTotalCount.getNailCountDetailMap();
+						// 排序
+						nailCountMap = MapUtil.mapSortForStringKey(nailCountMap);
+						if(null != nailCountMap && nailCountMap.size() > 0){
+							for (Entry<String, NailCount> mapping : nailCountMap.entrySet()) {
+								String newSerialNumber = mapping.getKey();
+								NailCount nailCount = mapping.getValue();
+								Analys analys = nailDetailConfigMapMap.get(newSerialNumber);
+								if(null != analys){
+									
+									BigDecimal nailNumber = new BigDecimal(StringUtils.isEmpty(analys.getNailNumber())?"0":analys.getNailNumber()).add(new BigDecimal(nailCount.getNailNumber()));
+									analys.setNailNumber(nailNumber.toString());
+									
+									BigDecimal requreWeight = new BigDecimal(StringUtils.isEmpty(analys.getRequreWeight())?"0":analys.getRequreWeight()).add(new BigDecimal(nailCount.getRequreWeight()));
+									analys.setRequreWeight(requreWeight.toString());
+									
+									BigDecimal requrePieces = new BigDecimal(StringUtils.isEmpty(analys.getRequrePieces())?"0":analys.getRequrePieces()).add(new BigDecimal(nailCount.getRequrePieces()));
+									analys.setRequrePieces(requrePieces.toString());
+									
+									nailDetailConfigMapMap.put(newSerialNumber, analys);
+									
+								}
+								
+								
+								
+								
+							}
+							
+							
+						}
+						
+						
+						
+					}
+				}
+			}
+			
+			for (Entry<String, Analys> nailOrder : nailDetailConfigMapMap.entrySet()) {
+				Analys s = nailOrder.getValue();
+				System.out.println(s.getNailNumber()+"---"+s.getRequrePieces());
+			}
+			
+		}
+		
+		
+		
+		
+		
+		
+		return null;
+	}
+	
+	
+	private Map<String,Analys> getNailDetailConfigMap (){
+		Map<String,Analys> nailTotalCountMap = new HashMap<String, Analys>(); 
+		// 获取图钉
+		List<NailDetailConfig> nailDetailConfigList = nailDetailConfigDao.select(new HashMap<String,Object>());
+		if(null != nailDetailConfigList && nailDetailConfigList.size() > 0){
+			for (NailDetailConfig nailDetailConfig : nailDetailConfigList) {
+				String rgb = nailDetailConfig.getRgb();
+				String newSerialNumber = nailDetailConfig.getNewSerialNumber();
+				Analys analys= new Analys(rgb, newSerialNumber);
+				nailTotalCountMap.put(newSerialNumber,analys);
+			}
+		}
+		return nailTotalCountMap;
+	
 	}
 	
 	

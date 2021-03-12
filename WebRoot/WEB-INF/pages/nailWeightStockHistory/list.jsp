@@ -19,7 +19,14 @@
     <div class="x-body">
       <div class="layui-form layui-row demoTable">
           
-		       	
+        <div class="layui-inline">
+			<label class="layui-form-label">创建时间：</label>
+			<div class="layui-input-inline">
+				<input type="text" name="createDateStr" id="createDateStr" placeholder="请选择开始时间 - 结束时间"
+					autocomplete="off" class="layui-input" readonly="readonly" style="width: 360px;">
+			</div>
+		</div>
+				  	
 		新编号：
           <div class="layui-inline">
 		   		 <select id="nailWeightStockId" name="nailWeightStockId" lay-search>
@@ -31,14 +38,7 @@
 		  </div>
 		  
 		  
-		   <div class="layui-inline">
-					<label class="layui-form-label">创建时间：</label>
-					<div class="layui-input-inline">
-						<input type="text" name="createDateStr" id="createDateStr" placeholder="请选择开始时间 - 结束时间"
-							autocomplete="off" class="layui-input" readonly="readonly" style="width: 360px;">
-					</div>
-				</div>
-				
+		
 			
 		  
 				
