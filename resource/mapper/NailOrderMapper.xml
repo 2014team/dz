@@ -27,7 +27,7 @@
 	</resultMap>
 	
 	<insert id="save" parameterType="com.artcweb.bean.NailOrder" useGeneratedKeys="true" keyProperty="id">
-      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,result_image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,third_flag,nail_drawing_stock_id,create_date,checkout_flag,update_date)
+      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,result_image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,third_flag,nail_drawing_stock_id,checkout_flag,create_date,update_date)
       VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{resultImageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},#{thirdFlag},#{nailDrawingStockId},#{checkoutFlag},now(),now())
      </insert>
 
@@ -47,11 +47,15 @@
 	</delete>
 	
 	<select id="getByBatch" parameterType="String" resultType="com.artcweb.bean.NailOrder">
-		select id as id, image_url as imageUrl from
+		select id as id,checkout_flag AS checkoutFlag,third_flag as thirdFlag ,nail_count_detail AS nailCountDetail,comefrom as comefrom,
+		checkout_flag as checkoutFlag, 
+		image_url as imageUrl,
+		nail_drawing_stock_id as nailDrawingStockId from
 		`t_nail_order`
 		where
 		FIND_IN_SET (id,#{id})
 	</select>
+
 	
 	<!-- 更新 -->
 	<update id="update" parameterType="com.artcweb.bean.NailOrder">
@@ -77,6 +81,16 @@
 		where
 		id=#{id}
 	</update>
+	
+	<!-- 更新 -->
+	<update id="updateCheckoutFlag" parameterType="Map">
+		update `t_nail_order`
+		set
+		checkout_flag=#{checkoutFlag}
+		where
+		FIND_IN_SET (id,#{id})
+	</update>
+	
 
 	<!-- 查找 -->
 	<select id="get" parameterType="Integer" resultMap="result">
@@ -179,9 +193,10 @@
 		,t.create_date AS createDate
 		,t.update_date AS updateDate
 		,nf.nail_type AS nailType
-		,tnp.color_name   AS colorName,
-		t.nail_drawing_stock_id as nailDrawingStockId,
-		tds.style AS style
+		,tnp.color_name   AS colorName
+		,t.nail_drawing_stock_id as nailDrawingStockId
+		,t.checkout_flag as checkoutFlag
+		,tds.style AS style
 		 FROM t_nail_order t LEFT JOIN t_nail_config nf ON t.nail_config_id = nf.id
 		 LEFT JOIN  t_nail_pictureframe tnp ON t.nail_pictureframe_Id = tnp.id
 		 LEFT JOIN t_nail_drawing_stock tds ON t.nail_drawing_stock_id = tds.id
