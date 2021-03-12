@@ -1061,7 +1061,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 							
 							 totalNailNumber = new BigDecimal(StringUtils.isEmpty(totalNailNumber)?"0": totalNailNumber).add(new BigDecimal(StringUtils.isEmpty(nailTotalCount.getTotalNailNumber())?"0" : nailTotalCount.getTotalNailNumber())).toString() ;
 							 totalrPieces = new BigDecimal(StringUtils.isEmpty(totalrPieces)?"0":totalrPieces).add(new BigDecimal(StringUtils.isEmpty(nailTotalCount.getTotalrPieces())?"0" : nailTotalCount.getTotalrPieces())).toString() ;
-							 totalWeight = new BigDecimal(StringUtils.isEmpty(totalWeight)?"0":totalrPieces).add(new BigDecimal(StringUtils.isEmpty(nailTotalCount.getTotalWeight())?"0" : nailTotalCount.getTotalWeight())).toString() ;
+							 totalWeight = new BigDecimal(StringUtils.isEmpty(totalWeight)?"0":totalWeight).add(new BigDecimal(StringUtils.isEmpty(nailTotalCount.getTotalWeight())?"0" : nailTotalCount.getTotalWeight())).toString() ;
 							
 							
 							
@@ -1116,8 +1116,8 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		}
 		if(a !=  null){
 			String nailNumber = a.getTotalNailNumber();
-			String requreWeight = a.getRequrePieces();
-			String requrePieces = a.getRequrePieces();
+			String requreWeight = a.getTotalWeight();
+			String requrePieces = a.getTotalrPieces();
 			Analys n = new Analys();
 			n.setSort(1000000);
 			n.setIndexId("总计");
