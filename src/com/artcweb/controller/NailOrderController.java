@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.artcweb.bean.Analys;
 import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailConfig;
 import com.artcweb.bean.NailCount;
@@ -174,8 +175,8 @@ public class NailOrderController {
 	@RequestMapping(value = "/analys")
 	public String analys(NailOrderVo entity, HttpServletRequest request) {
 		
-		NailTotalCount nailTotalCount = nailOrderService.analys(entity);
-		request.setAttribute("nailTotalCount", nailTotalCount);
+		Map<String,Analys> analysMap = nailOrderService.analys(entity);
+		request.setAttribute("analysMap", analysMap);
 		
 		// 获取图片类型
 		List<NailConfig> nailconfigList = nailconfigService.select(new HashMap<String, Object>());

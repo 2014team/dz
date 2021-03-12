@@ -29,11 +29,16 @@ public class Analys extends NailCount{
 	public void setTotalrPieces(String totalrPieces) {
 		this.totalrPieces = totalrPieces;
 	}
-	public Analys(String rgb,String newSerialNumber) {
+	public Analys( int sort,String rgb,String newSerialNumber) {
 		super();
+		this.setSort(sort);
 		this.setRgb(rgb);
 		this.setIndexId(newSerialNumber);
 	}
+	public Analys() {
+		super();
+	}
+	
 	
 	
 

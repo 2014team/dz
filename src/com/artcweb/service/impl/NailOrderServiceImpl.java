@@ -1026,27 +1026,46 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	* @return
 	*/
 	@Override
-	public NailTotalCount analys(NailOrderVo entity) {
+	public Map<String,Analys> analys(NailOrderVo entity) {
 		
 		
 		Map<String,Object> paramMap = new HashMap<String,Object>();
 		// 获取订单
 		List<NailOrder> nailOrderList = nailOrderDao.select(paramMap);
 		
+		// 获取图钉
+		Map<String,Analys>  nailDetailConfigMapMap = getNailDetailConfigMap();
+
 		if(null != nailOrderList && nailOrderList.size() > 0){
 
-			// 获取图钉
-			Map<String,Analys>  nailDetailConfigMapMap = getNailDetailConfigMap();
+			
+			String totalNailNumber = null;
+			
+			String totalrPieces = null;
+			
+			String totalWeight = null;
+			
 			
 			for (NailOrder nailOrder : nailOrderList) {
 				String nailCountDetail = nailOrder.getNailCountDetail();
 				if(StringUtils.isNotEmpty(nailCountDetail)){
 					NailTotalCount nailTotalCount = ( NailTotalCount ) GsonUtil.jsonToBean(nailCountDetail,NailTotalCount.class);
+					
 					if(null != nailTotalCount){
 						LinkedHashMap<String, NailCount> nailCountMap = nailTotalCount.getNailCountDetailMap();
 						// 排序
 						nailCountMap = MapUtil.mapSortForStringKey(nailCountMap);
 						if(null != nailCountMap && nailCountMap.size() > 0){
+							
+							
+							
+							 totalNailNumber = new BigDecimal(StringUtils.isEmpty(totalNailNumber)?"0": totalNailNumber).add(new BigDecimal(StringUtils.isEmpty(nailTotalCount.getTotalNailNumber())?"0" : nailTotalCount.getTotalNailNumber())).toString() ;
+							 totalrPieces = new BigDecimal(StringUtils.isEmpty(totalrPieces)?"0":totalrPieces).add(new BigDecimal(StringUtils.isEmpty(nailTotalCount.getTotalrPieces())?"0" : nailTotalCount.getTotalrPieces())).toString() ;
+							 totalWeight = new BigDecimal(StringUtils.isEmpty(totalWeight)?"0":totalrPieces).add(new BigDecimal(StringUtils.isEmpty(nailTotalCount.getTotalWeight())?"0" : nailTotalCount.getTotalWeight())).toString() ;
+							
+							
+							
+							
 							for (Entry<String, NailCount> mapping : nailCountMap.entrySet()) {
 								String newSerialNumber = mapping.getKey();
 								NailCount nailCount = mapping.getValue();
@@ -1061,6 +1080,11 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 									
 									BigDecimal requrePieces = new BigDecimal(StringUtils.isEmpty(analys.getRequrePieces())?"0":analys.getRequrePieces()).add(new BigDecimal(nailCount.getRequrePieces()));
 									analys.setRequrePieces(requrePieces.toString());
+									
+									
+									analys.setTotalNailNumber(totalNailNumber);
+									analys.setTotalrPieces(totalrPieces);
+									analys.setTotalWeight(totalWeight);
 									
 									nailDetailConfigMapMap.put(newSerialNumber, analys);
 									
@@ -1079,32 +1103,44 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 					}
 				}
 			}
-			
-			for (Entry<String, Analys> nailOrder : nailDetailConfigMapMap.entrySet()) {
-				Analys s = nailOrder.getValue();
-				System.out.println(s.getNailNumber()+"---"+s.getRequrePieces());
-			}
-			
 		}
 		
+		Analys a = null;
+		if(null != nailDetailConfigMapMap && nailDetailConfigMapMap.size() > 0){
+			for (Entry<String, Analys> nailOrder : nailDetailConfigMapMap.entrySet()) {
+				a = nailOrder.getValue();
+	            if (a != null) {
+	                break;
+	            }
+			}
+		}
+		if(a !=  null){
+			String nailNumber = a.getTotalNailNumber();
+			String requreWeight = a.getRequrePieces();
+			String requrePieces = a.getRequrePieces();
+			Analys n = new Analys();
+			n.setSort(1000000);
+			n.setIndexId("总计");
+			n.setNailNumber(nailNumber);
+			n.setRequreWeight(requreWeight);
+			n.setRequrePieces(requrePieces);
+			nailDetailConfigMapMap.put("总计", n);
+		}
 		
-		
-		
-		
-		
-		return null;
+		return nailDetailConfigMapMap;
 	}
 	
 	
 	private Map<String,Analys> getNailDetailConfigMap (){
-		Map<String,Analys> nailTotalCountMap = new HashMap<String, Analys>(); 
+		Map<String,Analys> nailTotalCountMap = new LinkedHashMap<String, Analys>(); 
 		// 获取图钉
 		List<NailDetailConfig> nailDetailConfigList = nailDetailConfigDao.select(new HashMap<String,Object>());
 		if(null != nailDetailConfigList && nailDetailConfigList.size() > 0){
 			for (NailDetailConfig nailDetailConfig : nailDetailConfigList) {
+				int sort =nailDetailConfig.getSort();
 				String rgb = nailDetailConfig.getRgb();
 				String newSerialNumber = nailDetailConfig.getNewSerialNumber();
-				Analys analys= new Analys(rgb, newSerialNumber);
+				Analys analys= new Analys(sort,rgb, newSerialNumber);
 				nailTotalCountMap.put(newSerialNumber,analys);
 			}
 		}

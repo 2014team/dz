@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import com.artcweb.bean.Analys;
 import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailCount;
 import com.artcweb.bean.NailOrder;
@@ -82,7 +83,7 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 	* @param entity
 	* @return
 	*/
-	NailTotalCount analys(NailOrderVo entity);
+	Map<String,Analys> analys(NailOrderVo entity);
 
 
 
