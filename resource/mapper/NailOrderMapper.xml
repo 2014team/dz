@@ -205,10 +205,34 @@
 	</select>
 	
 	
-	<select id="select" parameterType="Map" resultType="com.artcweb.bean.NailOrder">
+	<select id="selectByMap" parameterType="Map" resultType="com.artcweb.dto.NailOrderDto">
 		SELECT t.id
 			   ,t.nail_count_detail AS  nailCountDetail
+			  ,t.nail_config_id AS nailConfigId
 			   FROM t_nail_order t
+			  <where>
+				  	 <if test="null != entity and null != entity.nailConfigId and '' != entity.nailConfigId">
+				   		and t.nail_config_id = #{entity.nailConfigId}
+				   </if>
+				   <if test="null != entity and  null != entity.createDateStr and '' != entity.createDateStr">
+					<![CDATA[  
+					and t.create_date >= #{entity.beginDate} and  t.create_date <= #{entity.endDate} 
+					]]>
+					</if>
+				   <if test="null != entity and null != entity.array and '' != entity.array">
+					<![CDATA[  
+					and FIND_IN_SET (id,#{entity.array})
+					]]>
+					</if>
+					<if test="null != entity and  null != entity.checkoutFlag and -1 != entity.checkoutFlag">
+					and t.checkout_flag = #{entity.checkoutFlag}
+			</if>
+			  </where>
+		ORDER BY id DESC
+	</select>
+	
+	<select id="select" parameterType="Map" resultType="com.artcweb.bean.NailOrder">
+		SELECT * FROM t_nail_order t
 		ORDER by id desc
 	</select>
 	
@@ -261,6 +285,9 @@
 				</otherwise>
 			</choose>
 			
+			<if test="null != entity and  null != entity.checkoutFlag and -1 != entity.checkoutFlag">
+					and t.checkout_flag = #{entity.checkoutFlag}
+			</if>
 			<if test="null != entity and  null != entity.comefrom and '' != entity.comefrom">
 					and t.comefrom = #{entity.comefrom}
 			</if>
@@ -300,6 +327,9 @@
 					</if>
 				</otherwise>
 			</choose>
+			<if test="null != entity and  null != entity.checkoutFlag and -1 != entity.checkoutFlag">
+					and t.checkout_flag = #{entity.checkoutFlag}
+			</if>
 			<if test="null != entity and  null != entity.comefrom and '' != entity.comefrom">
 					and t.comefrom = #{entity.comefrom}
 			</if>

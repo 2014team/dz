@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -28,6 +29,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.bean.Analys;
+import com.artcweb.bean.AnalysNailConfig;
 import com.artcweb.bean.Inventory;
 import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailConfig;
@@ -41,6 +43,7 @@ import com.artcweb.bean.NailWeightStock;
 import com.artcweb.cache.DateMap;
 import com.artcweb.constant.NailOrderComeFromConstant;
 import com.artcweb.constant.UploadConstant;
+import com.artcweb.dao.NailConfigDao;
 import com.artcweb.dao.NailDetailConfigDao;
 import com.artcweb.dao.NailDrawingStockDao;
 import com.artcweb.dao.NailOrderDao;
@@ -50,6 +53,7 @@ import com.artcweb.enums.CheckoutFlagEnum;
 import com.artcweb.enums.NailImageTypeEnum;
 import com.artcweb.enums.ThirdFlagEnum;
 import com.artcweb.service.NailOrderService;
+import com.artcweb.util.DataUtil;
 import com.artcweb.util.ExportExcelUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
@@ -70,6 +74,8 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	private NailWeightStockDao nailWeightStockDao;
 	@Autowired
 	private NailDetailConfigDao nailDetailConfigDao;
+	@Autowired
+	private NailConfigDao nailConfigDao;
 	
 	
 
@@ -1026,28 +1032,78 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	* @return
 	*/
 	@Override
-	public Map<String,Analys> analys(NailOrderVo entity) {
+	public Map<String,Object>  analys(NailOrderVo entity,boolean listFlag) {
 		
+		
+		Map<String,Object> dataMap = new HashMap<String, Object>();
+		
+		
+		
+		
+		String createDateStr = entity.getCreateDateStr();
+		if(StringUtils.isNotBlank(createDateStr)){
+			String[] createDateArr = createDateStr.split("~");
+			if(null != createDateArr && createDateArr.length ==2){
+				entity.setBeginDate(createDateArr[0]);
+				entity.setEndDate(createDateArr[1]);
+			}
+		}else{
+			
+			if(listFlag){
+				Date date  = new Date();
+				String  beginDate = DataUtil.format(date, DataUtil.DATE_YYYY_MM_DD);
+				String  endDate = DataUtil.format(DataUtil.addDay(date, 1), DataUtil.DATE_YYYY_MM_DD);
+				entity.setCreateDateStr(beginDate);
+				
+				entity.setBeginDate(beginDate);
+				entity.setEndDate(endDate);
+			}
+			
+		}
 		
 		Map<String,Object> paramMap = new HashMap<String,Object>();
+		paramMap.put("entity", entity);
 		// 获取订单
-		List<NailOrder> nailOrderList = nailOrderDao.select(paramMap);
+		List<NailOrderDto> nailOrderList = nailOrderDao.selectByMap(paramMap);
 		
-		// 获取图钉
-		Map<String,Analys>  nailDetailConfigMapMap = getNailDetailConfigMap();
+		
+		
+		
+		
+		// 订单统计
+		Map<String,AnalysNailConfig> analysNailConfigMap =  getNailConfigMap();
+		
+		// 图钉统计
+		Map<String,Analys>  analysMap = getNailDetailConfigMap();
+		
+		
+		
 
 		if(null != nailOrderList && nailOrderList.size() > 0){
-
+			
+			
 			
 			String totalNailNumber = null;
-			
 			String totalrPieces = null;
-			
 			String totalWeight = null;
-			
-			
-			
-			for (NailOrder nailOrder : nailOrderList) {
+			for (NailOrderDto nailOrder : nailOrderList) {
+				
+				
+				// 订单统计
+				String nailConfigId= nailOrder.getNailConfigId();
+				if(StringUtils.isNotEmpty(nailConfigId)){
+					AnalysNailConfig acf = analysNailConfigMap.get(nailConfigId);
+					if(null != acf){
+						Integer Id = acf.getId();
+						int total = acf.getTotal() +1;
+						acf.setTotal(total);
+						analysNailConfigMap.put(String.valueOf(Id), acf);
+					}
+				}
+				
+				
+				
+				// 图钉统计
 				String nailCountDetail = nailOrder.getNailCountDetail();
 				if(StringUtils.isNotEmpty(nailCountDetail)){
 					NailTotalCount nailTotalCount = ( NailTotalCount ) GsonUtil.jsonToBean(nailCountDetail,NailTotalCount.class);
@@ -1058,21 +1114,17 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 						nailCountMap = MapUtil.mapSortForStringKey(nailCountMap);
 						if(null != nailCountMap && nailCountMap.size() > 0){
 							
-							
-							
 							 totalNailNumber = new BigDecimal(StringUtils.isEmpty(totalNailNumber)?"0": totalNailNumber).add(new BigDecimal(StringUtils.isEmpty(nailTotalCount.getTotalNailNumber())?"0" : nailTotalCount.getTotalNailNumber())).toString() ;
 							 totalrPieces = new BigDecimal(StringUtils.isEmpty(totalrPieces)?"0":totalrPieces).add(new BigDecimal(StringUtils.isEmpty(nailTotalCount.getTotalrPieces())?"0" : nailTotalCount.getTotalrPieces())).toString() ;
 							 totalWeight = new BigDecimal(StringUtils.isEmpty(totalWeight)?"0":totalWeight).add(new BigDecimal(StringUtils.isEmpty(nailTotalCount.getTotalWeight())?"0" : nailTotalCount.getTotalWeight())).toString() ;
 							
 							
-							
-							
+							// 统计各图钉
 							for (Entry<String, NailCount> mapping : nailCountMap.entrySet()) {
 								String newSerialNumber = mapping.getKey();
 								NailCount nailCount = mapping.getValue();
-								Analys analys = nailDetailConfigMapMap.get(newSerialNumber);
+								Analys analys = analysMap.get(newSerialNumber);
 								if(null != analys){
-									
 									BigDecimal nailNumber = new BigDecimal(StringUtils.isEmpty(analys.getNailNumber())?"0":analys.getNailNumber()).add(new BigDecimal(nailCount.getNailNumber()));
 									analys.setNailNumber(nailNumber.toString());
 									
@@ -1087,7 +1139,12 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 									analys.setTotalrPieces(totalrPieces);
 									analys.setTotalWeight(totalWeight);
 									
-									nailDetailConfigMapMap.put(newSerialNumber, analys);
+									
+									
+									
+									analys.setRgbSize(nailOrderList.size());
+									
+									analysMap.put(newSerialNumber, analys);
 									
 								}
 								
@@ -1106,29 +1163,165 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			}
 		}
 		
-		Analys a = null;
-		if(null != nailDetailConfigMapMap && nailDetailConfigMapMap.size() > 0){
-			for (Entry<String, Analys> nailOrder : nailDetailConfigMapMap.entrySet()) {
-				a = nailOrder.getValue();
-	            if (a != null) {
-	                break;
-	            }
-			}
-		}
+		
+		// 图钉统计处理
+		Analys a = getAnalysOne(analysMap);
 		if(a !=  null){
 			String nailNumber = a.getTotalNailNumber();
 			String requreWeight = a.getTotalWeight();
 			String requrePieces = a.getTotalrPieces();
+			int rgbSize = a.getRgbSize();
 			Analys n = new Analys();
 			n.setSort(1000000);
+			n.setRgb("255,255,255");
 			n.setIndexId("总计");
+			n.setRgbSize(rgbSize);
 			n.setNailNumber(nailNumber);
 			n.setRequreWeight(requreWeight);
 			n.setRequrePieces(requrePieces);
-			nailDetailConfigMapMap.put("总计", n);
+			analysMap.put("总计", n);
+			
+			Analys n1 = new Analys();
+			n1.setRgbSize(rgbSize);
+			n1.setRgb("255,255,255");
+			n1.setSort(1000001);
+			n1.setIndexId("平均值");
+			if(rgbSize > 0){
+				if(StringUtils.isNotEmpty(nailNumber)){
+					n1.setNailNumber(new BigDecimal(nailNumber).divide(new BigDecimal(rgbSize),2,BigDecimal.ROUND_HALF_UP).toString());
+				}
+				
+				if(StringUtils.isNotEmpty(requreWeight)){
+					n1.setRequreWeight(new BigDecimal(requreWeight).divide(new BigDecimal(rgbSize),2,BigDecimal.ROUND_HALF_UP).toString());
+				}
+				if(StringUtils.isNotEmpty(requrePieces)){
+					n1.setRequrePieces(new BigDecimal(requrePieces).divide(new BigDecimal(rgbSize),2,BigDecimal.ROUND_HALF_UP).toString());
+				}
+			}
+			analysMap.put("平均值", n1);
 		}
 		
-		return nailDetailConfigMapMap;
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		analysMap = dataDeal(analysMap);
+		
+		analysNailConfigMap = nailConfigMapDataDeal(analysNailConfigMap);
+		dataMap.put("analysNailConfigMap", analysNailConfigMap);
+		dataMap.put("analysMap", analysMap);
+		
+		
+		return dataMap;
+	}
+	
+	
+	
+	private Map<String, AnalysNailConfig> nailConfigMapDataDeal(Map<String, AnalysNailConfig> analysNailConfigMap) {
+		if(null != analysNailConfigMap && analysNailConfigMap.size() > 0){
+			int  total = 0;
+			for (Entry<String, AnalysNailConfig> iterable_element : analysNailConfigMap.entrySet()) {
+				AnalysNailConfig analysTotal = iterable_element.getValue();
+				if(null != analysTotal){
+					total = total + analysTotal.getTotal();
+				}
+			}
+			
+			AnalysNailConfig an = new AnalysNailConfig();
+			an.setTotal(total);
+			an.setNailType("总计");
+			analysNailConfigMap.put("总计", an);
+		}
+		return analysNailConfigMap;
+	}
+
+	private Map<String, AnalysNailConfig> getNailConfigMap() {
+		Map<String, AnalysNailConfig> analysNailConfig = new LinkedHashMap<String, AnalysNailConfig>();
+		Map<String,Object> paramMap = new HashMap<String, Object>();
+		List<NailConfig> nailConfigList = nailConfigDao.select(paramMap);
+		if(null != nailConfigList && nailConfigList.size() > 0){
+			for (NailConfig nailConfig : nailConfigList) {
+				Integer id = nailConfig.getId();
+				String nailType  = nailConfig.getNailType();
+				AnalysNailConfig a = new AnalysNailConfig();
+				a.setId(id);
+				a.setNailType(nailType);
+				analysNailConfig.put(String.valueOf(id), a);
+			}
+			
+		}
+		return analysNailConfig;
+	}
+
+	
+	
+	
+	//图钉数据处理
+	private Map<String,Analys> dataDeal(Map<String,Analys> data){
+		
+		if(null != data && data.size() > 0){
+			
+			Analys analysTotal = data.get("总计");
+			
+			for (Entry<String, Analys> iterable_element : data.entrySet()) {
+				Analys analys = iterable_element.getValue();
+				int rgbSize = analys.getRgbSize();
+				
+				// 计算比率
+				String totalNailNumber = analysTotal.getNailNumber();
+				String totalWeight = analysTotal.getRequreWeight();
+				String totalrPieces = analysTotal.getRequrePieces();
+				
+					if(rgbSize > 0){
+						
+						// 计算平均值
+						if(StringUtils.isNotEmpty(analys.getNailNumber())){
+							String nailNumberAvg = new BigDecimal(analys.getNailNumber()).divide(new BigDecimal(rgbSize),2,BigDecimal.ROUND_HALF_UP).toString();
+							analys.setNailNumberAvg(nailNumberAvg);
+						}
+						if(StringUtils.isNotEmpty(analys.getRequrePieces())){
+							String requrePiecesAvg = new BigDecimal(analys.getRequrePieces()).divide(new BigDecimal(rgbSize),2,BigDecimal.ROUND_HALF_UP).toString();
+							analys.setRequrePiecesAvg(requrePiecesAvg);
+							
+						}
+						if(StringUtils.isNotEmpty(analys.getRequreWeight())){
+							String requreWeightAvg = new BigDecimal(analys.getRequreWeight()).divide(new BigDecimal(rgbSize),2,BigDecimal.ROUND_HALF_UP).toString();
+							analys.setRequreWeightAvg(requreWeightAvg);
+						}
+						
+						
+						
+						
+						// 计算比率
+						if(StringUtils.isNotEmpty(totalNailNumber)){
+							String nailNumberRatio = new BigDecimal(analys.getNailNumber()).divide(new BigDecimal(totalNailNumber),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).toBigInteger().toString();
+							analys.setNailNumberRatio(nailNumberRatio+"%");
+						}
+						
+						if(StringUtils.isNotEmpty(totalWeight)){
+							String requreWeightRatio = new BigDecimal(analys.getRequreWeight()).divide(new BigDecimal(totalWeight),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).toBigInteger().toString();
+							analys.setRequreWeightRatio(requreWeightRatio+"%");
+						}
+						
+						if(StringUtils.isNotEmpty(totalrPieces)){
+							String requrePiecesRatio = new BigDecimal(analys.getRequrePieces()).divide(new BigDecimal(totalrPieces),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).toBigInteger().toString();
+							analys.setRequrePiecesRatio(requrePiecesRatio+"%");
+						}
+				}
+					
+					
+			}
+		}
+		return data;
+		
 	}
 	
 	
@@ -1148,6 +1341,21 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		return nailTotalCountMap;
 	
 	}
+	
+	@Override
+	public Analys getAnalysOne(Map<String,Analys> nailDetailConfigMap){
+		Analys analys = null; 
+		if(null != nailDetailConfigMap && nailDetailConfigMap.size() > 0){
+			for (Entry<String, Analys> nailOrder : nailDetailConfigMap.entrySet()) {
+				analys = nailOrder.getValue();
+	            if (analys != null) {
+	                break;
+	            }
+			}
+		}
+		return analys;
+	}
+	
 	
 	
 

@@ -28,8 +28,16 @@ public class NailCount implements Serializable{
 	// rgb值
 	private String rgb;
 	
+	// 排序
 	private int sort;
 	
+	private String nailNumberAvg;
+	private String requreWeightAvg;
+	private String requrePiecesAvg;
+	
+	private String nailNumberRatio;
+	private String requreWeightRatio;
+	private String requrePiecesRatio;
 
 	public NailCount() {
 		super();
@@ -97,10 +105,58 @@ public class NailCount implements Serializable{
 	public void setSort(int sort) {
 		this.sort = sort;
 	}
-	
+
+	public String getNailNumberAvg() {
+		return nailNumberAvg;
+	}
+
+	public void setNailNumberAvg(String nailNumberAvg) {
+		this.nailNumberAvg = nailNumberAvg;
+	}
+
+	public String getRequreWeightAvg() {
+		return requreWeightAvg;
+	}
+
+	public void setRequreWeightAvg(String requreWeightAvg) {
+		this.requreWeightAvg = requreWeightAvg;
+	}
+
+	public String getRequrePiecesAvg() {
+		return requrePiecesAvg;
+	}
+
+	public void setRequrePiecesAvg(String requrePiecesAvg) {
+		this.requrePiecesAvg = requrePiecesAvg;
+	}
+
+	public String getNailNumberRatio() {
+		return nailNumberRatio;
+	}
+
+	public void setNailNumberRatio(String nailNumberRatio) {
+		this.nailNumberRatio = nailNumberRatio;
+	}
+
+	public String getRequreWeightRatio() {
+		return requreWeightRatio;
+	}
+
+	public void setRequreWeightRatio(String requreWeightRatio) {
+		this.requreWeightRatio = requreWeightRatio;
+	}
+
+	public String getRequrePiecesRatio() {
+		return requrePiecesRatio;
+	}
+
+	public void setRequrePiecesRatio(String requrePiecesRatio) {
+		this.requrePiecesRatio = requrePiecesRatio;
+	}
+
 	/*@Override
 	public int compareTo(NailCount o) {
 		return this.indexId.compareTo(o.getIndexId());
 	}*/
-
+	
 }

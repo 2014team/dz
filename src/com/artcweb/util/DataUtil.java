@@ -140,5 +140,26 @@ public class DataUtil {
 		}
 		return tl.get();
 	}
+	
+
+	public static Date addDay(Date date, int num) {
+		return add(date, Calendar.DAY_OF_MONTH, num);
+	}
+
+	public static Date addMonth(Date date, int num) {
+		return add(date, Calendar.MONTH, num);
+	}
+
+	public static Date addYear(Date date, int num) {
+		return add(date, Calendar.YEAR, num);
+	}
+	
+	private static Date add(Date date,int type,int num){
+		Calendar cal = Calendar.getInstance(); 
+		cal.setTime(date);
+		cal.add(type, num);
+		
+		return cal.getTime();
+	}
 
 }

@@ -18,24 +18,7 @@
     </div>
     
     <div class="x-body">
-    
-
-	<form class="layui-form layui-form-pane" action="">
-		<div class="layui-form-item">
-			<div class="layui-inline" style="width: 400px">
-				<label class="layui-form-label">日期选择</label>
-				<div class="layui-input-block">
-					<input type="text" name="createDateStr" id="createDateStr" autocomplete="off"
-						class="layui-input">
-				</div>
-			</div>
-			<button type="button" class="layui-btn layui-btn-normal"
-				style="position: absolute;" lay-submit lay-filter="dateRangeFilter" >统计分析</button>
-
-		</div>
-	</form>	
 	
-    
       <div class="layui-form layui-row demoTable">
           <div class="layui-inline">
 		   		 <select id="searchKey" name="searchKey" lay-search>
@@ -49,12 +32,12 @@
 		    <input class="layui-input" name="searchValue" id="searchValue" autocomplete="off">
 		  </div>
 		  
-		  来源：
+		  出库：
           <div class="layui-inline">
-	        <select id="comefrom" name="comefrom" lay-search>
+	        <select id="checkoutFlagX" name="checkoutFlagX" lay-search>
 	                 <option value="">全部</option>
-	                   <option value="0" >后台</option>
-	                   <option value="1" >H5</option>
+	                   <option value="1" >是</option>
+	                   <option value="0" >否</option>
 	             </select>
 	    	</div>
 	    	
@@ -81,7 +64,6 @@
 	<script type="text/html" id="toolbar">
   		<div class="layui-btn-container">
    			   <button class="layui-btn layui-btn-sm layui-btn-danger" onclick="order_delAll('rendReloadId','/admin/center/nailorder/delete/batch.do')">批量删除</button>
-   			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailorder/add.do')"><i class="layui-icon"></i>增加</button>
    			  <button class="layui-btn layui-btn-sm"  onclick="checkout('rendReloadId','/admin/center/nailorder/checkout.do','出库')">
 				<i class="layui-icon">&#xe605;</i>
 				出库
@@ -90,6 +72,9 @@
 				<i class="layui-icon">&#x1006;</i>
 				退库
 			 </button>
+			<button class="layui-btn layui-btn-sm layui-btn layui-btn-normal"  onclick="analys('rendReloadId','/admin/center/nailorder/analys.do','统计分析')">
+				<i class="layui-icon">&#xe60a;</i>统计分析
+   			  <button class="layui-btn layui-btn-sm"  onclick="x_admin_show('编辑','/admin/center/nailorder/add.do')"><i class="layui-icon"></i>增加</button>
   		</div>
 	</script>
      
@@ -278,10 +263,7 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 		      }, 'data');
   
     });
-     form.on('submit(dateRangeFilter)', function (data) {
-			data = JSON.parse(JSON.stringify(data.field));
-		   x_admin_show('统计分析','/admin/center/nailorder/analys.do');
-    });
+    
 		
 		//监听行工具条
 		table.on('tool(table_list)', function(obj) {
@@ -392,6 +374,19 @@ function order_delAll(layfilterId,url) {
 		
 	});
 		
+   }
+   
+   // 统计分析
+   function analys(layfilterId,url) {
+	var selectData = layui.table.checkStatus(layfilterId).data;
+		var array = new Array();
+		$.each(selectData,function(i,e){
+			array.push(e.id);
+		 })
+		
+		// x_admin_show('统计分析','/admin/center/nailorder/choose/analys/'+array+'.do',$(window).width(),$(window).height());
+		 x_admin_show('统计分析','/admin/center/nailorder/choose/analys/'+array+'.do');
+		 
    }
    
    

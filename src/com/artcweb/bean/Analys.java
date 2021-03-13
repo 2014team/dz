@@ -11,6 +11,9 @@ public class Analys extends NailCount{
 	// 总包数
 	private String totalrPieces;
 	
+	// 订单数量
+	private int rgbSize;
+	
 	public String getTotalNailNumber() {
 		return totalNailNumber;
 	}
@@ -37,6 +40,12 @@ public class Analys extends NailCount{
 	}
 	public Analys() {
 		super();
+	}
+	public int getRgbSize() {
+		return rgbSize;
+	}
+	public void setRgbSize(int rgbSize) {
+		this.rgbSize = rgbSize;
 	}
 	
 	

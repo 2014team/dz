@@ -38,5 +38,7 @@ public interface NailOrderDao extends BaseDao<NailOrder, Integer> {
 	* @return
 	*/
 	Integer updateCheckoutFlag (Map<String, Object> paramMap);
+	
+	List<NailOrderDto> selectByMap (Map<String, Object> paramMap);
 
 }

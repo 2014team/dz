@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.bean.Analys;
+import com.artcweb.bean.AnalysNailConfig;
 import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailConfig;
 import com.artcweb.bean.NailCount;
@@ -172,16 +173,82 @@ public class NailOrderController {
 	* @param request
 	* @return
 	*/
-	@RequestMapping(value = "/analys")
-	public String analys(NailOrderVo entity, HttpServletRequest request) {
+	@RequestMapping(value = "/choose/analys/{array}")
+	public String analys(NailOrderVo entity,@PathVariable("") String array,Integer checkoutFlagX, HttpServletRequest request) {
 		
-		Map<String,Analys> analysMap = nailOrderService.analys(entity);
+		// 特殊处理
+		if(null != checkoutFlagX){
+			entity.setCheckoutFlag(checkoutFlagX);
+		}else{
+			entity.setCheckoutFlag(-1);
+		}
+		
+		entity.setArray(array);
+		Map<String,Object>  datamap = nailOrderService.analys(entity,true);
+		
+		
+		
+		// 订单统计
+		Map<String,AnalysNailConfig> nailConfigMap =  null;
+		// 图钉统计
+		Map<String,Analys>  analysMap = null;
+		if(null != datamap && datamap.size() > 0){
+			nailConfigMap = (Map<String,AnalysNailConfig>) datamap.get("analysNailConfigMap");
+			analysMap = (Map<String, Analys>) datamap.get("analysMap");
+		}
 		request.setAttribute("analysMap", analysMap);
+		request.setAttribute("nailConfigMap", nailConfigMap);
+		
+		
+//		Analys analys = nailOrderService. getAnalysOne(analysMap);
+//		request.setAttribute("analys", analys);
 		
 		// 获取图片类型
 		List<NailConfig> nailconfigList = nailconfigService.select(new HashMap<String, Object>());
 		request.setAttribute("nailconfigList", nailconfigList);
+		
+		
+
+		
 		return "/nailorder/analys";
+	}
+	
+	
+	@RequestMapping(value = "/analys/list")
+	public String analyslist(NailOrderVo entity, Integer checkoutFlagX,HttpServletRequest request) {
+		
+		// 特殊处理
+		if(null != checkoutFlagX){
+			entity.setCheckoutFlag(checkoutFlagX);
+		}else{
+			entity.setCheckoutFlag(-1);
+		}
+		
+		
+		
+		Map<String,Object>  datamap = nailOrderService.analys(entity,false);
+		
+		
+		
+		// 订单统计
+		Map<String,AnalysNailConfig> nailConfigMap =  null;
+		// 图钉统计
+		Map<String,Analys>  analysMap = null;
+		if(null != datamap && datamap.size() > 0){
+			nailConfigMap = (Map<String,AnalysNailConfig>) datamap.get("analysNailConfigMap");
+			analysMap = (Map<String, Analys>) datamap.get("analysMap");
+		}
+		request.setAttribute("analysMap", analysMap);
+		request.setAttribute("nailConfigMap", nailConfigMap);
+		
+		
+//		Analys analys = nailOrderService. getAnalysOne(analysMap);
+//		request.setAttribute("analys", analys);
+		
+		// 获取图片类型
+		List<NailConfig> nailconfigList = nailconfigService.select(new HashMap<String, Object>());
+		request.setAttribute("nailconfigList", nailconfigList);
+		return "/nailorder/analys_list";
 	}
 	
 	
@@ -664,8 +731,17 @@ public class NailOrderController {
 	@ResponseBody
 	@RequestMapping(value = "/list", method = { RequestMethod.POST,
 					RequestMethod.GET }, produces = "application/json; charset=UTF-8")
-	public LayUiResult list(NailOrderVo entity, HttpServletRequest request) {
+	public LayUiResult list(NailOrderVo entity, Integer checkoutFlagX ,HttpServletRequest request) {
 
+		
+		// 特殊处理
+		if(null != checkoutFlagX){
+			entity.setCheckoutFlag(checkoutFlagX);
+		}else{
+			entity.setCheckoutFlag(-1);
+		}
+		
+		
 		// 查找类型处理
 		String searchKey = entity.getSearchKey();
 		String searchValue = entity.getSearchValue();

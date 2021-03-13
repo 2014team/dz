@@ -83,7 +83,9 @@ public interface NailOrderService extends BaseService<NailOrder, Integer>{
 	* @param entity
 	* @return
 	*/
-	Map<String,Analys> analys(NailOrderVo entity);
+	Map<String,Object>  analys(NailOrderVo entity,boolean listFalg);
+	
+	public Analys getAnalysOne(Map<String,Analys> nailDetailConfigMapMap);
 
 
 
