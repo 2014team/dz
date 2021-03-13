@@ -1046,6 +1046,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			String totalWeight = null;
 			
 			
+			
 			for (NailOrder nailOrder : nailOrderList) {
 				String nailCountDetail = nailOrder.getNailCountDetail();
 				if(StringUtils.isNotEmpty(nailCountDetail)){
