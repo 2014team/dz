@@ -1040,25 +1040,27 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		
 		
 		String array = entity.getArray();
+		
 		String createDateStr = entity.getCreateDateStr();
+		String nailConfigIde = entity.getNailConfigId();
+		int checkoutFlag = entity.getCheckoutFlag();
+		
 		if(StringUtils.isNotBlank(createDateStr)){
 			String[] createDateArr = createDateStr.split("~");
 			if(null != createDateArr && createDateArr.length ==2){
 				entity.setBeginDate(createDateArr[0]);
 				entity.setEndDate(createDateArr[1]);
 			}
-		}else{
+		}
+		
+		if(StringUtils.isEmpty(array) && StringUtils.isEmpty(createDateStr) && StringUtils.isEmpty(nailConfigIde) && checkoutFlag == -1){
+			Date date  = new Date();
+			String  beginDate = DataUtil.format(date, DataUtil.DATE_YYYY_MM_DD);
+			String  endDate = DataUtil.format(DataUtil.addDay(date, 1), DataUtil.DATE_YYYY_MM_DD);
+			entity.setCreateDateStr(beginDate);
 			
-			if(listFlag && StringUtils.isEmpty(array)){
-				Date date  = new Date();
-				String  beginDate = DataUtil.format(date, DataUtil.DATE_YYYY_MM_DD);
-				String  endDate = DataUtil.format(DataUtil.addDay(date, 1), DataUtil.DATE_YYYY_MM_DD);
-				entity.setCreateDateStr(beginDate);
-				
-				entity.setBeginDate(beginDate);
-				entity.setEndDate(endDate);
-			}
-			
+			entity.setBeginDate(beginDate);
+			entity.setEndDate(endDate);
 		}
 		
 		Map<String,Object> paramMap = new HashMap<String,Object>();
