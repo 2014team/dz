@@ -1039,7 +1039,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		
 		
 		
-		
+		String array = entity.getArray();
 		String createDateStr = entity.getCreateDateStr();
 		if(StringUtils.isNotBlank(createDateStr)){
 			String[] createDateArr = createDateStr.split("~");
@@ -1049,7 +1049,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			}
 		}else{
 			
-			if(listFlag){
+			if(listFlag && StringUtils.isEmpty(array)){
 				Date date  = new Date();
 				String  beginDate = DataUtil.format(date, DataUtil.DATE_YYYY_MM_DD);
 				String  endDate = DataUtil.format(DataUtil.addDay(date, 1), DataUtil.DATE_YYYY_MM_DD);
