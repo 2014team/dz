@@ -174,7 +174,7 @@ public class NailOrderController {
 	* @return
 	*/
 	@RequestMapping(value = "/choose/analys/{array}")
-	public String analys(NailOrderVo entity,@PathVariable("") String array,Integer checkoutFlagX, HttpServletRequest request) {
+	public String analys(NailOrderVo entity,@PathVariable("array") String array,Integer checkoutFlagX, HttpServletRequest request) {
 		
 		// 特殊处理
 		if(null != checkoutFlagX){
@@ -314,7 +314,7 @@ public class NailOrderController {
 			return result;
 		}
 		// 更新库存
-		result.success("出库成功");
+		result.success("退库成功");
 		return result;
 	}
 	
