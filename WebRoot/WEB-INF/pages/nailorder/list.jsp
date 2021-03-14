@@ -5,6 +5,12 @@
   		<%@ taglib uri="/WEB-INF/tag/nailDrawingStock.tld" prefix="ns" %>
   </head>
   
+  <<style>
+.layui-inline{
+margin: 8px	
+}
+</style>
+  
    <body>
     <div class="x-nav">
       <span class="layui-breadcrumb">
@@ -50,6 +56,14 @@
 		          	</c:forEach>
 	            </select>
 		  </div>
+		  
+		  	<div class="layui-inline">
+					<label class="layui-form-label">日期选择：</label>
+					<div class="layui-input-inline">
+						<input type="text" name="createDateStr" id="createDateStr" placeholder="请选择开始时间 - 结束时间"
+							autocomplete="off" class="layui-input" readonly="readonly" style="width: 360px;">
+					</div>
+				</div>
 		  
           <button class="layui-btn" lay-submit lay-filter="searchFilter" >搜索</button>
       </div>
@@ -212,7 +226,6 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				}, {
 					field : 'createDate' ,
 					title : '创建时间' ,
-					hide:true,
 					templet : function(d) {
 					return date.toDateString(d.createDate, 'yyyy-MM-dd HH:mm:ss');
 				}, 
