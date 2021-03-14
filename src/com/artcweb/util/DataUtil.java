@@ -163,12 +163,11 @@ public class DataUtil {
 	}
 	
 	public static String getStartTime(){
-		Date startTime  = getTime(0, 0, 0, 0);
-		return format(startTime, DATE_YYYY_MM_DD_HH_MM_SS);
+		return format(new Date(), DATE_YYYY_MM_DD);
 	}
 	public static String getEndTime(){
-		Date startTime  = getTime(23, 59, 59, 999);
-		return format(startTime, DATE_YYYY_MM_DD_HH_MM_SS);
+		Date d = addDay(new Date(),1);
+		return format(d, DATE_YYYY_MM_DD);
 	}
 	
 	private static Date getTime(int hour,int minute,int second ,int millisecond ) {
