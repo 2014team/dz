@@ -161,5 +161,24 @@ public class DataUtil {
 		
 		return cal.getTime();
 	}
+	
+	public static String getStartTime(){
+		Date startTime  = getTime(0, 0, 0, 0);
+		return format(startTime, DATE_YYYY_MM_DD_HH_MM_SS);
+	}
+	public static String getEndTime(){
+		Date startTime  = getTime(23, 59, 59, 999);
+		return format(startTime, DATE_YYYY_MM_DD_HH_MM_SS);
+	}
+	
+	private static Date getTime(int hour,int minute,int second ,int millisecond ) {
+		Calendar todayStart = Calendar.getInstance();
+		todayStart.set(Calendar.HOUR, hour);
+		todayStart.set(Calendar.MINUTE, minute);
+		todayStart.set(Calendar.SECOND, second);
+		todayStart.set(Calendar.MILLISECOND, millisecond);
+		return todayStart.getTime();
+	}
+ 
 
 }
