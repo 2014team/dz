@@ -62,7 +62,7 @@
 <!--图片模板  -->
 <script type="text/html" id="rgbTemplet">
 <div lay-templateid="TPL_layout">
-	<button w style='background-color:rgb({{d.rgbName}});width: 80px;height: 25px;border: 0px'></button>
+	<button w style='background-color:rgb({{d.rgbName}});width: 80px;height: 18px;border: 0px'></button>
 </div>
 </script>
 
