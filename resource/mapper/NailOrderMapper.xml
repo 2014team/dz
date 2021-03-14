@@ -300,6 +300,11 @@
 			<if test="null != entity and  null != entity.nailDrawingStockId and '' != entity.nailDrawingStockId">
 					and t.nail_drawing_stock_id = #{entity.nailDrawingStockId}
 			</if>
+			<if test="null != entity and  null != entity.createDateStr and '' != entity.createDateStr">
+					<![CDATA[  
+					and t.create_date >= #{entity.beginDate} and  t.create_date <= #{entity.endDate} 
+					]]>
+			</if>
 		</where>
 		ORDER by t.id desc limit ${page.begin},${page.limit} 
 	</select>
@@ -342,6 +347,11 @@
 			<if test="null != entity and  null != entity.nailDrawingStockId and '' != entity.nailDrawingStockId">
 					and t.nail_drawing_stock_id = #{entity.nailDrawingStockId}
 			</if>
+			<if test="null != entity and  null != entity.createDateStr and '' != entity.createDateStr">
+					<![CDATA[  
+					and t.create_date >= #{entity.beginDate} and  t.create_date <= #{entity.endDate} 
+					]]>
+				</if>
 		</where>
 	</select>
 	

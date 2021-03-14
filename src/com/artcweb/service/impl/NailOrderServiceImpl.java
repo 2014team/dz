@@ -88,6 +88,17 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	 */
 	@Override
 	public LayUiResult findByPage(NailOrderVo entity, LayUiResult result) {
+		
+		//创建日期处理
+		String createDateStr = entity.getCreateDateStr();
+		if(StringUtils.isNotBlank(createDateStr)){
+			String[] createDateArr = createDateStr.split("~");
+			if(null != createDateArr && createDateArr.length ==2){
+				entity.setBeginDate(createDateArr[0]);
+				entity.setEndDate(createDateArr[1]);
+			}
+		}
+				
 
 		Map<String, Object> paramMap = new HashMap<String, Object>();
 		paramMap.put("entity", entity);
@@ -1032,7 +1043,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	* @return
 	*/
 	@Override
-	public Map<String,Object>  analys(NailOrderVo entity,boolean listFlag) {
+	public Map<String,Object>  analys(NailOrderVo entity) {
 		
 		
 		Map<String,Object> dataMap = new HashMap<String, Object>();
@@ -1054,9 +1065,8 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		}
 		
 		if(StringUtils.isEmpty(array) && StringUtils.isEmpty(createDateStr) && StringUtils.isEmpty(nailConfigIde) && checkoutFlag == -1){
-			Date date  = new Date();
-			String  beginDate = DataUtil.format(date, DataUtil.DATE_YYYY_MM_DD);
-			String  endDate = DataUtil.format(DataUtil.addDay(date, 1), DataUtil.DATE_YYYY_MM_DD);
+			String  beginDate = DataUtil.getStartTime();
+			String  endDate = DataUtil.getEndTime();
 			entity.setCreateDateStr(beginDate);
 			
 			entity.setBeginDate(beginDate);

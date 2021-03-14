@@ -49,7 +49,7 @@
 	<div id="table_list">
 		<%@ include file="/WEB-INF/pages/nailorder/analys_list.jsp" %>
 	</div>
-	<div>
+	<div style="padding:20px;line-height:2;">
 		说明：默认当天数据<br/>
 		1、计算：<br/>①涉及到小数点四舍五入处理。<br/>
 		②保留两位小数。	
@@ -79,6 +79,18 @@
 					
 		 form.on('submit(searchFilter)', function (data) {
 				data = JSON.parse(JSON.stringify(data.field));
+				
+			     var loading = layer.load(2, { //icon支持传入0-2
+		   		    shade: [0.5, 'gray'], //0.5透明度的灰色背景
+		   		    content: '统计分析中,请稍等操作...',
+		   		    success: function (layero) {
+		   		        layero.find('.layui-layer-content').css({
+		   		            'padding-top': '39px',
+		   		            'width': '60px'
+		   		        });
+		   		    }
+		   		});
+			     
 			     
 			     $.ajax({
 				url : "/admin/center/nailorder/analys/list.do",
@@ -86,6 +98,8 @@
 				data : data,
 				dataType : "text",
 				success : function(data) {
+					//关闭动画
+					layer.close(loading);
 					$("#table_list").html(data);
 				},
 				

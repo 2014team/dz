@@ -184,7 +184,7 @@ public class NailOrderController {
 		}
 		
 		entity.setArray(array);
-		Map<String,Object>  datamap = nailOrderService.analys(entity,true);
+		Map<String,Object>  datamap = nailOrderService.analys(entity);
 		
 		
 		
@@ -226,7 +226,7 @@ public class NailOrderController {
 		
 		
 		
-		Map<String,Object>  datamap = nailOrderService.analys(entity,false);
+		Map<String,Object>  datamap = nailOrderService.analys(entity);
 		
 		
 		

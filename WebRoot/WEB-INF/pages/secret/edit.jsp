@@ -69,7 +69,6 @@
         
           // 保存
           form.on('submit(save)', function(obj) {
-          debugger
           	data = JSON.parse(JSON.stringify(obj.field));
              //加载动画
 				var loading = layer.load(0, {
