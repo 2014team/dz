@@ -50,8 +50,9 @@
 		<%@ include file="/WEB-INF/pages/nailorder/analys_list.jsp" %>
 	</div>
 	<div style="padding:20px;line-height:2;">
-		说明：默认当天数据<br/>
-		1、计算：<br/>①涉及到小数点四舍五入处理。<br/>
+		说明：<br/>
+		1、默认当天数据<br/>
+		2、计算：<br/>①涉及到小数点四舍五入处理。<br/>
 		②保留两位小数。	
 		<br/>
 		3、计算公式<br/>
