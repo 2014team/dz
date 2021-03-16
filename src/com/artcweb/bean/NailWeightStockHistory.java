@@ -26,6 +26,11 @@ public class NailWeightStockHistory extends BaseBean{
 	 * 总价
 	 */
 	private String total;
+	
+	
+	// 图钉类型
+	private String nailConfigId;
+	
  
 	public Integer getNailWeightStockId(){
 		return this.nailWeightStockId;
@@ -55,4 +60,13 @@ public class NailWeightStockHistory extends BaseBean{
 	public void setTotal(String total){
 		this.total = total;
 	}
+
+	public String getNailConfigId() {
+		return nailConfigId;
+	}
+
+	public void setNailConfigId(String nailConfigId) {
+		this.nailConfigId = nailConfigId;
+	}
+	
 }

@@ -24,9 +24,21 @@ public class NailWeightStock extends BaseBean{
 	 */
 	private String oldSerialNumber;
 	/**
-	 * 库存(单位克)
+	 * 小钉库存(单位千克)
 	 */
-	private String stock;
+	private String stock_1;
+	/**
+	 * 玫瑰库存(单位千克)
+	 */
+	private String stock_2;
+	/**
+	* 钻石库存(单位千克)
+	*/
+	private String stock_3;
+	/**
+	* 大钉库存(单位千克)
+	*/
+	private String stock_4;
 	/**
 	 * 排序
 	 */
@@ -63,13 +75,47 @@ public class NailWeightStock extends BaseBean{
 	public void setOldSerialNumber(String oldSerialNumber){
 		this.oldSerialNumber = oldSerialNumber;
 	}
-	public String getStock(){
-		return this.stock;
-	}
 	
-	public void setStock(String stock){
-		this.stock = stock;
+	
+	public String getStock_1() {
+		return stock_1;
 	}
+
+	
+	public void setStock_1(String stock_1) {
+		this.stock_1 = stock_1;
+	}
+
+	
+	public String getStock_2() {
+		return stock_2;
+	}
+
+	
+	public void setStock_2(String stock_2) {
+		this.stock_2 = stock_2;
+	}
+
+	
+	public String getStock_3() {
+		return stock_3;
+	}
+
+	
+	public void setStock_3(String stock_3) {
+		this.stock_3 = stock_3;
+	}
+
+	
+	public String getStock_4() {
+		return stock_4;
+	}
+
+	
+	public void setStock_4(String stock_4) {
+		this.stock_4 = stock_4;
+	}
+
 	public Integer getSort(){
 		return this.sort;
 	}
