@@ -4,7 +4,6 @@
   	<%@include file="/WEB-INF/pages/common/head_layui.jsp" %>
   		<%@ taglib uri="/WEB-INF/tag/nailDrawingStock.tld" prefix="ns" %>
   </head>
-  
   <style>
 .layui-inline{
 margin: 8px	
