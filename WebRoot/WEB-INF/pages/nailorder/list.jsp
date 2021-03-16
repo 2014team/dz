@@ -5,7 +5,7 @@
   		<%@ taglib uri="/WEB-INF/tag/nailDrawingStock.tld" prefix="ns" %>
   </head>
   
-  <<style>
+  <style>
 .layui-inline{
 margin: 8px	
 }
@@ -411,7 +411,6 @@ function order_delAll(layfilterId,url) {
    
   //出库与退库
   function checkout(layfilterId,url,msg) {
-  debugger
 	var selectData = layui.table.checkStatus(layfilterId).data;
 	if(selectData.length < 1){	
 		layer.msg('请选择要'+msg+'的数据！', {icon: 2});
