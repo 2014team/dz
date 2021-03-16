@@ -3,7 +3,14 @@
   <head>
   	<%@include file="/WEB-INF/pages/common/head_layui.jsp" %>
   	<%@ taglib uri="/WEB-INF/tag/nailWeightStockTak.tld" prefix="nw" %>
+  	<%@ taglib uri="/WEB-INF/tag/nailConfig.tld" prefix="nc" %>
   </head>
+  
+  <<style>
+.layui-inline{
+margin: 8px	
+}
+</style>
   
    <body>
     <div class="x-nav">
@@ -27,12 +34,20 @@
 			</div>
 		</div>
 				  	
-		新编号：
           <div class="layui-inline">
 		   		 <select id="nailWeightStockId" name="nailWeightStockId" lay-search>
-	                <option value="">全部</option>
+	                <option value="">新编号</option>
 		          	<c:forEach items="${nw:getList() }" var="item">
 		          		<option value="${item.id }" >${item.newSerialNumber }</option>
+		          	</c:forEach>
+	            </select>
+		  </div>
+		  
+          <div class="layui-inline">
+		   		 <select id="nailConfigId" name="nailConfigId" lay-search>
+	                <option value="">  图钉类型</option>
+		          	<c:forEach items="${nc:getList() }" var="item">
+		          		<option value="${item.id }" >${item.nailType }</option>
 		          	</c:forEach>
 	            </select>
 		  </div>
@@ -134,6 +149,22 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 				,{
 					field : 'stock' ,
 					title : '库存量' ,
+				}
+				,{
+					field : 'nailConfigId' ,
+					title : '图钉类型' ,
+					templet : function(d) {
+					 if(d.nailConfigId == 1){
+						 return '小钉'
+					}else if(d.nailConfigId == 2){
+						 return '玫瑰'
+					}else if(d.nailConfigId == 3){
+					 return '钻石'
+					}else if(d.nailConfigId == 4){
+					 return '大钉'
+					}else{
+					return ""}
+				    }
 				}
 				,{
 					field : 'price' ,

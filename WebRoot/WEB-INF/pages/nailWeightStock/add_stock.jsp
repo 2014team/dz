@@ -12,7 +12,23 @@
 		
 			<div class="layui-form-item">
 			<label for="L_pass" class="layui-form-label"> 
-			<span class="x-red">*</span>库存量(单位克)
+			<span class="x-red">*</span>图钉类型：
+			</label>
+			<div class="layui-input-inline">
+				<select id="nailConfigId" name="nailConfigId" lay-search lay-verify="required">
+		                <option value="">全部</option>
+		                 	<c:forEach items="${nailconfigList }" var="item">
+		                 	<option value="${item.id }" >${item.nailType }</option>
+		                 	</c:forEach>
+		            </select>
+			</div>
+			<div class="layui-form-mid layui-word-aux">必选项</div>
+		</div>
+		
+		
+			<div class="layui-form-item">
+			<label for="L_pass" class="layui-form-label"> 
+			<span class="x-red">*</span>库存量(单位千克)
 			</label>
 			<div class="layui-input-inline">
 				<input type="text" id="stock" name="stock"
@@ -45,6 +61,9 @@
 			</div>
 			<div class="layui-form-mid layui-word-aux">必选项</div>
 		</div>
+		
+		
+			
 		
 			
 			<div class="layui-form-item">

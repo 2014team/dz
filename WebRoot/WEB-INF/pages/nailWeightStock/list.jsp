@@ -127,8 +127,17 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					title : '旧编号' ,
 				}
 				,{
-					field : 'stock' ,
-					title : '库存量(单位克)' ,
+					field : 'stock_1' ,
+					title : '小钉库存量(单位千克)' ,
+				},{
+					field : 'stock_2' ,
+					title : '玫瑰存量(单位千克)' ,
+				},{
+					field : 'stock_3' ,
+					title : '钻石存量(单位千克)' ,
+				},{
+					field : 'stock_4' ,
+					title : '大钉存量(单位千克)' ,
 				}
 				,{
 					field : 'sort' ,
@@ -323,7 +332,10 @@ function delAll(layfilterId,url) {
 							 rgbName: resp.data.rgbName,
 							 newSerialNumber: resp.data.newSerialNumber,
 							 oldSerialNumber: resp.data.oldSerialNumber,
-							 stock: resp.data.stock,
+							 stock_1: resp.data.stock_1,
+							 stock_2: resp.data.stock_2,
+							 stock_3: resp.data.stock_3,
+							 stock_4: resp.data.stock_4,
 							 sort: resp.data.sort,
 							 createDate: resp.data.createDate,
 							 updateDate: resp.data.updateDate,

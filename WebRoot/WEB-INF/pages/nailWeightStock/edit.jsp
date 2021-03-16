@@ -52,11 +52,44 @@
 				
 				<div class="layui-form-item">
 				<label for="L_pass" class="layui-form-label"> 
-				<span class="x-red">*</span>库存(单位克)：
+				<span class="x-red">*</span>小钉库存(单位千克)：
 				</label>
 				<div class="layui-input-inline">
-					<input type="text" id="stock" name="stock"
-						value="${entity.stock}"   lay-verify="required"
+					<input type="text" id="stock_1" name="stock_1"
+						value="${entity.stock_1}"   lay-verify="required|number"
+						autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">必选项</div>
+			</div> 
+				<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label"> 
+				<span class="x-red">*</span>玫瑰库存(单位千克)：
+				</label>
+				<div class="layui-input-inline">
+					<input type="text" id="stock_2" name="stock_2"
+						value="${entity.stock_2}"   lay-verify="required|number"
+						autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">必选项</div>
+			</div> 
+				<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label"> 
+				<span class="x-red">*</span>砖石库存(单位千克)：
+				</label>
+				<div class="layui-input-inline">
+					<input type="text" id="stock_3" name="stock_3"
+						value="${entity.stock_3}"   lay-verify="required|number"
+						autocomplete="off" class="layui-input">
+				</div>
+				<div class="layui-form-mid layui-word-aux">必选项</div>
+			</div> 
+				<div class="layui-form-item">
+				<label for="L_pass" class="layui-form-label"> 
+				<span class="x-red">*</span>大钉库存(单位千克)：
+				</label>
+				<div class="layui-input-inline">
+					<input type="text" id="stock_4" name="stock_4"
+						value="${entity.stock_4}"   lay-verify="required|number"
 						autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-form-mid layui-word-aux">必选项</div>
