@@ -51,6 +51,7 @@ import com.artcweb.dao.NailWeightStockDao;
 import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.CheckoutFlagEnum;
 import com.artcweb.enums.NailImageTypeEnum;
+import com.artcweb.enums.NailTypeEnum;
 import com.artcweb.enums.ThirdFlagEnum;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.util.DataUtil;
@@ -742,20 +743,60 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		// 出库验证,退库不需要验证
 		if(ckeckOutFlag){
 			// 检查图钉
+			
 			if (null != nailInventoryMap && nailInventoryMap.size() > 0) {
 				for (Entry<String, Inventory> mapping : nailInventoryMap.entrySet()) {
+					String key = mapping.getKey();
+					if(key.equals("0.0.0")){
+						System.out.println(11);
+					}
 					Inventory inventory = mapping.getValue();
-
 					String newSerialNumber = inventory.getNewSerialNumber();
 
-					String stock = inventory.getStock();
+					String nailConfigId=  inventory.getNailConfigId();
+					if(StringUtils.isEmpty(nailConfigId)){
+						continue;
+					}
+					String stock_1 = inventory.getStock_1();
+					String stock_2 = inventory.getStock_2();
+					String stock_3 = inventory.getStock_3();
+					String stock_4 = inventory.getStock_4();
+//					String nailType = "";
+//					if (String.valueOf(NailTypeEnum.SMALL.getValue()).equals(nailConfigId)) {
+//						stock_1 = inventory.getStock_1();
+//						nailType = NailTypeEnum.SMALL.getDisplayName();
+//					} else if (String.valueOf(NailTypeEnum.ROSE.getValue()).equals(nailConfigId)) {
+//						// 玫瑰库存相加
+//						stock = inventory.getStock_2();
+//						nailType = NailTypeEnum.ROSE.getDisplayName();
+//					} else if (String.valueOf(NailTypeEnum.DIAMOND.getValue()).equals(nailConfigId)) {
+//						// 砖石库存相加
+//						stock = inventory.getStock_3();
+//						nailType = NailTypeEnum.DIAMOND.getDisplayName();
+//					} else if (String.valueOf(NailTypeEnum.BIG.getValue()).equals(nailConfigId)) {
+//						// 打钉库存相加
+//						stock = inventory.getStock_4();
+//						nailType = NailTypeEnum.BIG.getDisplayName();
+//					}
 
-					BigDecimal stockBG = new BigDecimal(stock);
+
+					BigDecimal stock_1BG = new BigDecimal(stock_1);
+					BigDecimal stock_2BG = new BigDecimal(stock_2);
+					BigDecimal stock_3BG = new BigDecimal(stock_3);
+					BigDecimal stock_4BG = new BigDecimal(stock_4);
 
 					// 库存<出库
-					if (stockBG.compareTo(BigDecimal.ZERO) < 0) {
-
-						return "新编号【"+newSerialNumber + "】库存不足,出库失败!";
+					if (stock_1BG.compareTo(BigDecimal.ZERO) == -1) {
+						return "小钉新编号【"+newSerialNumber + "】库存不足,出库失败!";
+					}
+					if (stock_2BG.compareTo(BigDecimal.ZERO) == -1) {
+						return "玫瑰钉新编号【"+newSerialNumber + "】库存不足,出库失败!";
+					}
+					if (stock_3BG.compareTo(BigDecimal.ZERO) == -1) {
+						return "钻石钉新编号【"+newSerialNumber + "】库存不足,出库失败!";
+					}
+					if (stock_4BG.compareTo(BigDecimal.ZERO) == -1) {
+						return "大钉新编号【"+newSerialNumber + "】库存不足,出库失败!";
 					}
 				}
 			}
@@ -772,7 +813,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 					BigDecimal numberBG = new BigDecimal(number);
 
 					// 库存<出库
-					if (numberBG.compareTo(BigDecimal.ZERO) < 0) {
+					if (numberBG.compareTo(BigDecimal.ZERO) == -1) {
 
 						return "图纸【"+style + "】库存不足,出库失败!";
 					}
@@ -811,8 +852,11 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 				Integer id = nailWeightStock.getId();
 				String rgb = nailWeightStock.getRgb();
 				String newSerialNumber = nailWeightStock.getNewSerialNumber();
-				String stock = nailWeightStock.getStock();
-				Inventory inventory = new Inventory(id,rgb, newSerialNumber, stock);
+				String stock_1 = nailWeightStock.getStock_1();
+				String stock_2 = nailWeightStock.getStock_2();
+				String stock_3 = nailWeightStock.getStock_3();
+				String stock_4 = nailWeightStock.getStock_4();
+				Inventory inventory = new Inventory(id,rgb, newSerialNumber, stock_1, stock_2, stock_3, stock_4);
 				rgbMap.put(rgb, inventory);
 			}
 		}
@@ -821,6 +865,9 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		// 统计出库图钉重量
 		if(null != list && list.size() > 0){
 			for (NailOrder nailOrder : list) {
+				
+				String nailConfigId = nailOrder.getNailConfigId();
+				
 				String nailCountDetail = nailOrder.getNailCountDetail();
 				// 钉子统计详情信息
 				if(StringUtils.isNotBlank(nailCountDetail)){
@@ -835,31 +882,9 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 				        	// 重量
 				        	
 				        	String rgb = nailCount.getRgb();
-				        	String requreWeight = nailCount.getRequreWeight();
-				        	
 				        	Inventory inventory = rgbMap.get(rgb);
 				        	if(null != inventory){
-				        		// 统计库存重量
-				        		String ckeckOutNumberDeal =StringUtils.isEmpty(inventory.getCkeckOutNumber())?"0":inventory.getCkeckOutNumber();
-				        		BigDecimal ckeckOutNumberMap = new BigDecimal(ckeckOutNumberDeal);
-				        		BigDecimal weight = new BigDecimal(requreWeight);
-				        		BigDecimal  ckeckOutNumber = ckeckOutNumberMap.add(weight);
-				        		
-				        		
-				        		
-				        		BigDecimal stockMap = null;
-				        		BigDecimal  stock = null;
-				        		if(ckeckOutFlag){
-				        			stockMap = new BigDecimal(inventory.getStock());
-				        			stock = stockMap.subtract(weight);
-				        		}else{
-				        			stockMap = new BigDecimal(inventory.getStock());
-				        			stock = stockMap.add(weight);
-				        		}
-				        		
-				        		inventory.setStock(stock.toString());
-				        		inventory.setCkeckOutNumber(ckeckOutNumber.toString());
-				        		
+				        		inventory = inventoryDeal(inventory, nailCount, nailConfigId, ckeckOutFlag);
 				        		rgbMap.put(rgb, inventory);
 				        	}
 			            } 
@@ -872,6 +897,60 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		
 	}
 	
+	
+	public Inventory inventoryDeal(Inventory inventory, NailCount nailCount, String nailConfigId,
+			boolean ckeckOutFlag) {
+		if (StringUtils.isNotEmpty(nailConfigId)) {
+
+			BigDecimal stockMap = null;
+			BigDecimal stock = null;
+			String requreWeight = nailCount.getRequreWeight();
+			BigDecimal weight = new BigDecimal(requreWeight);
+			String inventoryStock = null;
+			if (String.valueOf(NailTypeEnum.SMALL.getValue()).equals(nailConfigId)) {
+				inventoryStock = inventory.getStock_1();
+
+			} else if (String.valueOf(NailTypeEnum.ROSE.getValue()).equals(nailConfigId)) {
+				// 玫瑰库存相加
+				inventoryStock = inventory.getStock_2();
+			} else if (String.valueOf(NailTypeEnum.DIAMOND.getValue()).equals(nailConfigId)) {
+				// 砖石库存相加
+				inventoryStock = inventory.getStock_3();
+			} else if (String.valueOf(NailTypeEnum.BIG.getValue()).equals(nailConfigId)) {
+				// 打钉库存相加
+				inventoryStock = inventory.getStock_4();
+			}
+
+			
+			if(StringUtils.isEmpty(inventoryStock)){
+				inventoryStock = "0";
+			}
+			if (ckeckOutFlag) {
+				stockMap = new BigDecimal(inventoryStock);
+				stock = stockMap.subtract(weight);
+			} else {
+				stockMap = new BigDecimal(inventoryStock);
+				stock = stockMap.add(weight);
+			}
+
+			if (String.valueOf(NailTypeEnum.SMALL.getValue()).equals(nailConfigId)) {
+				inventory.setStock_1(stock.toString());
+
+			} else if (String.valueOf(NailTypeEnum.ROSE.getValue()).equals(nailConfigId)) {
+				// 玫瑰库存相加
+				inventory.setStock_2(stock.toString());
+			} else if (String.valueOf(NailTypeEnum.DIAMOND.getValue()).equals(nailConfigId)) {
+				// 砖石库存相加
+				inventory.setStock_3(stock.toString());
+			} else if (String.valueOf(NailTypeEnum.BIG.getValue()).equals(nailConfigId)) {
+				// 打钉库存相加
+				inventory.setStock_4(stock.toString());
+			}
+
+		}
+		inventory.setNailConfigId(nailConfigId);
+		return inventory;
+	}
 	
 	/**
 	* @Title: getDrawInventory
@@ -944,11 +1023,23 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			//Map<String,Inventory> nailInventoryMap = getNailInventory(list);
 			 for(Entry<String, Inventory> mapping:nailInventoryMap.entrySet()){ 
 				 Inventory inventory = mapping.getValue();
-				 String stock = inventory.getStock();
+				 String nailConfigId = inventory.getNailConfigId();
 				 Integer primaryKey = inventory.getId();
 				 NailWeightStock nailWeightStock = nailWeightStockDao.get(primaryKey);
 				 if(null != nailWeightStock){
-					 nailWeightStock.setStock(stock);
+//				 if (String.valueOf(NailTypeEnum.SMALL.getValue()).equals(nailConfigId)) {
+					 	nailWeightStock.setStock_1(inventory.getStock_1());
+//
+//					} else if (String.valueOf(NailTypeEnum.ROSE.getValue()).equals(nailConfigId)) {
+//						// 玫瑰库存相加
+						nailWeightStock.setStock_2(inventory.getStock_2());
+//					} else if (String.valueOf(NailTypeEnum.DIAMOND.getValue()).equals(nailConfigId)) {
+//						// 砖石库存相加
+						nailWeightStock.setStock_3(inventory.getStock_3());
+//					} else if (String.valueOf(NailTypeEnum.BIG.getValue()).equals(nailConfigId)) {
+//						// 打钉库存相加
+						nailWeightStock.setStock_4(inventory.getStock_4());
+//					}
 					 Integer update = nailWeightStockDao.update(nailWeightStock);
 					 //logger.info("更新库存"+update);
 				 }

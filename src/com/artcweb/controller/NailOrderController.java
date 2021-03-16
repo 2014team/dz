@@ -84,7 +84,7 @@ public class NailOrderController {
 	@RequestMapping(value = "/add")
 	public String toAdd(HttpServletRequest request) {
 
-		// 获取图片类型
+		// 获取图钉类型
 		Map<String ,Object> paramMap = null;
 		List<NailConfig> nailconfigList = nailconfigService.select(paramMap);
 		request.setAttribute("nailconfigList", nailconfigList);

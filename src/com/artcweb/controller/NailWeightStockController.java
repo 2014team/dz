@@ -1,5 +1,8 @@
 package com.artcweb.controller;
 
+import java.util.List;
+import java.util.Map;
+
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -11,7 +14,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.artcweb.bean.LayUiResult;
+import com.artcweb.bean.NailConfig;
 import com.artcweb.bean.NailWeightStock;
+import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailWeightStockService;
 import com.artcweb.vo.NailWeightStockHistoryVo;
 import com.artcweb.vo.NailWeightStockVo;
@@ -29,6 +34,9 @@ public class NailWeightStockController {
 
 	@Autowired
 	private NailWeightStockService nailWeightStockService;
+	
+	@Autowired
+	private NailConfigService nailconfigService;
 
 	/**
 	 * @Title: toList
@@ -62,6 +70,12 @@ public class NailWeightStockController {
 	*/
 	@RequestMapping(value = "/addStock/{id}")
 	public String addStock(HttpServletRequest request,@PathVariable Integer id) {
+		
+		
+		// 获取图钉类型
+		Map<String ,Object> paramMap = null;
+		List<NailConfig> nailconfigList = nailconfigService.select(paramMap);
+		request.setAttribute("nailconfigList", nailconfigList);
 		request.setAttribute("id", id);
 		return "/nailWeightStock/add_stock";
 	}
@@ -158,9 +172,24 @@ public class NailWeightStockController {
 			layUiResult.failure("旧编号不能为空");
 			return layUiResult;
 		}
-	    String stock = entity.getStock();
-		if (StringUtils.isBlank(stock)) {
-			layUiResult.failure("库存(单位克)不能为空");
+	    String stock_1 = entity.getStock_1();
+		if (StringUtils.isBlank(stock_1)) {
+			layUiResult.failure("小钉库存(单位千克)不能为空");
+			return layUiResult;
+		}
+		String stock_2 = entity.getStock_2();
+		if (StringUtils.isBlank(stock_2)) {
+			layUiResult.failure("玫瑰库存(单位千克)不能为空");
+			return layUiResult;
+		}
+		String stock_3 = entity.getStock_3();
+		if (StringUtils.isBlank(stock_3)) {
+			layUiResult.failure("钻石库存(单位千克)不能为空");
+			return layUiResult;
+		}
+		String stock_4 = entity.getStock_4();
+		if (StringUtils.isBlank(stock_4)) {
+			layUiResult.failure("大钉库存(单位千克)不能为空");
 			return layUiResult;
 		}
 		Integer sort = entity.getSort();

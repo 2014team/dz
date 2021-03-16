@@ -38,28 +38,25 @@ margin: 8px
 		    <input class="layui-input" name="searchValue" id="searchValue" autocomplete="off">
 		  </div>
 		  
-		  出库：
           <div class="layui-inline">
 	        <select id="checkoutFlagX" name="checkoutFlagX" lay-search>
-	                 <option value="">全部</option>
-	                   <option value="1" >是</option>
-	                   <option value="0" >否</option>
+	                 <option value="">出库</option>
+	                   <option value="0" >是</option>
+	                   <option value="1" >否</option>
 	             </select>
 	    	</div>
 	    	
-		 来源：
           <div class="layui-inline">
-	        <select id="checkoutFlagX" name="checkoutFlagX" lay-search>
-	                 <option value="">全部</option>
-	                   <option value="1" >是</option>
-	                   <option value="0" >否</option>
+	        <select id="comefrom" name="comefrom" lay-search>
+	                 <option value="">来源</option>
+	                   <option value="0" >后台</option>
+	                   <option value="1" >H5</option>
 	             </select>
 	    	</div>
 	    	
-		款式：
           <div class="layui-inline">
 		   		 <select id="nailDrawingStockId" name="nailDrawingStockId" lay-search>
-	                <option value="">全部</option>
+	                <option value="">图钉款式</option>
 		          	<c:forEach items="${ns:getList() }" var="item">
 		          		<option value="${item.id }" >${item.style }</option>
 		          	</c:forEach>

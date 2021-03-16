@@ -21,6 +21,7 @@ public class NailWeightStockHistoryVo extends NailWeightStockHistory {
 	// 查询-结束时间
 	private String endDate;
 
+
 	public String getCreateDateStr() {
 		return createDateStr;
 	}
@@ -44,6 +45,7 @@ public class NailWeightStockHistoryVo extends NailWeightStockHistory {
 	public void setEndDate(String endDate) {
 		this.endDate = endDate;
 	}
+
 	
 	
 

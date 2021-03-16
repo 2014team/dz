@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,6 +15,7 @@ import com.artcweb.bean.NailWeightStock;
 import com.artcweb.dao.NailWeightStockDao;
 import com.artcweb.dao.NailWeightStockHistoryDao;
 import com.artcweb.dto.NailWeightStockDto;
+import com.artcweb.enums.NailTypeEnum;
 import com.artcweb.service.NailWeightStockService;
 import com.artcweb.vo.NailWeightStockHistoryVo;
 import com.artcweb.vo.NailWeightStockVo;
@@ -81,11 +83,11 @@ public class NailWeightStockServiceImpl extends BaseServiceImpl<NailWeightStock,
 		Integer update = null;
 		if(null != nailWeightStock){
 			
-			// 库存相加
-			 BigDecimal stockDB = new BigDecimal(nailWeightStock.getStock());
-			 BigDecimal stock = new BigDecimal(entity.getStock());
-			 BigDecimal addVal = stockDB.add(stock);
-			 nailWeightStock.setStock(addVal.toString());
+			 String nailConfigId = entity.getNailConfigId();
+			 String stock = entity.getStock();
+			 
+			 // 库存处理
+			 stockDeal(nailConfigId, stock, nailWeightStock);
 			 
 			 update = nailWeightStockDao.update(nailWeightStock);
 			 
@@ -98,4 +100,37 @@ public class NailWeightStockServiceImpl extends BaseServiceImpl<NailWeightStock,
 		return update;
 	}
 	
+	
+	public void stockDeal(String nailConfigId,String stock,NailWeightStock nailWeightStock){
+		if(StringUtils.isNotEmpty(nailConfigId)){
+			
+			if(String.valueOf(NailTypeEnum.SMALL.getValue()).equals(nailConfigId)){
+				// 小订库存相加
+				 BigDecimal stockDB = new BigDecimal(nailWeightStock.getStock_1());
+				 BigDecimal stockAdd = new BigDecimal(stock);
+				 BigDecimal stock_1 = stockDB.add(stockAdd);
+				 nailWeightStock.setStock_1(stock_1.toString());
+				
+			}else if(String.valueOf(NailTypeEnum.ROSE.getValue()).equals(nailConfigId)){
+				// 玫瑰库存相加
+				 BigDecimal stockDB = new BigDecimal(nailWeightStock.getStock_2());
+				 BigDecimal stockAdd = new BigDecimal(stock);
+				 BigDecimal stock_2 = stockDB.add(stockAdd);
+				 nailWeightStock.setStock_2(stock_2.toString());
+			}else if(String.valueOf(NailTypeEnum.DIAMOND.getValue()).equals(nailConfigId)){
+				// 砖石库存相加
+				 BigDecimal stockDB = new BigDecimal(nailWeightStock.getStock_3());
+				 BigDecimal stockAdd = new BigDecimal(stock);
+				 BigDecimal stock_3 = stockDB.add(stockAdd);
+				 nailWeightStock.setStock_3(stock_3.toString());
+			}else if(String.valueOf(NailTypeEnum.BIG.getValue()).equals(nailConfigId)){
+				// 打钉库存相加
+				 BigDecimal stockDB = new BigDecimal(nailWeightStock.getStock_4());
+				 BigDecimal stockAdd = new BigDecimal(stock);
+				 BigDecimal stock_4 = stockDB.add(stockAdd);
+				 nailWeightStock.setStock_4(stock_4.toString());
+			}
+		}
+		
+	};
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailWeightStockHistory;
+import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailWeightStockHistoryService;
 import com.artcweb.service.NailWeightStockService;
 import com.artcweb.vo.NailWeightStockHistoryVo;
@@ -29,7 +30,6 @@ public class NailWeightStockHistoryController {
 
 	@Autowired
 	private NailWeightStockHistoryService nailWeightStockHistoryService;
-
 	/**
 	 * @Title: toList
 	 * @Description: 到列表UI
