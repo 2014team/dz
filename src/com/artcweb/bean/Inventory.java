@@ -13,9 +13,12 @@ public class Inventory extends BaseBean{
 	private String newSerialNumber;
 	
 	/**
-	 * 图钉-库存(单位克)
+	 * 图钉-库存(单位千克)
 	 */
-	private String stock;
+	private String stock_1;
+	private String stock_2;
+	private String stock_3;
+	private String stock_4;
 	
 	
 	/**
@@ -42,6 +45,7 @@ public class Inventory extends BaseBean{
 	 */
 	private String drawCkeckOutNumber;
 	
+	private String nailConfigId;
 	
 
 	public String getRgb() {
@@ -60,14 +64,39 @@ public class Inventory extends BaseBean{
 		this.newSerialNumber = newSerialNumber;
 	}
 
-	public String getStock() {
-		return stock;
+	
+	public String getStock_1() {
+		return stock_1;
 	}
 
-	public void setStock(String stock) {
-		this.stock = stock;
+	public void setStock_1(String stock_1) {
+		this.stock_1 = stock_1;
 	}
-	
+
+	public String getStock_2() {
+		return stock_2;
+	}
+
+	public void setStock_2(String stock_2) {
+		this.stock_2 = stock_2;
+	}
+
+	public String getStock_3() {
+		return stock_3;
+	}
+
+	public void setStock_3(String stock_3) {
+		this.stock_3 = stock_3;
+	}
+
+	public String getStock_4() {
+		return stock_4;
+	}
+
+	public void setStock_4(String stock_4) {
+		this.stock_4 = stock_4;
+	}
+
 	public String getCkeckOutNumber() {
 		return ckeckOutNumber;
 	}
@@ -111,12 +140,15 @@ public class Inventory extends BaseBean{
 		this.drawCkeckOutNumber = drawCkeckOutNumber;
 	}
 
-	public Inventory(Integer id,String rgb, String newSerialNumber, String stock) {
+	public Inventory(Integer id,String rgb, String newSerialNumber, String stock_1, String stock_2, String stock_3, String stock_4) {
 		super();
 		this.id = id;
 		this.rgb = rgb;
 		this.newSerialNumber = newSerialNumber;
-		this.stock = stock;
+		this.stock_1 = stock_1;
+		this.stock_2 = stock_2;
+		this.stock_3 = stock_3;
+		this.stock_4 = stock_4;
 	}
 
 	public Inventory(Integer drawDrawingId, String style, Integer number) {
@@ -124,6 +156,14 @@ public class Inventory extends BaseBean{
 		this.drawDrawingId = drawDrawingId;
 		this.style = style;
 		this.number = number;
+	}
+
+	public String getNailConfigId() {
+		return nailConfigId;
+	}
+
+	public void setNailConfigId(String nailConfigId) {
+		this.nailConfigId = nailConfigId;
 	}
 	
 
