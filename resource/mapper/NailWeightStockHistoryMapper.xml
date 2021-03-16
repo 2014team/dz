@@ -9,6 +9,7 @@
 		<result property="stock" column="stock" />
 		<result property="price" column="price" />
 		<result property="total" column="total" />
+		<result property="nailConfigId" column="nail_config_id" />
 		<result property="createDate" column="create_date" />
 		<result property="updateDate" column="update_date" />
 	</resultMap>
@@ -20,6 +21,7 @@
 			,stock
 			,price
 			,total
+			,nail_config_id
 			,create_date
 			,update_date
 		)
@@ -29,6 +31,7 @@
 			,#{stock}
 			,#{price}
 			,#{total}
+			,#{nailConfigId}
 			,now()	
 			,now()	
 		)
@@ -54,6 +57,7 @@
 				,stock = #{stock}
 				,price = #{price}
 				,total = #{total}
+				,nail_config_id = #{nailConfigId}
 		where id = #{id}
 	</update>
 	
@@ -65,6 +69,7 @@
 				,stock
 				,price
 				,total
+				,nail_config_id
 				,create_date
 				,update_date
 		 from t_nail_weight_stock_history where id = #{id} 
@@ -79,6 +84,7 @@
 				,stock
 				,price
 				,total
+				,nail_config_id
 				,create_date
 				,update_date
 		 from
@@ -95,6 +101,9 @@
 			</if> 
 			<if test="null != total and ''!= total">
 			and total = #{total}
+			</if> 
+			<if test="null != nailConfigId and ''!= nailConfigId">
+			and nail_config_id = #{nailConfigId}
 			</if> 
 			<if test="null != createDate and ''!= createDate">
 			and create_date = #{createDate}
@@ -114,6 +123,7 @@
 				,stock
 				,price
 				,total
+				,nail_config_id
 				,create_date
 				,update_date
  		 from t_nail_weight_stock_history
@@ -129,6 +139,9 @@
 			</if> 
 			<if test="null != total and ''!= total">
 			and total = #{total}
+			</if> 
+			<if test="null != nailconfigid and ''!= nailconfigid">
+			and nail_config_id = #{nailconfigid}
 			</if> 
 			<if test="null != createDate and ''!= createDate">
 			and create_date = #{createDate}
@@ -148,6 +161,7 @@
 				,t.stock AS stock
 				,t.price AS price
 				,t.total AS total
+				,t.nail_config_id AS nailConfigId
 				,t.create_date AS createDate
 				,t.update_date AS updateDate
 				,tws.`rgb` AS rgb
@@ -171,6 +185,9 @@
 			</if> 
 			<if test="null != entity.total and ''!= entity.total">
 				and total = #{entity.total}
+			</if> 
+			<if test="null != entity.nailConfigId and ''!= entity.nailConfigId">
+				and nail_config_id = #{entity.nailConfigId}
 			</if> 
 			<if test="null != entity.createDateStr and '' != entity.createDateStr">
 						<![CDATA[  
@@ -202,6 +219,9 @@
 			</if> 
 			<if test="null != entity.total and ''!= entity.total">
 				and t.total = #{entity.total}
+			</if> 
+			<if test="null != entity.nailConfigId and ''!= entity.nailConfigId">
+				and nail_config_id = #{entity.nailConfigId}
 			</if> 
 			<if test="null != entity.createDateStr and '' != entity.createDateStr">
 						<![CDATA[  

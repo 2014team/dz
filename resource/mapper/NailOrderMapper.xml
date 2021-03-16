@@ -48,7 +48,7 @@
 	
 	<select id="getByBatch" parameterType="String" resultType="com.artcweb.bean.NailOrder">
 		select id as id,checkout_flag AS checkoutFlag,third_flag as thirdFlag ,nail_count_detail AS nailCountDetail,comefrom as comefrom,
-		checkout_flag as checkoutFlag, 
+		checkout_flag as checkoutFlag, nail_config_id as nailConfigId,
 		image_url as imageUrl,
 		nail_drawing_stock_id as nailDrawingStockId from
 		`t_nail_order`
@@ -231,7 +231,7 @@
 		ORDER BY id DESC
 	</select>
 	
-	<select id="select" parameterType="Map" resultType="com.artcweb.bean.NailOrder">
+	<select id="select" parameterType="Map" resultMap="result">
 		SELECT * FROM t_nail_order t
 		ORDER by id desc
 	</select>

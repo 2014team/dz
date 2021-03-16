@@ -8,7 +8,10 @@
 		<result property="rgb" column="rgb" />
 		<result property="newSerialNumber" column="new_serial_number" />
 		<result property="oldSerialNumber" column="old_serial_number" />
-		<result property="stock" column="stock" />
+		<result property="stock_1" column="stock_1" />
+		<result property="stock_2" column="stock_2" />
+		<result property="stock_3" column="stock_3" />
+		<result property="stock_4" column="stock_4" />
 		<result property="sort" column="sort" />
 		<result property="createDate" column="create_date" />
 		<result property="updateDate" column="update_date" />
@@ -20,7 +23,10 @@
 			rgb
 			,new_serial_number
 			,old_serial_number
-			,stock
+			,stock_1
+			,stock_2
+			,stock_3
+			,stock_4
 			,sort
 			,create_date
 			,update_date
@@ -30,7 +36,10 @@
 			#{rgb}
 			,#{newSerialNumber}
 			,#{oldSerialNumber}
-			,#{stock}
+			,#{stock_1}
+			,#{stock_2}
+			,#{stock_3}
+			,#{stock_4}
 			,#{sort}
 			,now()	
 			,now()	
@@ -56,7 +65,10 @@
 				,rgb = #{rgb}
 				,new_serial_number = #{newSerialNumber}
 				,old_serial_number = #{oldSerialNumber}
-				,stock = #{stock}
+				,stock_1 = #{stock_1}
+				,stock_2 = #{stock_2}
+				,stock_3 = #{stock_3}
+				,stock_4 = #{stock_4}
 				,sort = #{sort}
 		where id = #{id}
 	</update>
@@ -69,7 +81,10 @@
 				,rgb as rgbName
 				,new_serial_number
 				,old_serial_number
-				,stock
+				,stock_1
+				,stock_2
+				,stock_3
+				,stock_4
 				,sort
 				,create_date
 				,update_date
@@ -84,7 +99,10 @@
 				,rgb
 				,new_serial_number
 				,old_serial_number
-				,stock
+				,stock_1
+				,stock_2
+				,stock_3
+				,stock_4
 				,sort
 				,create_date
 				,update_date
@@ -100,8 +118,17 @@
 			<if test="null != oldSerialNumber and ''!= oldSerialNumber">
 			and old_serial_number = #{oldSerialNumber}
 			</if> 
-			<if test="null != stock and ''!= stock">
-			and stock = #{stock}
+			<if test="null != stock_1 and ''!= stock_1">
+			and stock_1 = #{stock_1}
+			</if> 
+			<if test="null != stock_2 and ''!= stock_2">
+			and stock_2 = #{stock_2}
+			</if> 
+			<if test="null != stock_3 and ''!= stock_3">
+			and stock_3 = #{stock_3}
+			</if> 
+			<if test="null != stock_4 and ''!= stock_4">
+			and stock_4 = #{stock_4}
 			</if> 
 			<if test="null != sort ">
 			and sort = #{sort}
@@ -123,7 +150,10 @@
 				,rgb
 				,new_serial_number
 				,old_serial_number
-				,stock
+				,stock_1
+				,stock_2
+				,stock_3
+				,stock_4
 				,sort
 				,create_date
 				,update_date
@@ -138,8 +168,17 @@
 			<if test="null != oldSerialNumber and ''!= oldSerialNumber">
 			and old_serial_number = #{oldSerialNumber}
 			</if> 
-			<if test="null != stock and ''!= stock">
-			and stock = #{stock}
+			<if test="null != stock_2 and ''!= stock_2">
+			and stock_2 = #{stock_2}
+			</if> 
+			<if test="null != stock_3 and ''!= stock_3">
+			and stock_3 = #{stock_3}
+			</if> 
+			<if test="null != stock_4 and ''!= stock_4">
+			and stock_4 = #{stock_4}
+			</if> 
+			<if test="null != stock_1 and ''!= stock_1">
+			and stock_1 = #{stock_1}
 			</if> 
 			<if test="null != sort ">
 			and sort = #{sort}
@@ -162,7 +201,10 @@
 				,t.rgb as rgbName
 				,t.new_serial_number as newSerialNumber
 				,t.old_serial_number as oldSerialNumber
-				,t.stock as stock
+				,t.stock_1 as stock_1
+				,t.stock_2 as stock_2
+				,t.stock_3 as stock_3
+				,t.stock_4 as stock_4
 				,t.sort as sort
 				,t.create_date as createDate
 				,t.update_date as updateDate
@@ -180,8 +222,17 @@
 			<if test="null != entity.oldSerialNumber and ''!= entity.oldSerialNumber">
 				and old_serial_number = #{entity.oldSerialNumber}
 			</if> 
-			<if test="null != entity.stock and ''!= entity.stock">
-				and stock = #{entity.stock}
+			<if test="null != entity.stock_1 and ''!= entity.stock_1">
+				and stock_1 = #{entity.stock_1}
+			</if> 
+			<if test="null != entity.stock_2 and ''!= entity.stock_2">
+				and stock_2 = #{entity.stock_2}
+			</if> 
+			<if test="null != entity.stock_3 and ''!= entity.stock_3">
+				and stock_3 = #{entity.stock_3}
+			</if> 
+			<if test="null != entity.stock_4 and ''!= entity.stock_4">
+				and stock_4 = #{entity.stock_4}
 			</if> 
 			<if test="null != entity.sort ">
 				and sort = #{entity.sort}
@@ -215,9 +266,18 @@
 			<if test="null != entity.oldSerialNumber and ''!= entity.oldSerialNumber">
 				and t.old_serial_number = #{entity.oldSerialNumber}
 			</if> 
-			<if test="null != entity.stock and ''!= entity.stock">
-				and t.stock = #{entity.stock}
+			<if test="null != entity.stock_1 and ''!= entity.stock_1">
+				and stock_1 = #{entity.stock_1}
 			</if> 
+			<if test="null != entity.stock_2 and ''!= entity.stock_2">
+				and stock_2 = #{entity.stock_2}
+			</if> 
+			<if test="null != entity.stock_3 and ''!= entity.stock_3">
+				and stock_3 = #{entity.stock_3}
+			</if> 
+			<if test="null != entity.stock_4 and ''!= entity.stock_4">
+				and stock_4 = #{entity.stock_4}
+			</if>  
 			<if test="null != entity.sort ">
 				and t.sort = #{entity.sort}
 			</if> 
