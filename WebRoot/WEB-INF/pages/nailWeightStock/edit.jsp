@@ -56,7 +56,7 @@
 				</label>
 				<div class="layui-input-inline">
 					<input type="text" id="stock_1" name="stock_1"
-						value="${entity.stock_1}"   lay-verify="required|number"
+						value="${empty entity.stock_1 ? '0' :entity.stock_1 }"   lay-verify="required|number"
 						autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-form-mid layui-word-aux">必选项</div>
@@ -67,7 +67,7 @@
 				</label>
 				<div class="layui-input-inline">
 					<input type="text" id="stock_2" name="stock_2"
-						value="${entity.stock_2}"   lay-verify="required|number"
+						value="${empty entity.stock_2 ? '0':entity.stock_2}"   lay-verify="required|number"
 						autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-form-mid layui-word-aux">必选项</div>
@@ -78,7 +78,7 @@
 				</label>
 				<div class="layui-input-inline">
 					<input type="text" id="stock_3" name="stock_3"
-						value="${entity.stock_3}"   lay-verify="required|number"
+						value="${empty entity.stock_3? '0': entity.stock_3}"   lay-verify="required|number"
 						autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-form-mid layui-word-aux">必选项</div>
@@ -89,14 +89,23 @@
 				</label>
 				<div class="layui-input-inline">
 					<input type="text" id="stock_4" name="stock_4"
-						value="${entity.stock_4}"   lay-verify="required|number"
+						value="${empty entity.stock_4 ? '0' :entity.stock_4 }"   lay-verify="required|number"
 						autocomplete="off" class="layui-input">
 				</div>
 				<div class="layui-form-mid layui-word-aux">必选项</div>
 			</div> 
 			</c:when>
 			<c:otherwise>
-				<input type="hidden" id="stock" name="stock"
+				<input type="hidden" id="stock_1" name="stock_1"
+						value="0"   lay-verify="required"
+						autocomplete="off" class="layui-input">
+				<input type="hidden" id="stock_2" name="stock_2"
+						value="0"   lay-verify="required"
+						autocomplete="off" class="layui-input">
+				<input type="hidden" id="stock_3" name="stock_3"
+						value="0"   lay-verify="required"
+						autocomplete="off" class="layui-input">
+				<input type="hidden" id="stock_4" name="stock_4"
 						value="0"   lay-verify="required"
 						autocomplete="off" class="layui-input">
 			</c:otherwise>
