@@ -1385,16 +1385,16 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 						
 						// 计算平均值
 						if(StringUtils.isNotEmpty(analys.getNailNumber())){
-							String nailNumberAvg = new BigDecimal(analys.getNailNumber()).divide(new BigDecimal(rgbSize),2,BigDecimal.ROUND_HALF_UP).toString();
+							String nailNumberAvg = new BigDecimal(analys.getNailNumber()).divide(new BigDecimal(rgbSize),4,BigDecimal.ROUND_HALF_UP).toString();
 							analys.setNailNumberAvg(nailNumberAvg);
 						}
 						if(StringUtils.isNotEmpty(analys.getRequrePieces())){
-							String requrePiecesAvg = new BigDecimal(analys.getRequrePieces()).divide(new BigDecimal(rgbSize),2,BigDecimal.ROUND_HALF_UP).toString();
+							String requrePiecesAvg = new BigDecimal(analys.getRequrePieces()).divide(new BigDecimal(rgbSize),4,BigDecimal.ROUND_HALF_UP).toString();
 							analys.setRequrePiecesAvg(requrePiecesAvg);
 							
 						}
 						if(StringUtils.isNotEmpty(analys.getRequreWeight())){
-							String requreWeightAvg = new BigDecimal(analys.getRequreWeight()).divide(new BigDecimal(rgbSize),2,BigDecimal.ROUND_HALF_UP).toString();
+							String requreWeightAvg = new BigDecimal(analys.getRequreWeight()).divide(new BigDecimal(rgbSize),4,BigDecimal.ROUND_HALF_UP).toString();
 							analys.setRequreWeightAvg(requreWeightAvg);
 						}
 						
@@ -1402,18 +1402,22 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 						
 						
 						// 计算比率
+//						if(StringUtils.isNotEmpty(totalNailNumber)){
+//							String nailNumberRatio = new BigDecimal(analys.getNailNumber()).divide(new BigDecimal(totalNailNumber),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).toBigInteger().toString();
+//							analys.setNailNumberRatio(nailNumberRatio+"%");
+//						}
 						if(StringUtils.isNotEmpty(totalNailNumber)){
-							String nailNumberRatio = new BigDecimal(analys.getNailNumber()).divide(new BigDecimal(totalNailNumber),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).toBigInteger().toString();
+							String nailNumberRatio = (new BigDecimal(analys.getNailNumber()).divide(new BigDecimal(totalNailNumber),4,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100))).toString();
 							analys.setNailNumberRatio(nailNumberRatio+"%");
 						}
 						
 						if(StringUtils.isNotEmpty(totalWeight)){
-							String requreWeightRatio = new BigDecimal(analys.getRequreWeight()).divide(new BigDecimal(totalWeight),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).toBigInteger().toString();
+							String requreWeightRatio = new BigDecimal(analys.getRequreWeight()).divide(new BigDecimal(totalWeight),4,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).toString();
 							analys.setRequreWeightRatio(requreWeightRatio+"%");
 						}
 						
 						if(StringUtils.isNotEmpty(totalrPieces)){
-							String requrePiecesRatio = new BigDecimal(analys.getRequrePieces()).divide(new BigDecimal(totalrPieces),2,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).toBigInteger().toString();
+							String requrePiecesRatio = new BigDecimal(analys.getRequrePieces()).divide(new BigDecimal(totalrPieces),4,BigDecimal.ROUND_HALF_UP).multiply(new BigDecimal(100)).toString();
 							analys.setRequrePiecesRatio(requrePiecesRatio+"%");
 						}
 				}
