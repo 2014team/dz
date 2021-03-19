@@ -1443,6 +1443,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	
 	}
 	
+	
 	@Override
 	public Analys getAnalysOne(Map<String,Analys> nailDetailConfigMap){
 		Analys analys = null; 
