@@ -64,6 +64,7 @@ public class NailOrderController {
 	@Autowired
 	private NailDrawingStockService nailDrawingStockService;
 	
+	
 
 	/**
 	 * @Title: toList
