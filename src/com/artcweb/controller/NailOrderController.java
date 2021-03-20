@@ -30,7 +30,6 @@ import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailConfig;
 import com.artcweb.bean.NailCount;
 import com.artcweb.bean.NailDrawingStock;
-import com.artcweb.bean.NailDrawingStockHistory;
 import com.artcweb.bean.NailOrder;
 import com.artcweb.bean.NailPictureFrame;
 import com.artcweb.bean.NailTotalCount;
