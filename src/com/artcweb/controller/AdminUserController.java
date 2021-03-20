@@ -25,7 +25,6 @@ import com.artcweb.util.SessionUtil;
 @RequestMapping("/admin")
 public class AdminUserController {
 
-
 	@Autowired
 	private AdminUserService adminUserService;
 
