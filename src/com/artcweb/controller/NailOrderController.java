@@ -4,10 +4,13 @@ package com.artcweb.controller;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,10 +46,13 @@ import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailDrawingStockService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailPictureFrameService;
+import com.artcweb.util.DateUtil;
+import com.artcweb.util.ExcelUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
 import com.artcweb.util.MapUtil;
 import com.artcweb.vo.NailOrderVo;
+
 
 
 @Controller
@@ -188,7 +194,7 @@ public class NailOrderController {
 		
 		
 		
-		// 订单统计
+		// 图纸统计
 		Map<String,AnalysNailConfig> nailConfigMap =  null;
 		// 图钉统计
 		Map<String,Analys>  analysMap = null;
@@ -230,7 +236,7 @@ public class NailOrderController {
 		
 		
 		
-		// 订单统计
+		// 图纸统计
 		Map<String,AnalysNailConfig> nailConfigMap =  null;
 		// 图钉统计
 		Map<String,Analys>  analysMap = null;
@@ -876,7 +882,7 @@ public class NailOrderController {
 	* @param request
 	*/
 	@RequestMapping("/export/{id}")
-	public void export(@PathVariable String id ,HttpServletResponse response,HttpServletRequest request) {
+	public void export(@PathVariable String id ,HttpServletRequest request,HttpServletResponse response) {
 		if(StringUtils.isEmpty(id)){
 			logger.error("id参数错误,不能为空");
 			return ;
@@ -892,5 +898,114 @@ public class NailOrderController {
 		
 	}
 	
+	
+	/**
+	* @Title: exportNail
+	* @Description: 导出图钉
+	* @author zhuzq
+	* @date  2021年3月20日 下午5:44:36
+	* @param entity
+	* @param checkoutFlagX
+	* @param request
+	* @return
+	*/
+	@RequestMapping(value = "/export/nail")
+	public void exportNail(NailOrderVo entity, Integer checkoutFlagX,HttpServletRequest request,HttpServletResponse response) {
+		// 特殊处理
+		if(null != checkoutFlagX){
+			entity.setCheckoutFlag(checkoutFlagX);
+		}else{
+			entity.setCheckoutFlag(-1);
+		}
+		Map<String,Object>  datamap = nailOrderService.analys(entity);
+		// 图钉统计
+		Map<String,Analys>  analysMap = null;
+		
+		String [] columnWidth ={"12","12","12","12","12","12","12","12","12","12"}; 
+		String[][] columnNames =  new String[][] {
+			{"编号","数量","重量","包数","数量平均值","重量平均值","包数平均值","数量占比","重量占比","包数占比"}, 
+			{"indexId","nailNumber","requreWeight","requrePieces","nailNumberAvg","requreWeightAvg","requrePiecesAvg","nailNumberRatio","requreWeightRatio","requrePiecesRatio"}
+			};
+		List<Map<String,Object>> dataRows = new LinkedList<Map<String,Object>>();
+		
+		if(null != datamap && datamap.size() > 0){
+			analysMap = (Map<String, Analys>) datamap.get("analysMap");
+			if(null != analysMap && analysMap.size() > 0){
+				for (Entry<String, Analys> e : analysMap.entrySet()) {
+					Analys al = e.getValue();
+					 Map<String, Object> map = new HashMap<String, Object>();
+					 map.put("indexId", al.getIndexId());
+					 map.put("nailNumber", al.getNailNumber());
+					 map.put("requreWeight", al.getRequreWeight());
+					 map.put("requrePieces", al.getRequrePieces());
+					 map.put("nailNumberAvg", al.getNailNumberAvg());
+					 map.put("requreWeightAvg", al.getRequreWeightAvg());
+					 map.put("requrePiecesAvg", al.getRequrePiecesAvg());
+					 map.put("nailNumberRatio", al.getNailNumberRatio());
+					 map.put("requreWeightRatio", al.getRequreWeightRatio());
+					 map.put("requrePiecesRatio", al.getRequrePiecesRatio());
+					 dataRows.add(map);
+					
+				}
+				
+			}
+			
+		}
+		String excelName = "图钉统计分析"+ExcelUtil.getFileName();
+		ExcelUtil.exportExcel(request, response, excelName, columnWidth, columnNames, dataRows);
+		
+	}
+	
+	/**
+	* @Title: exportDrawing
+	* @Description: 导出图纸
+	* @author zhuzq
+	* @date  2021年3月20日 下午10:03:54
+	* @param entity
+	* @param checkoutFlagX
+	* @param request
+	* @param response
+	*/
+	@RequestMapping(value = "/export/drawing")
+	public void exportDrawing(NailOrderVo entity, Integer checkoutFlagX,HttpServletRequest request,HttpServletResponse response) {
+		// 特殊处理
+		if(null != checkoutFlagX){
+			entity.setCheckoutFlag(checkoutFlagX);
+		}else{
+			entity.setCheckoutFlag(-1);
+		}
+		
+		Map<String,Object>  datamap = nailOrderService.analys(entity);
+		Map<String,AnalysNailConfig> nailConfigMap =  null;
+		// 图钉统计
+		if(null != datamap && datamap.size() > 0){
+			nailConfigMap = (Map<String,AnalysNailConfig>) datamap.get("analysNailConfigMap");
+		}
+				
+		String [] columnWidth ={"60","60"}; 
+		String[][] columnNames =  new String[][] {
+			{"款式","数量"}, 
+			{"nailType","total"}
+			};
+		List<Map<String,Object>> dataRows = new LinkedList<Map<String,Object>>();
+		
+		if(null != datamap && datamap.size() > 0){
+			nailConfigMap = (Map<String,AnalysNailConfig>) datamap.get("analysNailConfigMap");
+			if(null != nailConfigMap && nailConfigMap.size() > 0){
+				for (Entry<String, AnalysNailConfig> e : nailConfigMap.entrySet()) {
+					AnalysNailConfig al = e.getValue();
+					 Map<String, Object> map = new HashMap<String, Object>();
+					 map.put("nailType", al.getNailType());
+					 map.put("total", al.getTotal());
+					 dataRows.add(map);
+					
+				}
+				
+			}	
+				
+	}
+		String excelName = "图纸统计分析"+ExcelUtil.getFileName();
+		ExcelUtil.exportExcel(request, response, excelName, columnWidth, columnNames, dataRows);
+	}
 	
 }

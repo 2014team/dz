@@ -23,7 +23,7 @@ import com.artcweb.enums.SiteEnum;
 import com.artcweb.service.OrderService;
 import com.artcweb.service.SecretService;
 import com.artcweb.service.WhileService;
-import com.artcweb.util.DataUtil;
+import com.artcweb.util.DateUtil;
 import com.artcweb.vo.OrderVo;
 
 @Controller
@@ -103,10 +103,10 @@ public class ApiOrderController {
 			Date createDate = order.getCreateDate();
 			String dateStr = "2020-09-05 17:00:00";
 			try {
-				Date startDate = DataUtil.parse(dateStr, DataUtil.DATE_YYYY_MM_DD_HH_MM_SS);
+				Date startDate = DateUtil.parse(dateStr, DateUtil.DATE_YYYY_MM_DD_HH_MM_SS);
 				
 				//时间比较
-				boolean dateCompare = DataUtil.compareToLte(createDate, startDate);
+				boolean dateCompare = DateUtil.compareToLte(createDate, startDate);
 				//false证明是以前的订单
 				if(!dateCompare){
 					result.success(order);

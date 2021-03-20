@@ -19,7 +19,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.artcweb.enums.ImagePrefixNameEnum;
 import com.artcweb.enums.ImageSuffixNameEnum;
 import com.artcweb.service.ImageService;
-import com.artcweb.util.DataUtil;
+import com.artcweb.util.DateUtil;
 import com.artcweb.util.ImageUtil;
 import com.artcweb.util.UploadUtil;
 
@@ -75,8 +75,8 @@ public class ImageServiceImpl implements ImageService {
 		// 新文件名称
 		String newFileName = UploadUtil.getNewFileName(ext);
 
-		String year = String.valueOf(DataUtil.getYear(new Date()));
-		String month = String.valueOf(DataUtil.getMonth(new Date()));
+		String year = String.valueOf(DateUtil.getYear(new Date()));
+		String month = String.valueOf(DateUtil.getMonth(new Date()));
 		String folder = year + "/" + month + "/";
 		uploadPath = uploadPath + folder;
 
@@ -117,8 +117,8 @@ public class ImageServiceImpl implements ImageService {
 		String newFileName = UploadUtil.getNewFileName(ext);
 		newFileName = "min_"+newFileName;
 
-		String year = String.valueOf(DataUtil.getYear(new Date()));
-		String month = String.valueOf(DataUtil.getMonth(new Date()));
+		String year = String.valueOf(DateUtil.getYear(new Date()));
+		String month = String.valueOf(DateUtil.getMonth(new Date()));
 		String folder = year + "/" + month + "/";
 		uploadPath = uploadPath + folder;
 
@@ -156,8 +156,8 @@ public class ImageServiceImpl implements ImageService {
 		String newFileName = UploadUtil.getNewFileName(ext);
 		newFileName = prefix.getDeclaringClass()+newFileName;
 		
-		String year = String.valueOf(DataUtil.getYear(new Date()));
-		String month = String.valueOf(DataUtil.getMonth(new Date()));
+		String year = String.valueOf(DateUtil.getYear(new Date()));
+		String month = String.valueOf(DateUtil.getMonth(new Date()));
 		String folder = year + "/" + month + "/";
 		uploadPath = uploadPath + folder;
 		

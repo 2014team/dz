@@ -13,4 +13,5 @@
 <script type="text/javascript" src="/js/crud.js?t=<%=new java.util.Date().getTime() %>"></script>
 <script type="text/javascript" src="/js/date_util.js?t=<%=new java.util.Date().getTime() %>"></script>
 <link rel="stylesheet" type="text/css" href="/lib/layui/css/layui.css">
+<link rel="stylesheet" type="text/css" href="/css/xcss.css?t=<%=new java.util.Date().getTime() %>">
 <%@include file="/WEB-INF/pages/common/jsp_jstl.jsp"%>

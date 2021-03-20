@@ -38,10 +38,21 @@
 	             </select>
 	    	</div>
 	    	
-			<button type="button" class="layui-btn layui-btn-normal"
+			<button type="button" class="layui-btn"
 					style="position: absolute;" lay-submit lay-filter="searchFilter">搜索</button>
-		
-	</div>
+			
+			
+			<div class="layui-btn-container xbtpt10">
+   			  <button type="button" lay-submit class="layui-btn layui-btn-sm" onclick="exportCount('/admin/center/nailorder/export/nail.do')">
+				<i class="layui-icon">&#xe605;</i>
+				图钉统计导出
+			</button>
+   			  <button type="button" lay-submit class="layui-btn layui-btn-sm" onclick="exportCount('/admin/center/nailorder/export/drawing.do')">
+				<i class="layui-icon">&#xe605;</i>
+				图纸导出统计
+			 </button> 
+  			</div>
+		</div>
 	</form>
 	
 	
@@ -105,14 +116,15 @@
 				},
 				
 				});
-	  
-	  
-	    });  
-          
+	   	 });  
+	    
           
 		}); 
 		
-       
+       //导出统计
+       function exportCount(url){
+       		$("#rendReloadId").attr("action",url).submit();
+       }
     
           
     </script>

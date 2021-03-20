@@ -107,8 +107,8 @@ public class ImageUtil {
 			}
 		}
 		
-		String year = String.valueOf(DataUtil.getYear(new Date()));
-		String month = String.valueOf(DataUtil.getMonth(new Date()));
+		String year = String.valueOf(DateUtil.getYear(new Date()));
+		String month = String.valueOf(DateUtil.getMonth(new Date()));
 		String folder = year + "/" + month + "/";
 		uploadPath = uploadPath + folder;
 		
@@ -175,8 +175,8 @@ public class ImageUtil {
 			
 			
 			
-			String year = String.valueOf(DataUtil.getYear(new Date()));
-			String month = String.valueOf(DataUtil.getMonth(new Date()));
+			String year = String.valueOf(DateUtil.getYear(new Date()));
+			String month = String.valueOf(DateUtil.getMonth(new Date()));
 			String folder = year + "/" + month + "/";
 			uploadPath = uploadPath + folder;
 

@@ -53,7 +53,8 @@ import com.artcweb.enums.NailImageTypeEnum;
 import com.artcweb.enums.NailTypeEnum;
 import com.artcweb.enums.ThirdFlagEnum;
 import com.artcweb.service.NailOrderService;
-import com.artcweb.util.DataUtil;
+import com.artcweb.util.DateUtil;
+import com.artcweb.util.ExcelUtil;
 import com.artcweb.util.ExportExcelUtil;
 import com.artcweb.util.FileUtil;
 import com.artcweb.util.GsonUtil;
@@ -538,7 +539,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			 String[] columnWidth = getColumnWidth();
 			 String[][] columnNames = getColumnNames();
 			 String excelName = entity.getImageName();
-			 ExportExcelUtil.exportExcel(request, response, columnNames, columnWidth, rows, excelName,entity);
+			 ExcelUtil.exportExcel(request, response, columnNames, columnWidth, rows, excelName,entity);
 		 }
 		 
 	}
@@ -1154,8 +1155,8 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 		}
 		
 		if(StringUtils.isEmpty(array) && StringUtils.isEmpty(createDateStr) && StringUtils.isEmpty(nailConfigIde) && checkoutFlag == -1){
-			String  beginDate = DataUtil.getStartTime();
-			String  endDate = DataUtil.getEndTime();
+			String  beginDate = DateUtil.getStartTime();
+			String  endDate = DateUtil.getEndTime();
 			entity.setCreateDateStr(beginDate);
 			
 			entity.setBeginDate(beginDate);

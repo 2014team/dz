@@ -9,7 +9,7 @@ import java.util.Map;
 
 import com.steadystate.css.ParseException;
 
-public class DataUtil {
+public class DateUtil {
 	
 	/**
 	 * 存放不同的日期模板格式的sdf的Map
@@ -33,6 +33,7 @@ public class DataUtil {
 	public static final String DATE_YYYY_MM_DD_HH_MM_SS = "yyyy-MM-dd HH:mm:ss";
 	public static final Integer DATE_YYYY_MM_DD_HH_MM_SS_LENGTH = 19;
 	
+	public static final String DATEYYYYMMDDHHMMSS = "yyyyMMddHHmmss";
 	/**
 	* @Title: getYear
 	* @Description: 获取年
