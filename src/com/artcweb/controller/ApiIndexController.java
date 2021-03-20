@@ -18,6 +18,7 @@ import com.artcweb.vo.WeixinVo;
 * @ClassName: ApiIndexController
 * @Description: 首页
 */
+
 @Controller
 public class ApiIndexController {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(ApiIndexController.class);
