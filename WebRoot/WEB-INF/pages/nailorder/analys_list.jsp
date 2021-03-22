@@ -2,6 +2,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
+
+
+刷选条件：<c:if test="${not empty arrayIdSize }">
+		勾选 ${arrayIdSize}天数据
+</c:if>
+
+
 <table class="layui-table"; >
 	<thead >
 		<tr >

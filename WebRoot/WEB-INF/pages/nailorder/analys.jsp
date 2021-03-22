@@ -55,10 +55,7 @@
   			</div>
 		</div>
 		
-		<div style="padding:20px;line-height:2;">
-		刷新条件：<c:if test="${not empty arrayIdSize }">
-				勾选订单arrayIdSize
-		</c:if>
+		
 		</div>
 		
 	</form>
@@ -66,6 +63,7 @@
 	
 	
 	<div id="table_list">
+	<div style="padding:5px;line-height:2;">
 		<%@ include file="/WEB-INF/pages/nailorder/analys_list.jsp" %>
 	</div>
 	<div style="padding:20px;line-height:2;">
