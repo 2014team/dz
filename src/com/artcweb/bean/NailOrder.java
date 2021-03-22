@@ -25,7 +25,7 @@ public class NailOrder extends BaseBean {
 	// 来源 0:后台1:H5
 	private String comefrom;
 
-	// 图片类型Id
+	// 图钉类型Id
 	private String nailConfigId;
 
 	// 画框Id
@@ -49,7 +49,7 @@ public class NailOrder extends BaseBean {
 	// 款式Id
 	private String nailDrawingStockId;
 	// 出库标识1:出库
-	private int checkoutFlag;
+	protected int checkoutFlag;
 	
 	public String getUsername() {
 		return username;

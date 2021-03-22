@@ -207,18 +207,19 @@ public class NailOrderController {
 		request.setAttribute("nailConfigMap", nailConfigMap);
 		
 		
-//		Analys analys = nailOrderService. getAnalysOne(analysMap);
-//		request.setAttribute("analys", analys);
-		
 		// 获取图片类型
 		List<NailConfig> nailconfigList = nailconfigService.select(new HashMap<String, Object>());
 		request.setAttribute("nailconfigList", nailconfigList);
 		request.setAttribute("nailconfigList", nailconfigList);
 		
-		request.setAttribute("arrayId", arrayId);
+		request.setAttribute("entity", entity);
 		
-		
-
+		// 判断大小
+		String[] idArr= null;
+		if(StringUtils.isNotEmpty(entity.getArray())){
+			idArr = entity.getArray().split(",");
+			request.setAttribute("arrayIdSize", idArr.length);
+		}
 		
 		return "/nailorder/analys";
 	}
@@ -250,8 +251,7 @@ public class NailOrderController {
 		request.setAttribute("nailConfigMap", nailConfigMap);
 		
 		
-//		Analys analys = nailOrderService. getAnalysOne(analysMap);
-//		request.setAttribute("analys", analys);
+		request.setAttribute("entity", entity);
 		
 		// 获取图片类型
 		List<NailConfig> nailconfigList = nailconfigService.select(new HashMap<String, Object>());

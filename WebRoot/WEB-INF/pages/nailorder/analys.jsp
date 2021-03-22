@@ -7,7 +7,11 @@
    <body>
    
    <form class="layui-form layui-form-pane" id="rendReloadId" >
-	   <input type="hidden" name="arrayId" value="${arrayId}">
+   
+   <div>
+	   <input type="hidden" name="arrayId" value="${entity.array}">
+   </div>
+
 	   <h2 style="text-align: center; margin: 5px">
 	 		统计分析
 	 	</h2>
@@ -119,6 +123,7 @@
 					//关闭动画
 					layer.close(loading);
 					$("#table_list").html(data);
+					$("#arrayId").html(data);
 				},
 				
 				});

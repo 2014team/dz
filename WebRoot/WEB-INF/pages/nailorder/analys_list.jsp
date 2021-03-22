@@ -3,10 +3,9 @@
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 
 
-
-刷选条件：<c:if test="${not empty arrayIdSize }">
-		勾选 ${arrayIdSize}天数据
-</c:if>
+<div style="padding:5px;line-height:2;">
+	${entity.searchCondition}
+</div>
 
 
 <table class="layui-table"; >
