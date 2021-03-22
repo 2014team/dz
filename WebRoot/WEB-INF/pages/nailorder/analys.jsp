@@ -7,7 +7,7 @@
    <body>
    
    <form class="layui-form layui-form-pane" id="rendReloadId" >
-   <input type="hidden" name="array" value="${entity.array }">
+	   <input type="hidden" name="arrayId" value="${arrayId}">
 	   <h2 style="text-align: center; margin: 5px">
 	 		统计分析
 	 	</h2>
@@ -54,6 +54,7 @@
 			 </button> 
   			</div>
 		</div>
+		
 	</form>
 	
 	

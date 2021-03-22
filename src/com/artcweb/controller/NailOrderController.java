@@ -179,8 +179,8 @@ public class NailOrderController {
 	* @param request
 	* @return
 	*/
-	@RequestMapping(value = "/choose/analys/{array}")
-	public String analys(NailOrderVo entity,@PathVariable("array") String array,Integer checkoutFlagX, HttpServletRequest request) {
+	@RequestMapping(value = "/choose/analys/{arrayId}")
+	public String analys(NailOrderVo entity,@PathVariable("arrayId") String arrayId,Integer checkoutFlagX, HttpServletRequest request) {
 		
 		// 特殊处理
 		if(null != checkoutFlagX){
@@ -189,9 +189,10 @@ public class NailOrderController {
 			entity.setCheckoutFlag(-1);
 		}
 		
-		entity.setArray(array);
-		Map<String,Object>  datamap = nailOrderService.analys(entity);
 		
+		entity.setArray(arrayId);
+		
+		Map<String,Object>  datamap = nailOrderService.analys(entity);
 		
 		
 		// 图纸统计
@@ -214,7 +215,7 @@ public class NailOrderController {
 		request.setAttribute("nailconfigList", nailconfigList);
 		request.setAttribute("nailconfigList", nailconfigList);
 		
-		request.setAttribute("entity", entity);
+		request.setAttribute("arrayId", arrayId);
 		
 		
 
@@ -234,9 +235,7 @@ public class NailOrderController {
 		}
 		
 		
-		
 		Map<String,Object>  datamap = nailOrderService.analys(entity);
-		
 		
 		
 		// 图纸统计
@@ -913,7 +912,7 @@ public class NailOrderController {
 	* @return
 	*/
 	@RequestMapping(value = "/export/nail")
-	public void exportNail(NailOrderVo entity, Integer checkoutFlagX,String array,HttpServletRequest request,HttpServletResponse response) {
+	public void exportNail(NailOrderVo entity, Integer checkoutFlagX,String arrayId,HttpServletRequest request,HttpServletResponse response) {
 		// 特殊处理
 		if(null != checkoutFlagX){
 			entity.setCheckoutFlag(checkoutFlagX);
@@ -922,7 +921,13 @@ public class NailOrderController {
 		}
 		
 		
-		entity.setArray(array);
+		String nailConfigIde = entity.getNailConfigId();
+		int checkoutFlag = entity.getCheckoutFlag();
+		String createDateStr = entity.getCreateDateStr();
+		if(StringUtils.isEmpty(createDateStr) && StringUtils.isEmpty(nailConfigIde) && checkoutFlag == -1){
+				entity.setArray(arrayId);
+		}
+		
 		Map<String,Object>  datamap = nailOrderService.analys(entity);
 		// 图钉统计
 		Map<String,Analys>  analysMap = null;
@@ -973,7 +978,7 @@ public class NailOrderController {
 	* @param response
 	*/
 	@RequestMapping(value = "/export/drawing")
-	public void exportDrawing(NailOrderVo entity, Integer checkoutFlagX,String array,HttpServletRequest request,HttpServletResponse response) {
+	public void exportDrawing(NailOrderVo entity, Integer checkoutFlagX,String arrayId,HttpServletRequest request,HttpServletResponse response) {
 		// 特殊处理
 		if(null != checkoutFlagX){
 			entity.setCheckoutFlag(checkoutFlagX);
@@ -981,8 +986,14 @@ public class NailOrderController {
 			entity.setCheckoutFlag(-1);
 		}
 		
+		String nailConfigIde = entity.getNailConfigId();
+		int checkoutFlag = entity.getCheckoutFlag();
+		String createDateStr = entity.getCreateDateStr();
+		if(StringUtils.isEmpty(createDateStr) && StringUtils.isEmpty(nailConfigIde) && checkoutFlag == -1){
+				entity.setArray(arrayId);
+		}
 		
-		entity.setArray(array);
+		
 		Map<String,Object>  datamap = nailOrderService.analys(entity);
 		Map<String,AnalysNailConfig> nailConfigMap =  null;
 		// 图钉统计

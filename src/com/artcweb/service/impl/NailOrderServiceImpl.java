@@ -1161,6 +1161,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 			
 			entity.setBeginDate(beginDate);
 			entity.setEndDate(endDate);
+		
 		}
 		
 		Map<String,Object> paramMap = new HashMap<String,Object>();
