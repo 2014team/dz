@@ -982,7 +982,6 @@ public class NailOrderController {
 			nailConfigMap = (Map<String,AnalysNailConfig>) datamap.get("analysNailConfigMap");
 		}
 				
-		
 		String [] columnWidth ={"60","60"}; 
 		String[][] columnNames =  new String[][] {
 			{"款式","数量"}, 
