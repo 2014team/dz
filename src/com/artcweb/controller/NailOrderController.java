@@ -212,6 +212,9 @@ public class NailOrderController {
 		// 获取图片类型
 		List<NailConfig> nailconfigList = nailconfigService.select(new HashMap<String, Object>());
 		request.setAttribute("nailconfigList", nailconfigList);
+		request.setAttribute("nailconfigList", nailconfigList);
+		
+		request.setAttribute("entity", entity);
 		
 		
 
@@ -910,13 +913,16 @@ public class NailOrderController {
 	* @return
 	*/
 	@RequestMapping(value = "/export/nail")
-	public void exportNail(NailOrderVo entity, Integer checkoutFlagX,HttpServletRequest request,HttpServletResponse response) {
+	public void exportNail(NailOrderVo entity, Integer checkoutFlagX,String array,HttpServletRequest request,HttpServletResponse response) {
 		// 特殊处理
 		if(null != checkoutFlagX){
 			entity.setCheckoutFlag(checkoutFlagX);
 		}else{
 			entity.setCheckoutFlag(-1);
 		}
+		
+		
+		entity.setArray(array);
 		Map<String,Object>  datamap = nailOrderService.analys(entity);
 		// 图钉统计
 		Map<String,Analys>  analysMap = null;
@@ -967,7 +973,7 @@ public class NailOrderController {
 	* @param response
 	*/
 	@RequestMapping(value = "/export/drawing")
-	public void exportDrawing(NailOrderVo entity, Integer checkoutFlagX,HttpServletRequest request,HttpServletResponse response) {
+	public void exportDrawing(NailOrderVo entity, Integer checkoutFlagX,String array,HttpServletRequest request,HttpServletResponse response) {
 		// 特殊处理
 		if(null != checkoutFlagX){
 			entity.setCheckoutFlag(checkoutFlagX);
@@ -975,6 +981,8 @@ public class NailOrderController {
 			entity.setCheckoutFlag(-1);
 		}
 		
+		
+		entity.setArray(array);
 		Map<String,Object>  datamap = nailOrderService.analys(entity);
 		Map<String,AnalysNailConfig> nailConfigMap =  null;
 		// 图钉统计
