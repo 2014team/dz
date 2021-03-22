@@ -55,6 +55,12 @@
   			</div>
 		</div>
 		
+		<div style="padding:20px;line-height:2;">
+		刷新条件：<c:if test="${not empty arrayIdSize }">
+				勾选订单arrayIdSize
+		</c:if>
+		</div>
+		
 	</form>
 	
 	
