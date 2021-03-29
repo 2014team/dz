@@ -34,6 +34,9 @@ public class NailOrderVo extends NailOrder{
 	private String searchCondition;
 	
 	
+	private String nailImageSizeId;
+	
+	
 
 	public String getKeyword() {
 		return keyword;
@@ -167,6 +170,14 @@ public class NailOrderVo extends NailOrder{
 
 	public void setSearchCondition(String searchCondition) {
 		this.searchCondition = searchCondition;
+	}
+
+	public String getNailImageSizeId() {
+		return nailImageSizeId;
+	}
+
+	public void setNailImageSizeId(String nailImageSizeId) {
+		this.nailImageSizeId = nailImageSizeId;
 	}
 
 	

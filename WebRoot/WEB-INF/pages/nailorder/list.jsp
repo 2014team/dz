@@ -2,7 +2,9 @@
 <!DOCTYPE html>
   <head>
   	<%@include file="/WEB-INF/pages/common/head_layui.jsp" %>
-  		<%@ taglib uri="/WEB-INF/tag/nailDrawingStock.tld" prefix="ns" %>
+  	<%@ taglib uri="/WEB-INF/tag/nailDrawingStock.tld" prefix="ns" %>
+  	<%@ taglib uri="/WEB-INF/tag/nailImageSize.tld" prefix="nz" %>
+  	<%@ taglib uri="/WEB-INF/tag/nailPictureFrame.tld" prefix="np" %>
   </head>
   
   <style>
@@ -59,6 +61,22 @@ margin: 8px
 	                <option value="">图钉款式</option>
 		          	<c:forEach items="${ns:getList() }" var="item">
 		          		<option value="${item.id }" >${item.style }</option>
+		          	</c:forEach>
+	            </select>
+		  </div>
+          <div class="layui-inline">
+		   		 <select id="nailImageSizeId" name="nailImageSizeId" lay-search>
+	                <option value="">画框尺寸</option>
+		          	<c:forEach items="${nz:getList() }" var="item">
+		          		<option value="${item.id }" >尺寸  ${item.size }宽  x 高(${item.width } x ${item.height })</option>
+		          	</c:forEach>
+	            </select>
+		  </div>
+          <div class="layui-inline">
+		   		 <select id="nailPictureFrameId" name="nailPictureFrameId" lay-search>
+	                <option value="">画框颜色</option>
+		          	<c:forEach items="${np:getList() }" var="item">
+		          		<option value="${item.id }" >${item.colorName }</option>
 		          	</c:forEach>
 	            </select>
 		  </div>

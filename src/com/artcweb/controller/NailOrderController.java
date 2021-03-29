@@ -33,6 +33,7 @@ import com.artcweb.bean.LayUiResult;
 import com.artcweb.bean.NailConfig;
 import com.artcweb.bean.NailCount;
 import com.artcweb.bean.NailDrawingStock;
+import com.artcweb.bean.NailImageSize;
 import com.artcweb.bean.NailOrder;
 import com.artcweb.bean.NailPictureFrame;
 import com.artcweb.bean.NailTotalCount;
@@ -44,6 +45,7 @@ import com.artcweb.enums.ThirdFlagEnum;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.NailConfigService;
 import com.artcweb.service.NailDrawingStockService;
+import com.artcweb.service.NailImageSizeService;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.service.NailPictureFrameService;
 import com.artcweb.util.DateUtil;
@@ -69,6 +71,8 @@ public class NailOrderController {
 	private ImageService imageService;
 	@Autowired
 	private NailDrawingStockService nailDrawingStockService;
+	@Autowired
+	private NailImageSizeService nailImageSizeService;
 	
 	
 
@@ -750,6 +754,7 @@ public class NailOrderController {
 		}
 		
 		
+		
 		// 查找类型处理
 		String searchKey = entity.getSearchKey();
 		String searchValue = entity.getSearchValue();
@@ -761,6 +766,17 @@ public class NailOrderController {
 			}else if(searchKey.equals("3")){
 				entity.setMobile(searchValue);
 				
+			}
+		}
+		
+		String nailImageSizeId = entity.getNailImageSizeId();
+		if(StringUtils.isNotEmpty(nailImageSizeId)){
+			NailImageSize nailImageSize = nailImageSizeService.get(Integer.valueOf(nailImageSizeId));
+			if(null != nailImageSize){
+				String width = nailImageSize.getWidth();
+				String height = nailImageSize.getHeight();
+				entity.setHeight(height);
+				entity.setWidth(width);
 			}
 		}
 		

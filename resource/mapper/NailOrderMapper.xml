@@ -301,6 +301,12 @@
 			<if test="null != entity and  null != entity.nailDrawingStockId and '' != entity.nailDrawingStockId">
 					and t.nail_drawing_stock_id = #{entity.nailDrawingStockId}
 			</if>
+			<if test="null != entity and  null != entity.width and '' != entity.width">
+					and t.width = #{entity.width}
+			</if>
+			<if test="null != entity and  null != entity.height and '' != entity.height">
+					and t.height = #{entity.height}
+			</if>
 			<if test="null != entity and  null != entity.createDateStr and '' != entity.createDateStr">
 					<![CDATA[  
 					and t.create_date >= #{entity.beginDate} and  t.create_date <= #{entity.endDate} 
@@ -347,6 +353,12 @@
 			</if>
 			<if test="null != entity and  null != entity.nailDrawingStockId and '' != entity.nailDrawingStockId">
 					and t.nail_drawing_stock_id = #{entity.nailDrawingStockId}
+			</if>
+			<if test="null != entity and  null != entity.width and '' != entity.width">
+					and t.width = #{entity.width}
+			</if>
+			<if test="null != entity and  null != entity.height and '' != entity.height">
+					and t.height = #{entity.height}
 			</if>
 			<if test="null != entity and  null != entity.createDateStr and '' != entity.createDateStr">
 					<![CDATA[  
