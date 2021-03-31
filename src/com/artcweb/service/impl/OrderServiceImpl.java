@@ -1,6 +1,7 @@
 
 package com.artcweb.service.impl;
 
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -536,8 +537,18 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 						packageName = order.getPackageName();
 						if(StringUtils.isNotBlank(packageName) && (packageName.lastIndexOf("-")!= -1)){
 							packageNameArr =  packageName.split("-");
-							if(null != packageName && packageName.length() > 1){
-								packageName = packageNameArr[0] + "-"+(Integer.valueOf(packageNameArr[1])+1);
+							String newPackageName = null;
+							try {
+								newPackageName = (new BigDecimal(packageNameArr[packageNameArr.length-1]).add(new BigDecimal(1)))+"";
+								if(packageNameArr.length > 2){
+									packageName = packageName.replace(packageNameArr[packageNameArr.length-1], newPackageName);
+								}else{
+									packageName = packageNameArr[0] + "-"+newPackageName;
+								}
+							} catch (Exception e) {
+								e.printStackTrace();
+								newPackageName = new BigDecimal(System.currentTimeMillis()).toString();
+								packageName = packageName + "-"+newPackageName;
 							}
 							
 						}else{
@@ -742,7 +753,16 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 				if(StringUtils.isNotBlank(packageName) && (packageName.lastIndexOf("-")!= -1)){
 					packageNameArr =  packageName.split("-");
 					if(null != packageName && packageName.length() > 1){
-						packageName = packageNameArr[0] + "-"+(Integer.valueOf(packageNameArr[1])+1);
+						String newPackageName = null;
+						try {
+							newPackageName = (new BigDecimal(packageNameArr[1]).add(new BigDecimal(1)))+"";
+							packageName = packageNameArr[0] + "-"+newPackageName;
+						} catch (Exception e) {
+							e.printStackTrace();
+							newPackageName = new BigDecimal(System.currentTimeMillis()).toString();
+							packageName = packageName + "-"+newPackageName;
+						}
+						
 					}
 					
 				}else{
