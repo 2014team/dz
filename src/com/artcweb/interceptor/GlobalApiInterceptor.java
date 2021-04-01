@@ -53,11 +53,11 @@ public class GlobalApiInterceptor implements HandlerInterceptor {
 		String requestURI = request.getRequestURI();
 		
 		// 验证是否符合要求请求
-		boolean checkTimeMap = checkTimeMap(paramMap);
-		if(!checkTimeMap){
-			logger.error("api接口签名错误 ip:" + ip + "--uri:" + requestURI + "--params:" + jsonStr);
-			return false;
-		}
+//		boolean checkTimeMap = checkTimeMap(paramMap);
+//		if(!checkTimeMap){
+//			logger.error("api接口签名错误 ip:" + ip + "--uri:" + requestURI + "--params:" + jsonStr);
+//			return false;
+//		}
 		
 		
 		
