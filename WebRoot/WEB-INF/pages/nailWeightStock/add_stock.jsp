@@ -74,7 +74,15 @@
 		</form>
 	</div>
 	<script>
-    
+    	$(function(){
+    		 $("#price,#stock").on("input",function(e){
+	    	 		var price = $("#price").val();
+	    	 		var stock = $("#stock").val();
+	    	 		if(price && stock){
+	    	 			$("#total").val(stock * price);
+	    	 		}
+		    	});
+    	})
  
         layui.use(['form','layer'], function(){
            $ = layui.jquery;
