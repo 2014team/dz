@@ -120,8 +120,7 @@ margin: 8px
      <script type="text/html" id="rowBar">
 		<a class="layui-btn layui-btn-xs" lay-event="edit">编辑</a>
  		<a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">删除</a>
-
-		{{#  if(d.thirdFlag==1 || d.comefrom == 0){ }}
+		{{#  if((d.thirdFlag==1 || d.comefrom == 0) && (d.nailConfigId && d.nailConfigId > 0)){ }}
 			<a class="layui-btn layui-btn-xs" lay-event="detail">清单</a>
 
 		{{# } }}
@@ -260,12 +259,13 @@ layui.use([ 'table', 'form', 'laydate' ], function() {
 					templet : function(d) {
 					return date.toDateString(d.updateDate, 'yyyy-MM-dd HH:mm:ss');
 				},  
-				}, {
+				}/* , {
 					align:'left', toolbar: '#rowBar',
 					title : '操作',
 					width: 180
 					
-				}
+				} */
+				,{field:'nailConfigId',templet:'#rowBar',width:180}
 
 			] ]
 			  ,id: 'rendReloadId'
@@ -499,7 +499,7 @@ function order_delAll(layfilterId,url) {
    
     //刷新
 	function reloadTable(id,resp){
-		
+		debugger
 		if(id){
 			editRelaod(id);
 		}else{
@@ -550,6 +550,7 @@ function order_delAll(layfilterId,url) {
 						 height: resp.data.height,
 						 style: resp.data.style,
 						 checkoutFlag: resp.data.checkoutFlag,
+						 nailConfigId: resp.data.nailConfigId,
 						 
 						 });
 						 
