@@ -353,22 +353,22 @@ public class NailOrderController {
 		}
 		
 		String nailconfigId = entity.getNailConfigId();
-		if (StringUtils.isEmpty(nailconfigId)) {
+		/*if (StringUtils.isEmpty(nailconfigId)) {
 			layUiResult.failure("图钉类型不能为空");
 			return layUiResult;
-		}
+		}*/
 
 		String nailPictureFrameId = entity.getNailPictureFrameId();
-		if (StringUtils.isEmpty(nailPictureFrameId)) {
+		/*if (StringUtils.isEmpty(nailPictureFrameId)) {
 			layUiResult.failure("画框颜色不能为空");
 			return layUiResult;
-		}
+		}*/
 		String mobile = entity.getMobile();
-		if (StringUtils.isEmpty(mobile)) {
+		/*if (StringUtils.isEmpty(mobile)) {
 			layUiResult.failure("手机号不能为空");
 			return layUiResult;
 		
-		}
+		}*/
 		String imageName = entity.getImageName();
 		if (StringUtils.isEmpty(imageName)) {
 			layUiResult.failure("图纸名称不能为空");
@@ -410,14 +410,19 @@ public class NailOrderController {
 				layUiResult.failure(errorMsg);
 				return layUiResult;
 			}
-			// 图片颜色统计
-			LinkedHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.BACKSTAGE);
-	
-			// 钉子颜色列表统计
-			LinkedHashMap<String, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
 			
-			// 钉子与重量总数统计
-			nailOrderService.nailTotalCount(nailCountMap,entity);
+//			if(StringUtils.isNotBlank(nailconfigId) && !"0".equals(nailconfigId) && StringUtils.isNotBlank(nailPictureFrameId) && !"0".equals(nailPictureFrameId)){
+				//
+				
+				// 图片颜色统计
+				LinkedHashMap<String, Integer> nailColorMap = nailOrderService.uploadImage(request,file,entity,UploadConstant.SAVE_UPLOAD_NAIL_PATH,NailOrderComeFromConstant.BACKSTAGE);
+		
+				// 钉子颜色列表统计
+				LinkedHashMap<String, NailCount> nailCountMap = nailOrderService.nailCount(nailColorMap,entity);
+				
+				// 钉子与重量总数统计
+				nailOrderService.nailTotalCount(nailCountMap,entity);
+//			}
 		
 		}
 		

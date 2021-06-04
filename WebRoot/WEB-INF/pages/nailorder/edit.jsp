@@ -25,15 +25,15 @@
 	
 		
 		<div class="layui-form-item">
-				<label class="layui-form-label"><span class="x-red">*</span>图钉类型</label>
+				<label class="layui-form-label"><!-- <span class="x-red">*</span> -->图钉类型</label>
 				<div class="layui-input-block">
 					<c:forEach items="${nailconfigList }" var="item">
 					<c:choose>
 						<c:when test="${not empty entity and entity.nailConfigId eq item.id}">
-							<input type="radio"  name="nailConfigId" value="${item.id}" title="${item.nailType}" lay-verify="nailConfigId_verify" checked>	
+							<input type="radio"  name="nailConfigId" value="${item.id}" title="${item.nailType}"  checked>	
 						</c:when>
 						<c:otherwise>
-							<input type="radio" name="nailConfigId" value="${item.id}" title="${item.nailType}" lay-verify="nailConfigId_verify"> 
+							<input type="radio" name="nailConfigId" value="${item.id}" title="${item.nailType}" > 
 						</c:otherwise>
 					</c:choose>
 					</c:forEach>
@@ -41,15 +41,15 @@
 				</div>
 			</div>	
 		<div class="layui-form-item">
-				<label class="layui-form-label"><span class="x-red">*</span>画框颜色</label>
+				<label class="layui-form-label"><!-- <span class="x-red">*</span> -->画框颜色</label>
 				<div class="layui-input-block">
 					<c:forEach items="${nailPictureFrameList }" var="item">
 					<c:choose>
 						<c:when test="${not empty entity and entity.nailPictureFrameId eq item.id}">
-							<input type="radio"  name="nailPictureFrameId" value="${item.id}" title="${item.colorName}" lay-verify="nailPictureFrameId_verify" checked>	
+							<input type="radio"  name="nailPictureFrameId" value="${item.id}" title="${item.colorName}"  checked>	
 						</c:when>
 						<c:otherwise>
-							<input type="radio" name="nailPictureFrameId" value="${item.id}" title="${item.colorName}" lay-verify="nailPictureFrameId_verify"> 
+							<input type="radio" name="nailPictureFrameId" value="${item.id}" title="${item.colorName}" > 
 						</c:otherwise>
 					</c:choose>
 					</c:forEach>
@@ -59,12 +59,12 @@
 		
 		  
 		  <div class="layui-form-item">
-				<label for="L_pass" class="layui-form-label"> <span
-					class="x-red">*</span>手机号码
+				<label for="L_pass" class="layui-form-label"> <!-- <span
+					class="x-red">*</span> -->手机号码
 				</label>
 				<div class="layui-input-inline">
 					<input type="text" id="mobile" name="mobile"
-						value="${empty entity.mobile ?'' : entity.mobile}"   lay-verify="required|number|phone"
+						value="${empty entity.mobile ?'' : entity.mobile}"   
 						autocomplete="off" class="layui-input" maxlength="15">
 				</div>
 				<div class="layui-form-mid layui-word-aux">数字</div>
@@ -282,12 +282,12 @@
           	var formData = new FormData() 
    			formData.append('id', $('#id').val());
    			formData.append('username', data.username);
-   			formData.append('nailConfigId',data.nailConfigId);
-   			formData.append('nailPictureFrameId',data.nailPictureFrameId);
+   			formData.append('nailConfigId',data.nailConfigId?data.nailConfigId:0);
+   			formData.append('nailPictureFrameId',data.nailPictureFrameId?data.nailPictureFrameId:0);
    			formData.append('imageName',data.imageName);
    			formData.append('mobile', data.mobile);
    			formData.append('imageUrl', data.imageUrl);
-   			formData.append('nailDrawingStockId', data.nailDrawingStockId);
+   			formData.append('nailDrawingStockId', data.nailDrawingStockId?data.nailDrawingStockId:0);
    			formData.append('step', data.step);
    			formData.append('file', files);
    			
@@ -362,21 +362,32 @@
           // 保存
           form.on('submit(saveOrDownload)', function(obj) {
           
+          
           	data = JSON.parse(JSON.stringify(obj.field));
+          	
+          	   if(!data.nailConfigId || !data.nailPictureFrameId){
+          		layer.msg('请选择仅保存按钮', {
+									icon : 2,
+									time : 1500
+								});
+					return false;		
+          	}
+          	
+          	
           	var formData = new FormData() 
    			formData.append('id', $('#id').val());
    			formData.append('username', data.username);
-   			formData.append('nailConfigId',data.nailConfigId);
-   			formData.append('nailPictureFrameId',data.nailPictureFrameId);
+   			formData.append('nailConfigId',data.nailConfigId?data.nailConfigId:0);
+   			formData.append('nailPictureFrameId',data.nailPictureFrameId?data.nailPictureFrameId:0);
    			formData.append('imageName',data.imageName);
    			formData.append('mobile', data.mobile);
    			formData.append('imageUrl', data.imageUrl);
+   			formData.append('nailDrawingStockId', data.nailDrawingStockId?data.nailDrawingStockId:0);
    			formData.append('step', data.step);
    			formData.append('file', files);
    			//var resultImage = dataURLtoFile(newBase64, Date.now() + '.gif');
    			//formData.append('resultImageFile', resultImage);
    			
-          	
              //加载动画
 				/* var loading = layer.load(0, {
 		            shade: false,
