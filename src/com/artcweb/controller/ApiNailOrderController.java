@@ -125,59 +125,62 @@ public class ApiNailOrderController {
 		
 		
 		//检查是否白名单
-		Map<String,Object> whileParamMap = new HashMap<String, Object>();
-		whileParamMap.put("mobile",nailOrderDto.getMobile());
-		List<While> whileList = whileService.select(whileParamMap);
-		if(null != whileList && whileList.size() > 0){
-			nailOrderDto.setStatus(StatusEnum.OK.getDisplayName());
-			result.success(nailOrderDto);
-			return result;
-		}
+//		Map<String,Object> whileParamMap = new HashMap<String, Object>();
+//		whileParamMap.put("mobile",nailOrderDto.getMobile());
+//		List<While> whileList = whileService.select(whileParamMap);
+//		if(null != whileList && whileList.size() > 0){
+//			nailOrderDto.setStatus(StatusEnum.OK.getDisplayName());
+//			result.success(nailOrderDto);
+//			return result;
+//		}
 		
 		
 		
 		///判断是否输入过秘钥
-		String status = nailOrderDto.getStatus();
-		if(null == status || !status.equals(StatusEnum.OK.getDisplayName())){
-			//秘钥验证
-			String secretKey = entity.getSecretKey();
-			if(StringUtils.isEmpty(secretKey)){
-				result.failure("请输入秘钥");
-				return result;
-			}
-			
-			//验证秘钥是否系统生成
-			paramMap.clear();
-			paramMap.put("secretKey", secretKey);
-			Secret secret = secretService.getByMap(paramMap);
-			if(null == secret){
-				result.failure("秘钥不是系统生成，请输入正确秘钥");
-				return result;
-			}
-			
-			
-			//验证秘钥是否已经被使用
-			if(null != secret.getStatus() && secret.getStatus().equals(1)){
-				result.failure("秘钥已经被使用，请联系工作人员");
-				return result;
-			}
-			
-			//更新秘钥
-			secret.setStatus(1);
-			secret.setOrderId(orderId);
-			secret.setSiteName(String.valueOf(SiteEnum.NAIL.getValue()));
-			Integer updateResult = secretService.update(secret);
-			if(null != updateResult && updateResult > 0){
-				nailOrderDto.setStatus(StatusEnum.OK.getDisplayName());
-				result.success(nailOrderDto);
-			}else{
-				result.failure("更新秘钥状态失败");
-			}
-		}else if(null != status && status.equals(StatusEnum.OK.getDisplayName())){
-			//证明已经验证通过
-			result.success(nailOrderDto);
-			return result;
-		}
+//		String status = nailOrderDto.getStatus();
+//		if(null == status || !status.equals(StatusEnum.OK.getDisplayName())){
+//			//秘钥验证
+//			String secretKey = entity.getSecretKey();
+//			if(StringUtils.isEmpty(secretKey)){
+//				result.failure("请输入秘钥");
+//				return result;
+//			}
+//			
+//			//验证秘钥是否系统生成
+//			paramMap.clear();
+//			paramMap.put("secretKey", secretKey);
+//			Secret secret = secretService.getByMap(paramMap);
+//			if(null == secret){
+//				result.failure("秘钥不是系统生成，请输入正确秘钥");
+//				return result;
+//			}
+//			
+//			
+//			//验证秘钥是否已经被使用
+//			if(null != secret.getStatus() && secret.getStatus().equals(1)){
+//				result.failure("秘钥已经被使用，请联系工作人员");
+//				return result;
+//			}
+//			
+//			//更新秘钥
+//			secret.setStatus(1);
+//			secret.setOrderId(orderId);
+//			secret.setSiteName(String.valueOf(SiteEnum.NAIL.getValue()));
+//			Integer updateResult = secretService.update(secret);
+//			if(null != updateResult && updateResult > 0){
+//				nailOrderDto.setStatus(StatusEnum.OK.getDisplayName());
+//				result.success(nailOrderDto);
+//			}else{
+//				result.failure("更新秘钥状态失败");
+//			}
+//		}else if(null != status && status.equals(StatusEnum.OK.getDisplayName())){
+//			//证明已经验证通过
+//			result.success(nailOrderDto);
+//			return result;
+//		}
+		
+		nailOrderDto.setStatus(StatusEnum.OK.getDisplayName());
+		result.success(nailOrderDto);
 		return result;
 		
 	}

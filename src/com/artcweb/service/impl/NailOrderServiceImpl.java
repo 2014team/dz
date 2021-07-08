@@ -51,6 +51,7 @@ import com.artcweb.dto.NailOrderDto;
 import com.artcweb.enums.CheckoutFlagEnum;
 import com.artcweb.enums.NailImageTypeEnum;
 import com.artcweb.enums.NailTypeEnum;
+import com.artcweb.enums.StatusEnum;
 import com.artcweb.enums.ThirdFlagEnum;
 import com.artcweb.service.NailOrderService;
 import com.artcweb.util.DateUtil;
@@ -655,6 +656,7 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 				resultImageUrl = ImageUtil.imageUrlDeal(resultImageUrl);
 				nailOrderDto.setImageUrl(imageUrl);	
 				nailOrderDto.setResultImageUrl(resultImageUrl);
+				nailOrderDto.setStatus(StatusEnum.OK.getDisplayName());
 						
 			}
 		}

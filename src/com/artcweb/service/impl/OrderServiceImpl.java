@@ -23,6 +23,7 @@ import com.artcweb.constant.UploadConstant;
 import com.artcweb.dao.OrderDao;
 import com.artcweb.dao.PicPackageDao;
 import com.artcweb.dao.UserDao;
+import com.artcweb.enums.StatusEnum;
 import com.artcweb.service.ImageService;
 import com.artcweb.service.OrderService;
 import com.artcweb.util.FileUtil;
@@ -139,6 +140,7 @@ public class OrderServiceImpl extends BaseServiceImpl<Order, Integer> implements
 		}
 		String imageUrl = ImageUtil.imageUrlDeal(entity.getImageUrl());
 		entity.setImageUrl(imageUrl);
+		entity.setStatus(Integer.parseInt(StatusEnum.OK.getDisplayName()));
 
 	}
 
