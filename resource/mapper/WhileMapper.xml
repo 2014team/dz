@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.WhileDao">
+
+	<resultMap type="com.artcweb.bean.While" id="result">
+		<result property="id" column="id" />
+		<result property="mobile" column="mobile" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	
+	<insert id="save" parameterType="com.artcweb.bean.While" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO t_while(mobile,create_date,update_date)
+      VALUE (#{mobile},now(),now())
+     </insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		`t_while`
+		where id=#{id}
+	</delete>
+	
+	<select id="select" parameterType="Map" resultMap="result">
+		select * from
+		`t_while`
+		<where>
+			<if test="null != mobile and '' != mobile">
+				mobile = #{mobile}
+			</if>
+		</where>
+	</select>
+	
+
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		`t_while`
+		where
+		FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="com.artcweb.bean.While">
+		update `t_while`
+		set
+		mobile=#{mobile}
+		,update_date=now()
+		where
+		id=#{id}
+	</update>
+
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		select * from
+		`t_while`
+		where id = #{id}
+		order by id limit 1
+	</select>
+
+	
+	<!-- 查询 -->
+	<select id="searchByPage" parameterType="Map" resultMap="result">
+			SELECT * from  `t_while` t
+			<where>
+				<if test="null != entity.mobile and '' != entity.mobile">
+						t.mobile = #{entity.mobile}
+				</if>
+			</where>
+			ORDER by id desc limit ${page.begin},${page.limit} 
+		
+	</select>
+	
+	<select id="searchByPageCount" parameterType="Map" resultType="int">
+			SELECT count(1) from  `t_while` t
+			<where>
+				<if test="null != entity.mobile and '' != entity.mobile">
+						t.mobile = #{entity.mobile}
+				</if>
+			</where>
+	</select>
+	
+	
+
+</mapper> 

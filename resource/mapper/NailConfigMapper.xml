@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.NailConfigDao">
+
+	<resultMap type="com.artcweb.bean.NailConfig" id="result">
+		<result property="id" column="id" />
+		<result property="nailType" column="nail_type" />
+		<result property="nailNumber" column="nail_number" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+	
+	<insert id="save" parameterType="com.artcweb.bean.Category" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO t_nail_config(nail_type,nail_number,create_date,update_date)
+      VALUE (#{nailType},#{nailNumber},now(),now())
+     </insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		`t_nail_config`
+		where id=#{id}
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		`t_nail_config`
+		where
+		FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="com.artcweb.bean.NailConfig">
+		update `t_nail_config`
+		set
+		nail_type=#{nailType},
+		nail_number=#{nailNumber},
+		update_date = now()
+		where
+		id=#{id}
+	</update>
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		select * from
+		`t_nail_config`
+		where id = #{id}
+		order by id limit 1
+	</select>
+	
+	
+	<select id="select" parameterType="Map" resultMap="result">
+		SELECT * FROM t_nail_config t
+		ORDER by id
+	</select>
+	
+	<select id="selectByMap" parameterType="Map" resultType="com.artcweb.dto.NailConfigDto">
+		SELECT * FROM t_nail_config t
+		<where>
+			<if test="id != null and '' != id">
+				id = #{id}
+			</if>
+			<if test="null != nailType and '' != nailType">
+				and nail_type = #{nailType}
+			</if>
+		</where>
+		ORDER by id limit 1
+	</select>
+	
+	<!-- 查询 -->
+	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.NailConfigDto">
+		SELECT t.id as id,
+		t.nail_type as nailType,
+		t.nail_number as nailNumber,
+		t.create_date as createDate,
+		t.update_date as updateDate
+		 FROM t_nail_config t
+		<where>
+			<if test="null != entity and  null != entity.nailNumber and '' != entity.nailNumber">
+					t.nail_number = #{entity.nailNumber}
+			</if>
+			<if test="null != entity and  null != entity.nailType and '' != entity.nailType">
+					and t.nail_type = #{entity.nailType}
+			</if>
+		</where>
+		ORDER by t.id  limit ${page.begin},${page.limit} 
+	</select>
+	
+	<select id="findByPageCount" parameterType="Map" resultType="int">
+		SELECT count(1) FROM `t_nail_config` t
+		<where>
+			<if test="null != entity and  null != entity.nailNumber and '' != entity.nailNumber">
+					t.nail_number = #{entity.nailNumber}
+			</if>
+			<if test="null != entity and  null != entity.nailType and '' != entity.nailType">
+					and t.nail_type = #{entity.nailType}
+			</if>
+		</where>
+	</select>
+	
+	
+
+</mapper> 

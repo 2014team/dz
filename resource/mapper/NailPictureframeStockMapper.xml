@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.NailPictureframeStockDao">
+	
+	<!-- resultMap -->
+	<resultMap type="com.artcweb.bean.NailPictureframeStock" id="resultMap">
+		<result property="id" column="id" />
+		<result property="colorName" column="color_name" />
+		<result property="stockNumber" column="stock_number" />
+		 <result property="black" column="black" />
+		<result property="white" column="white" />
+		<result property="blue" column="blue" />
+		<result property="powder" column="powder" />
+		<result property="gold" column="gold" />
+		<result property="silver" column="silver" /> 
+		<result property="rose" column="rose" /> 
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+		<result property="sort" column="sort" />
+	</resultMap>
+
+	<!-- 保存 -->
+	<insert id="save" parameterType="com.artcweb.bean.NailPictureframeStock" useGeneratedKeys="true" keyProperty="id">
+		insert into t_nail_pictureframe_stock (
+			color_name
+			,stock_number
+			,black
+			,white
+			,blue
+			,powder
+			,gold
+			,silver
+			,rose
+			,create_date
+			,update_date
+			,sort
+		)
+		 values
+		 (
+			#{colorName}
+			,#{stockNumber}
+			,#{black}
+			,#{white}
+			,#{blue}
+			,#{powder}
+			,#{gold}
+			,#{silver}
+			,#{rose}
+			,now()	
+			,now()	
+			,#{sort}
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="Integer">
+		delete from t_nail_pictureframe_stock where id = #{id};
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch"  parameterType="String">
+		delete from
+		t_nail_pictureframe_stock
+		where FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<!-- 修改-->
+	<update id="update" parameterType="com.artcweb.bean.NailPictureframeStock" >
+		update t_nail_pictureframe_stock 
+			set update_Date = now()
+				,color_name = #{colorName}
+				,black = #{black}
+				,white = #{white}
+				,blue = #{blue}
+				,powder = #{powder}
+				,gold = #{gold}
+				,silver = #{silver}
+				,rose = #{rose}
+				,stock_number = #{stockNumber}
+				,sort = #{sort}
+		where id = #{id}
+	</update>
+	
+	<!-- 根据id获取对象-->
+ 	<select id="get" parameterType="Integer" resultMap="resultMap">
+ 		select 
+				id
+				,color_name
+				,stock_number
+				,black
+				,white
+				,blue
+				,powder
+				,gold
+				,silver
+				,rose
+				,create_date
+				,update_date
+				,sort
+		 from t_nail_pictureframe_stock where id = #{id} 
+		 order by sort,id ,create_date desc limit 1;
+ 	</select>
+ 	
+ 	<!-- 通过Map单个查找-->
+	<select id="getOneByMap" parameterType="Map" resultMap="resultMap">
+		select 
+				id
+				,color_name
+				,stock_number
+				,black
+				,white
+				,blue
+				,powder
+				,gold
+				,silver
+				,rose
+				,create_date
+				,update_date
+				,sort
+		 from
+		t_nail_pictureframe_stock
+		<where>
+ 			<if test="null != colorName and ''!= colorName">
+			color_name = #{colorName}
+			</if>
+			<if test="null != stockNumber ">
+			and stock_number = #{stockNumber}
+			</if> 
+			<if test="null != black ">
+			and black = #{black}
+			</if> 
+			<if test="null != white ">
+			and white = #{white}
+			</if> 
+			<if test="null != blue ">
+			and blue = #{blue}
+			</if> 
+			<if test="null != powder ">
+			and powder = #{powder}
+			</if> 
+			<if test="null != gold ">
+			and gold = #{gold}
+			</if> 
+			<if test="null != silver ">
+			and silver = #{silver}
+			</if> 
+			<if test="null != rose ">
+			and rose = #{rose}
+			</if> 
+			<if test="null != createDate and ''!= createDate">
+			and create_date = #{createDate}
+			</if> 
+			<if test="null != updateDate and ''!= updateDate">
+			and update_date = #{updateDate}
+			</if> 
+			<if test="null != sort ">
+			and sort = #{sort}
+			</if> 
+		</where>
+		order by sort,id ,create_date desc limit 1;
+	</select>
+	
+	<!-- 列表查询 -->
+	<select id="select" parameterType="Map" resultMap="resultMap">
+ 		select 
+				id
+				,color_name
+				,stock_number
+				,black
+				,white
+				,blue
+				,powder
+				,gold
+				,silver
+				,rose
+				,create_date
+				,update_date
+				,sort
+ 		 from t_nail_pictureframe_stock
+ 		<where>
+ 			<if test="null != colorName and ''!= colorName">
+			color_name = #{colorName}
+			</if>
+			<if test="null != stockNumber ">
+			and stock_number = #{stockNumber}
+			</if> 
+			<if test="null != black ">
+			and black = #{black}
+			</if> 
+			<if test="null != white ">
+			and white = #{white}
+			</if> 
+			<if test="null != blue ">
+			and blue = #{blue}
+			</if> 
+			<if test="null != powder ">
+			and powder = #{powder}
+			</if> 
+			<if test="null != gold ">
+			and gold = #{gold}
+			</if> 
+			<if test="null != silver ">
+			and silver = #{silver}
+			</if> 
+			<if test="null != rose ">
+			and rose = #{rose}
+			</if> 
+			<if test="null != createDate and ''!= createDate">
+			and create_date = #{createDate}
+			</if> 
+			<if test="null != updateDate and ''!= updateDate">
+			and update_date = #{updateDate}
+			</if> 
+			<if test="null != sort ">
+			and sort = #{sort}
+			</if> 
+ 		</where>
+ 		order by sort,id ,create_date desc;
+ 	</select>
+ 	
+ 	<!-- 分页查找 -->
+	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.NailPictureframeStockDto">
+		select 
+				t.id as id
+				,t.color_name as colorName
+				,t.stock_number as stockNumber
+				,t.black as black
+				,t.white as white
+				,t.blue as blue
+				,t.powder as powder
+				,t.gold as gold
+				,t.silver as silver
+				,t.rose as rose
+				,t.create_date as createDate
+				,t.update_date as updateDate
+				,t.sort as sort
+ 		 from t_nail_pictureframe_stock as t
+ 		<where>
+ 			<if test="null != entity.id ">
+				t.id = #{nailPictureframeStockVo.id} 
+			</if>	
+			<if test="null != entity.colorName and ''!= entity.colorName">
+				and t.color_name = #{entity.colorName}
+			</if> 
+			<if test="null != entity.stockNumber ">
+				and t.stock_number = #{entity.stockNumber}
+			</if> 
+			<if test="null != entity.black ">
+				and t.black = #{entity.black}
+			</if> 
+			<if test="null != entity.white ">
+				and t.white = #{entity.white}
+			</if> 
+			<if test="null != entity.blue ">
+				and t.blue = #{entity.blue}
+			</if> 
+			<if test="null != entity.powder ">
+				and t.powder = #{entity.powder}
+			</if> 
+			<if test="null != entity.gold ">
+				and t.gold = #{entity.gold}
+			</if> 
+			<if test="null != entity.silver ">
+				and t.silver = #{entity.silver}
+			</if> 
+			<if test="null != entity.rose ">
+				and t.rose = #{entity.rose}
+			</if> 
+			<if test="null != entity.createDate and ''!= entity.createDate">
+				and t.create_date = #{entity.createDate}
+			</if> 
+			<if test="null != entity.updateDate and ''!= entity.updateDate">
+				and t.update_date = #{entity.updateDate}
+			</if> 
+			<if test="null != entity.sort ">
+				and t.sort = #{entity.sort}
+			</if> 
+ 		</where>
+ 		order by t.sort,t.id ,t.create_date desc   
+ 		<if test="null != page and '' != page and null != page.begin and null !=page.limit ">
+ 		 limit ${page.begin} , ${page.limit};
+ 		 </if>
+	</select>
+	
+	<!-- 分页查找数量 -->
+	<select id="selectByPageCount" parameterType="Map" resultType="Integer">
+		select count(1)  from t_nail_pictureframe_stock as t
+ 		<where>
+ 			<if test="null != entity.id ">
+				t.id = #{nailPictureframeStockVo.id} 
+			</if>	
+			<if test="null != entity.colorName and ''!= entity.colorName">
+				and t.color_name = #{entity.colorName}
+			</if> 
+			<if test="null != entity.stockNumber ">
+				and t.stock_number = #{entity.stockNumber}
+			</if> 
+			<if test="null != entity.black ">
+				and t.black = #{entity.black}
+			</if> 
+			<if test="null != entity.white ">
+				and t.white = #{entity.white}
+			</if> 
+			<if test="null != entity.blue ">
+				and t.blue = #{entity.blue}
+			</if> 
+			<if test="null != entity.powder ">
+				and t.powder = #{entity.powder}
+			</if> 
+			<if test="null != entity.gold ">
+				and t.gold = #{entity.gold}
+			</if> 
+			<if test="null != entity.silver ">
+				and t.silver = #{entity.silver}
+			</if> 
+			<if test="null != entity.rose ">
+				and t.rose = #{entity.rose}
+			</if> 
+			<if test="null != entity.createDate and ''!= entity.createDate">
+				and t.create_date = #{entity.createDate}
+			</if> 
+			<if test="null != entity.updateDate and ''!= entity.updateDate">
+				and t.update_date = #{entity.updateDate}
+			</if> 
+			<if test="null != entity.sort ">
+				and t.sort = #{entity.sort}
+			</if> 
+ 		</where>
+ 		order by t.sort,id ,t.create_date desc ;
+	</select>
+
+</mapper>

@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.NailImageSizeDao">
+
+	<resultMap type="com.artcweb.bean.NailImageSize" id="result">
+		<result property="id" column="id" />
+		<result property="size" column="size" />
+		<result property="height" column="height" />
+		<result property="width" column="width" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+	
+	<insert id="save" parameterType="com.artcweb.bean.NailImageSize" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO t_nail_image_size(size,height,width,create_date,update_date)
+      VALUE (#{size},#{height},#{width},now(),now())
+     </insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		`t_nail_image_size`
+		where id=#{id}
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		`t_nail_image_size`
+		where
+		FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="com.artcweb.bean.NailImageSize">
+		update `t_nail_image_size`
+		set
+		width=#{width},
+		height=#{height},
+		size=#{size},
+		update_date = now()
+		where
+		id=#{id}
+	</update>
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		select * from
+		`t_nail_image_size`
+		where id = #{id}
+		order by id limit 1
+	</select>
+	
+	
+	<select id="select" parameterType="Map" resultMap="result">
+		SELECT * FROM t_nail_image_size t
+		ORDER by id
+	</select>
+	
+	<!-- 查询 -->
+	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.NailImageSizeDto">
+		SELECT t.id as id,
+		t.size as size,
+		t.width as width,
+		t.height as height,
+		t.create_date as createDate,
+		t.update_date as updateDate
+		 FROM t_nail_image_size t
+		<where>
+			<if test="null != entity and  null != entity.height and '' != entity.height">
+					t.height = #{entity.height}
+			</if>
+			<if test="null != entity and  null != entity.width and '' != entity.width">
+					and t.width = #{entity.width}
+			</if>
+			<if test="null != entity and  null != entity.size and '' != entity.size">
+					and t.size = #{entity.size}
+			</if>
+		</where>
+		ORDER by t.size,id asc limit ${page.begin},${page.limit} 
+	</select>
+	
+	<select id="findByPageCount" parameterType="Map" resultType="int">
+		SELECT count(1) FROM `t_nail_image_size` t
+		<where>
+			<if test="null != entity and  null != entity.height and '' != entity.height">
+					t.height = #{entity.height}
+			</if>
+			<if test="null != entity and  null != entity.width and '' != entity.width">
+					and t.width = #{entity.width}
+			</if>
+			<if test="null != entity and  null != entity.size and '' != entity.size">
+					and t.size = #{entity.size}
+			</if>
+		</where>
+	</select>
+	
+	
+
+</mapper> 

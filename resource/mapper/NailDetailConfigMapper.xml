@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.NailDetailConfigDao">
+
+	<resultMap type="com.artcweb.bean.NailDetailConfig" id="result">
+		<result property="id" column="id" />
+		<result property="rgb" column="rgb" />
+		<result property="rgbName" column="rgb" />
+		<result property="newSerialNumber" column="new_serial_number" />
+		<result property="oldSerialNumber" column="old_serial_number" />
+		<result property="nailSmallWeight" column="nail_small_weight" />
+		<result property="nailMiniWeight" column="nail_mini_weight" />
+		<result property="nailBigWeight" column="nail_big_weight" />
+		<result property="sort" column="sort" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+	
+	<insert id="save" parameterType="com.artcweb.bean.NailDetailConfig" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO t_nail_detail_config(rgb,new_serial_number,old_serial_number,nail_small_weight,nail_small_weight,nail_big_weight,sort,create_date,update_date)
+      VALUE (#{rgb},#{newSerialNumber},#{oldSerialNumber},#{nailSmallWeight},#{nailMiniWeight},#{nailBigWeight},#{sort},now(),now())
+     </insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		`t_nail_detail_config`
+		where id=#{id}
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		`t_nail_detail_config`
+		where
+		FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="com.artcweb.bean.NailDetailConfig">
+		update `t_nail_detail_config`
+		set
+		rgb=#{rgb},
+		new_serial_number=#{newSerialNumber},
+		old_serial_number=#{oldSerialNumber},
+		nail_small_weight=#{nailSmallWeight},
+		nail_mini_weight=#{nailMiniWeight},
+		nail_big_weight=#{nailBigWeight},
+		sort=#{sort},
+		update_date = now()
+		where
+		id=#{id}
+	</update>
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		select * from
+		`t_nail_detail_config`
+		where id = #{id}
+		order by id limit 1
+	</select>
+	
+	
+	<select id="select" parameterType="Map" resultMap="result">
+		SELECT * FROM t_nail_detail_config t
+		ORDER by t.sort , t.update_date desc 
+	</select>
+	
+	
+	<select id="selectByMap" parameterType="Map" resultType="com.artcweb.dto.NailDetailConfigDto">
+		SELECT * FROM t_nail_detail_config t
+		<where>
+			<if test="id != null and '' != id">
+				id = #{id}
+			</if>
+			<if test="null != sort and '' != sort">
+				and sort = #{sort}
+			</if>
+		</where>
+		ORDER by id limit 1
+	</select>
+	
+	
+	
+	<!-- 查询 -->
+	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.NailDetailConfigDto">
+		SELECT t.id as id,
+		t.rgb as rgb,
+		t.rgb as rgbName,
+		t.new_serial_number as newSerialNumber,
+		t.old_serial_number as oldSerialNumber,
+		t.nail_small_weight as nailSmallWeight,
+		t.nail_mini_weight as nailMiniWeight,
+		t.nail_big_weight as nailBigWeight,
+		t.sort as sort,
+		t.create_date as createDate,
+		t.update_date as updateDate
+		 FROM t_nail_detail_config t
+		<where>
+			<if test="null != entity and  null != entity.newSerialNumber and '' != entity.newSerialNumber">
+					t.new_serial_number = #{entity.newSerialNumber}
+			</if>
+			<if test="null != entity and  null != entity.oldSerialNumber and '' != entity.oldSerialNumber">
+					and t.old_serial_number = #{entity.oldSerialNumber}
+			</if>
+			<if test="null != entity and  null != entity.rgb and '' != entity.rgb">
+					and t.rgb = #{entity.rgb}
+			</if>
+		</where>
+		ORDER by t.sort , t.update_date desc limit ${page.begin},${page.limit} 
+	</select>
+	
+	<select id="findByPageCount" parameterType="Map" resultType="int">
+		SELECT count(1) FROM `t_nail_detail_config` t
+		<where>
+			<if test="null != entity and  null != entity.newSerialNumber and '' != entity.newSerialNumber">
+					t.new_serial_number = #{entity.newSerialNumber}
+			</if>
+			<if test="null != entity and  null != entity.oldSerialNumber and '' != entity.oldSerialNumber">
+					and t.old_serial_number = #{entity.oldSerialNumber}
+			</if>
+			<if test="null != entity and  null != entity.rgb and '' != entity.rgb">
+					and t.rgb = #{entity.rgb}
+			</if>
+		</where>
+	</select>
+	
+	
+
+</mapper> 
