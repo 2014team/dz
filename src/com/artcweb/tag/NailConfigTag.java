@@ -11,6 +11,7 @@ import com.artcweb.util.SpringConfigTool;
 
 public class NailConfigTag {
 
+	
 	public static NailConfigService nailConfigService = (NailConfigService) SpringConfigTool
 			.getBean("nailConfigServiceImpl");
 
