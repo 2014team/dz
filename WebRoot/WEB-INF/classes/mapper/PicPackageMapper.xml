@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.PicPackageDao">
+
+	<resultMap type="com.artcweb.bean.PicPackage" id="result">
+		<result property="packageId" column="package_id" />
+		<result property="packageName" column="package_name" />
+		<result property="imageUrl" column="image_url" />
+		<result property="minImageUrl" column="min_image_url" />
+		<result property="step" column="step" />
+		<result property="stepName" column="step_name" />
+		<result property="pins" column="pins" />
+		<result property="comeFrom" column="come_from" />
+		<result property="categoryId" column="category_id" />
+		<result property="categoryName" column="category_name" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+
+	<!--保存 -->
+	<insert id="save" parameterType="com.artcweb.bean.PicPackage" useGeneratedKeys="true" keyProperty="packageId">
+		insert into
+		pic_package(package_name,image_url,min_image_url,step,step_name,pins,come_from,category_id)
+		values(#{packageName},#{imageUrl},#{minImageUrl},#{step},#{stepName},#{pins},#{comeFrom},#{categoryId})
+	</insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		pic_package
+		where
+		package_id=#{packageId}
+	</delete>
+
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		pic_package
+		where
+		FIND_IN_SET (package_id,#{packageId})
+	</delete>
+	
+	<select id="selectByBatch" parameterType="String" resultMap="result">
+		select *  from
+		pic_package
+		where
+		FIND_IN_SET (package_id,#{packageId})
+	</select>
+
+
+	<!-- 修改 -->
+	<update id="update" parameterType="com.artcweb.bean.PicPackage">
+		update pic_package
+		set
+		package_name=#{packageName}
+		,image_url=#{imageUrl}
+		,min_image_url=#{minImageUrl}
+		,step=#{step}
+		,step_name=#{stepName}
+		,pins=#{pins}
+		,category_id=#{categoryId}
+		,come_from=#{comeFrom}
+		where package_id=#{packageId}
+	</update>
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		select * from
+		pic_package
+		where package_id = #{packageId}
+		limit 1
+	</select>
+
+
+	<!-- 更新唯一性验证 -->
+	<select id="checkUnique" parameterType="Map" resultMap="result">
+		select * from
+		pic_package
+		where 1 = 1
+		<if test="null != packageName and '' != packageName">
+			and package_name = #{packageName}
+		</if>
+		<if test="null != comeFrom">
+			and come_from = #{comeFrom}
+		</if>
+		<if test="null != packageId and '' != packageId">
+			<![CDATA[and package_id <> #{packageId}]]>
+		</if>
+	</select>
+
+
+	<!-- 分页查找 -->
+	<select id="findByPage" parameterType="Map" resultType="com.artcweb.bean.PicPackage">
+		SELECT 
+		p.package_id as packageId,
+		p.package_name as packageName,
+		p.image_url as imageUrl,
+		p.min_image_url as minImageUrl,
+		p.step as step,
+		p.pins as pins,
+		p.come_from as comeFrom,
+		p.create_date as createDate,
+		p.update_date as updateDate,
+		(SELECT COUNT(1) FROM `order` o WHERE o.`package_id` = p.`package_id` ) AS useCount,
+		(SELECT c.`category_name` AS categoryName FROM t_category c WHERE c.id = p.category_id) AS  categoryName
+		 FROM pic_package p 
+		where 1=1
+		<if test="entity.packageName != null and '' != entity.packageName">
+			and package_name like '%${entity.packageName}%'
+		</if>
+		<if test="entity.comeFrom != null">
+			and come_from=#{entity.comeFrom}
+		</if>
+		order by useCount desc,package_id desc ,update_date desc  limit ${page.begin},${page.limit} ;
+	</select>
+	
+	
+	<!-- 分页查找数量 -->
+	<select id="findByPageCount" parameterType="Map" resultType="Integer">
+		select count(1) from pic_package
+		where 1=1
+		<if test="entity.packageName != null and '' != entity.packageName">
+			and package_name like '%${entity.packageName}%'
+		</if>
+		<if test="entity.comeFrom != null">
+			and come_from=#{entity.comeFrom}
+		</if>
+	</select>
+
+
+	<!-- 查找 -->
+	<select id="select" parameterType="Map" resultMap="result">
+		select * from pic_package
+		<where>
+			<if test="packageName != null and '' != packageName">
+				 package_name=#{packageName}
+			</if>
+			<if test="comeFrom != null">
+				and come_from=#{comeFrom}
+			</if>
+		
+		</where>
+		order by package_id desc ,update_date desc 
+	</select>
+	
+	
+	<select id="selectByMap" parameterType="Map" resultMap="result">
+		select package_id,package_name from pic_package
+		<where>
+			<if test="packageName != null and '' != packageName">
+				 package_name=#{packageName}
+			</if>
+			<if test="comeFrom != null">
+				and come_from=#{comeFrom}
+			</if>
+		
+		</where>
+		order by package_id desc ,update_date desc 
+	</select>
+	
+	<select id="selectByApiIndex" parameterType="Map" resultType="com.artcweb.dto.PicPackageDto">
+		SELECT 
+		p.package_id AS packageId,
+		p.package_name AS packageName,
+		p.image_url AS imageUrl,
+		p.min_image_url AS minImageUrl,
+		p.step AS step,
+		p.pins AS pins,
+		p.come_from AS comeFrom,
+		p.category_id AS categoryId,
+		t.category_name AS categoryName,
+		p.create_date AS createDate,
+		p.update_date AS updateDate,
+		(SELECT COUNT(1) FROM `order` o WHERE o.`package_id` = p.`package_id` ) AS useCount
+		 FROM pic_package p LEFT JOIN `t_category` t ON p.category_id= t.id
+		WHERE p.come_from = 1
+		<if test="null != pins and '' != pins">
+			and p.pins = #{pins}
+		</if>
+		<if test="null != categoryId and '' != categoryId">
+			and p.category_id = #{categoryId}
+		</if>
+		ORDER BY useCount DESC,package_id DESC ;
+	</select>
+
+</mapper> 

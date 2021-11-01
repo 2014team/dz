@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.NailPictureframeStockHistoryDao">
+	
+	<!-- resultMap -->
+	<resultMap type="com.artcweb.bean.NailPictureframeStockHistory" id="resultMap">
+		<result property="id" column="id" />
+		<result property="nailPictureframeId" column="nail_pictureframe_id" />
+		<result property="frameId" column="frame_id" />
+		<result property="price" column="price" />
+		<result property="total" column="total" />
+		<result property="stockNumber" column="stock_number" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<!-- 保存 -->
+	<insert id="save" parameterType="com.artcweb.bean.NailPictureframeStockHistory" useGeneratedKeys="true" keyProperty="id">
+		insert into t_nail_pictureframe_stock_history (
+			nail_pictureframe_id
+			,frame_id
+			,price
+			,total
+			,stock_number
+			,create_date
+			,update_date
+		)
+		 values
+		 (
+			#{nailPictureframeId}
+			,#{frameId}
+			,#{price}
+			,#{total}
+			,#{stockNumber}
+			,now()	
+			,now()	
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="Integer">
+		delete from t_nail_pictureframe_stock_history where id = #{id};
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch"  parameterType="String">
+		delete from
+		t_nail_pictureframe_stock_history
+		where FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<!-- 修改-->
+	<update id="update" parameterType="com.artcweb.bean.NailPictureframeStockHistory" >
+		update t_nail_pictureframe_stock_history 
+			set update_Date = now()
+				,nail_pictureframe_id = #{nailPictureframeId}
+				,frame_id = #{frameId}
+				,price = #{price}
+				,total = #{total}
+				,stock_number = #{stockNumber}
+		where id = #{id}
+	</update>
+	
+	<!-- 根据id获取对象-->
+ 	<select id="get" parameterType="Integer" resultMap="resultMap">
+ 		select 
+				id
+				,nail_pictureframe_id
+				,frame_id
+				,price
+				,total
+				,stock_number
+				,create_date
+				,update_date
+		 from t_nail_pictureframe_stock_history where id = #{id} 
+		 order by id ,create_date desc limit 1;
+ 	</select>
+ 	
+ 	<!-- 通过Map单个查找-->
+	<select id="getOneByMap" parameterType="Map" resultMap="resultMap">
+		select 
+				id
+				,nail_pictureframe_id
+				,frame_id
+				,price
+				,total
+				,stock_number
+				,create_date
+				,update_date
+		 from
+		t_nail_pictureframe_stock_history
+		<where>
+ 			<if test="null != nailPictureframeId ">
+			nail_pictureframe_id = #{nailPictureframeId}
+			</if>
+ 			<if test="null != frameIds ">
+			and frame_id = #{frameId}
+			</if>
+			<if test="null != price and ''!= price">
+			and price = #{price}
+			</if> 
+			<if test="null != total and ''!= total">
+			and total = #{total}
+			</if> 
+			<if test="null != stockNumber ">
+			and stock_number = #{stockNumber}
+			</if> 
+			<if test="null != createDate and ''!= createDate">
+			and create_date = #{createDate}
+			</if> 
+			<if test="null != updateDate and ''!= updateDate">
+			and update_date = #{updateDate}
+			</if> 
+		</where>
+		order by id ,create_date desc limit 1;
+	</select>
+	
+	<!-- 列表查询 -->
+	<select id="select" parameterType="Map" resultMap="resultMap">
+ 		select 
+				id
+				,nail_pictureframe_id
+				,frame_id
+				,price
+				,total
+				,stock_number
+				,create_date
+				,update_date
+ 		 from t_nail_pictureframe_stock_history
+ 		<where>
+ 			<if test="null != nailPictureframeId ">
+			nail_pictureframe_id = #{nailPictureframeId}
+			</if>
+ 			<if test="null != frameId ">
+			and frame_id = #{frameId}
+			</if>
+			<if test="null != price and ''!= price">
+			and price = #{price}
+			</if> 
+			<if test="null != total and ''!= total">
+			and total = #{total}
+			</if> 
+			<if test="null != stockNumber ">
+			and stock_number = #{stockNumber}
+			</if> 
+			<if test="null != createDate and ''!= createDate">
+			and create_date = #{createDate}
+			</if> 
+			<if test="null != updateDate and ''!= updateDate">
+			and update_date = #{updateDate}
+			</if> 
+ 		</where>
+ 		order by id ,create_date desc;
+ 	</select>
+ 	
+ 	<!-- 分页查找 -->
+	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.NailPictureframeStockHistoryDto">
+		select 
+				t.id as id
+				,t.nail_pictureframe_id as nailPictureframeId
+				,t.frame_id as frameId
+				,t.price as price
+				,t.total as total
+				,t.stock_number as stockNumber
+				,t.create_date as createDate
+				,t.update_date as updateDate
+				,ts.color_name as sizeName
+				,tp.color_name as colorName
+ 		 from t_nail_pictureframe_stock_history as t left join t_nail_pictureframe_stock ts on t.nail_pictureframe_id = ts.id
+ 		 left join t_nail_pictureframe tp on t.frame_id = tp.id
+ 		<where>
+ 			<if test="null != entity.id ">
+				t.id = #{nailPictureframeStockHistoryVo.id} 
+			</if>	
+			<if test="null != entity.nailPictureframeId ">
+				and t.nail_pictureframe_id = #{entity.nailPictureframeId}
+			</if> 
+			<if test="null != entity.frameId ">
+				and t.frame_id = #{entity.frameId}
+			</if> 
+			<if test="null != entity.price and ''!= entity.price">
+				and t.price = #{entity.price}
+			</if> 
+			<if test="null != entity.total and ''!= entity.total">
+				and t.total = #{entity.total}
+			</if> 
+			<if test="null != entity.stockNumber ">
+				and t.stock_number = #{entity.stockNumber}
+			</if> 
+			<if test="null != entity.createDateStr and '' != entity.createDateStr">
+				<![CDATA[  
+				and t.create_date >= #{entity.beginDate} and  t.create_date <= #{entity.endDate} 
+				]]>
+		</if>
+ 		</where>
+ 		order by t.id desc,t.create_date desc   
+ 		<if test="null != page and '' != page and null != page.begin and null !=page.limit ">
+ 		 limit ${page.begin} , ${page.limit};
+ 		 </if>
+	</select>
+	
+	<!-- 分页查找数量 -->
+	<select id="selectByPageCount" parameterType="Map" resultType="Integer">
+		select count(1)    from t_nail_pictureframe_stock_history as t left join t_nail_pictureframe_stock ts on t.nail_pictureframe_id = ts.id
+ 		 left join t_nail_pictureframe tp on t.frame_id = tp.id
+ 		<where>
+ 			<if test="null != entity.id ">
+				t.id = #{nailPictureframeStockHistoryVo.id} 
+			</if>	
+			<if test="null != entity.nailPictureframeId ">
+				and t.nail_pictureframe_id = #{entity.nailPictureframeId}
+			</if> 
+			<if test="null != entity.frameId">
+				and t.frame_id = #{entity.frameId}
+			</if> 
+			<if test="null != entity.price and ''!= entity.price">
+				and t.price = #{entity.price}
+			</if> 
+			<if test="null != entity.total and ''!= entity.total">
+				and t.total = #{entity.total}
+			</if> 
+			<if test="null != entity.stockNumber ">
+				and t.stock_number = #{entity.stockNumber}
+			</if> 
+			<if test="null != entity.createDateStr and '' != entity.createDateStr">
+				<![CDATA[  
+				and t.create_date >= #{entity.beginDate} and  t.create_date <= #{entity.endDate} 
+				]]>
+		</if>
+ 		</where>
+ 		order by t.id ,t.create_date desc ;
+	</select>
+
+</mapper>

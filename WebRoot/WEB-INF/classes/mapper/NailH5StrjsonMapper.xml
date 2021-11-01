@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.NailH5StrjsonDao">
+	
+	<!-- resultMap -->
+	<resultMap type="com.artcweb.bean.NailH5Strjson" id="resultMap">
+		<result property="id" column="id" />
+		<result property="strJson" column="strJson" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<!-- 保存 -->
+	<insert id="save" parameterType="com.artcweb.bean.NailH5Strjson" useGeneratedKeys="true" keyProperty="id">
+		insert into t_nail_h5_strjson (
+			strJson
+			,create_date
+			,update_date
+		)
+		 values
+		 (
+			#{strJson}
+			,now()	
+			,now()	
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="Integer">
+		delete from t_nail_h5_strjson where id = #{id};
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch"  parameterType="String">
+		delete from
+		t_nail_h5_strjson
+		where FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<!-- 修改-->
+	<update id="update" parameterType="com.artcweb.bean.NailH5Strjson" >
+		update t_nail_h5_strjson 
+			set update_Date = now()
+				,strJson = #{strJson}
+		where id = #{id}
+	</update>
+	
+	<!-- 根据id获取对象-->
+ 	<select id="get" parameterType="Integer" resultMap="resultMap">
+ 		select 
+				id
+				,strJson
+				,create_date
+				,update_date
+		 from t_nail_h5_strjson where id = #{id} 
+		 order by id ,create_date desc limit 1;
+ 	</select>
+ 	
+ 	<!-- 通过Map单个查找-->
+	<select id="getOneByMap" parameterType="Map" resultMap="resultMap">
+		select 
+				id
+				,strJson
+				,create_date
+				,update_date
+		 from
+		t_nail_h5_strjson
+		<where>
+ 			<if test="null != strJson and ''!= strJson">
+			strJson = #{strJson}
+			</if>
+			<if test="null != createDate and ''!= createDate">
+			and create_date = #{createDate}
+			</if> 
+			<if test="null != updateDate and ''!= updateDate">
+			and update_date = #{updateDate}
+			</if> 
+		</where>
+		order by id ,create_date desc limit 1;
+	</select>
+	
+	<!-- 列表查询 -->
+	<select id="select" parameterType="Map" resultMap="resultMap">
+ 		select 
+				id
+				,strJson
+				,create_date
+				,update_date
+ 		 from t_nail_h5_strjson
+ 		<where>
+ 			<if test="null != strJson and ''!= strJson">
+			strJson = #{strJson}
+			</if>
+			<if test="null != createDate and ''!= createDate">
+			and create_date = #{createDate}
+			</if> 
+			<if test="null != updateDate and ''!= updateDate">
+			and update_date = #{updateDate}
+			</if> 
+ 		</where>
+ 		order by id ,create_date desc;
+ 	</select>
+ 	
+ 	<!-- 分页查找 -->
+	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.NailH5StrjsonDto">
+		select 
+				t.id as id
+				,t.strJson as strJson
+				,t.create_date as createDate
+				,t.update_date as updateDate
+ 		 from t_nail_h5_strjson as t
+ 		<where>
+ 			<if test="null != entity.id ">
+				id = #{nailH5StrjsonVo.id} 
+			</if>	
+			<if test="null != entity.strJson and ''!= entity.strJson">
+				and strJson = #{entity.strJson}
+			</if> 
+			<if test="null != entity.createDate and ''!= entity.createDate">
+				and create_date = #{entity.createDate}
+			</if> 
+			<if test="null != entity.updateDate and ''!= entity.updateDate">
+				and update_date = #{entity.updateDate}
+			</if> 
+ 		</where>
+ 		order by t.id ,t.create_date desc   
+ 		<if test="null != page and '' != page and null != page.begin and null !=page.limit ">
+ 		 limit ${page.begin} , ${page.limit};
+ 		 </if>
+	</select>
+	
+	<!-- 分页查找数量 -->
+	<select id="selectByPageCount" parameterType="Map" resultType="Integer">
+		select count(1)  from t_nail_h5_strjson as t
+ 		<where>
+ 			<if test="null != entity.id ">
+				t.id = #{nailH5StrjsonVo.id} 
+			</if>	
+			<if test="null != entity.strJson and ''!= entity.strJson">
+				and t.strJson = #{entity.strJson}
+			</if> 
+			<if test="null != entity.createDate and ''!= entity.createDate">
+				and t.create_date = #{entity.createDate}
+			</if> 
+			<if test="null != entity.updateDate and ''!= entity.updateDate">
+				and t.update_date = #{entity.updateDate}
+			</if> 
+ 		</where>
+ 		order by id ,t.create_date desc ;
+	</select>
+
+</mapper>

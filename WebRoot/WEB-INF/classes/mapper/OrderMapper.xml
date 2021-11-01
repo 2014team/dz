@@ -1,0 +1,281 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.OrderDao">
+
+	<resultMap type="com.artcweb.bean.Order" id="result">
+		<result property="id" column="id" />
+		<result property="userId" column="user_id" />
+		<result property="mobile" column="mobile" />
+		<result property="userName" column="user_name" />
+		<result property="packageId" column="package_id" />
+		<result property="currentStep" column="current_step" />
+		<result property="sort" column="sort" />
+		<result property="pins" column="pins" />
+		<result property="template" column="template" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+
+	<!--保存 -->
+	<insert id="save" parameterType="com.artcweb.bean.Order">
+		insert into
+		`order`(mobile,package_id,current_step,sort,template,user_id,create_date,update_date)
+		values(#{mobile},#{packageId},#{currentStep},#{sort},#{template},#{userId},now(),now())
+	</insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		`order`
+		where id=#{id}
+	</delete>
+	
+	<!--根据map删除  -->
+	<delete id="deleteByMap" parameterType="Map">
+		delete from
+		`order`
+		where mobile=#{mobile}
+	</delete>
+
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		`order`
+		where
+		FIND_IN_SET (id,#{id})
+	</delete>
+
+
+	<!-- 修改 -->
+	<update id="update" parameterType="com.artcweb.bean.Order">
+		update `order`
+		set
+		mobile=#{mobile}
+		,package_id=#{packageId}
+		,current_step=#{currentStep}
+		,mobile=#{mobile}
+		,template=#{template}
+		,sort=#{sort}
+		,update_date=now()
+		where
+		id=#{id}
+	</update>
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		select * from
+		`order`
+		where id = #{id}
+		order by sort limit 1
+	</select>
+
+
+
+	<!-- 查询 -->
+	<select id="getByMap" parameterType="Map" resultType="com.artcweb.bean.Order">
+		SELECT u.id AS id,o.id AS orderId ,o.`mobile`,u.`user_name` AS userName,o.sort ,p.package_name
+		AS packageName,p.package_id AS  packageId, o.template AS template,p.come_from AS comeFrom,
+		p.image_url AS imageUrl ,p.min_image_url AS minImageUrl ,p.step ,o.current_step AS
+		currentStep,p.pins AS
+		pins,p.step_name AS stepName
+		FROM `order` o,`user` u,pic_package p
+		WHERE
+		o.user_id=u.id AND o.package_id = p.package_id
+		<if test="userName!= null and '' != userName">
+			and u.user_name=#{userName}
+		</if>
+		<if test="id != null and '' != id">
+			and o.id=#{id}
+		</if>
+		limit 1
+	</select>
+	
+	<!-- 查询 -->
+	<select id="select" parameterType="Map" resultType="com.artcweb.bean.Order">
+	SELECT u.id AS id,o.id AS orderId ,u.`user_name` AS userName,o.sort ,o.mobile,p.package_name
+		AS packageName,p.package_id AS packageId,p.come_from AS comeFrom,
+		p.image_url AS imageUrl ,p.min_image_url AS minImageUrl ,p.step ,o.current_step AS
+		currentStep,o.template AS template
+		FROM `order` o,`user` u,pic_package p
+		WHERE
+		o.user_id=u.id AND o.package_id = p.package_id
+		<if test="userName!= null and '' != userName">
+			and u.user_name=#{userName}
+		</if>
+		<if test="id != null and '' != id">
+			FIND_IN_SET (id,#{id})
+		</if>
+		ORDER BY o.sort, o.`update_date` desc
+	</select>
+	
+	<!-- 查询 -->
+	<select id="selectByMap" parameterType="Map" resultMap="result">
+		SELECT * FROM `order` o 
+		WHERE
+		1 = 1
+		<if test="mobile!= null and '' != mobile">
+			and o.mobile=#{mobile}
+		</if>
+		<if test="id != null and '' != id">
+			and o.id=#{id}
+		</if>
+		ORDER BY o.sort, o.`update_date` desc
+	</select>
+	
+	<select id="selectOne" parameterType="Map" resultMap="result">
+		SELECT * FROM `order` o 
+		WHERE
+		1 = 1
+		<if test="mobile!= null and '' != mobile">
+			and o.mobile=#{mobile}
+		</if>
+		<if test="id != null and '' != id">
+			and o.id=#{id}
+		</if>
+		ORDER BY o.sort, o.`update_date` desc limit 1
+	</select>
+
+
+	<!-- 分页查找 -->
+	<select id="findByPage" parameterType="Map" resultType="com.artcweb.bean.Order">
+		SELECT u.id AS id,o.id AS orderId ,u.`user_name` AS userName,o.sort ,o.mobile,p.package_name
+		AS packageName,
+		p.image_url AS imageUrl ,p.min_image_url AS minImageUrl ,p.step ,o.current_step AS
+		currentStep,o.template AS template
+		FROM `order` o,`user` u,pic_package p
+		WHERE
+		o.user_id=u.id AND o.package_id = p.package_id
+		<if test="entity.userName!= null and '' != entity.userName">
+			and u.user_name=#{entity.userName}
+		</if>
+		ORDER BY o.sort, o.`update_date` desc limit ${page.begin},${page.limit} ;
+	</select>
+
+	<!-- 分页数量 -->
+	<select id="findByPageCount" parameterType="Map" resultType="int">
+		SELECT count(1) FROM `order` o,`user` u,pic_package p
+		WHERE
+		o.user_id=u.id AND o.package_id = p.package_id
+		<if test="entity.userName!= null and '' != entity.userName">
+			and u.user_name=#{entity.userName}
+		</if>
+	</select>
+
+
+
+	<!-- API分页查找 -->
+	<select id="findPageByApi" parameterType="Map"
+		resultType="com.artcweb.bean.Order">
+			<![CDATA[ select t.*,CASE WHEN (LENGTH(w.mobile) > 0 || (t.createDate  <= '2020-09-05 17:00:00' and ts.site_name = 1))  THEN 1 ELSE (CASE WHEN ts.`status` =1 and ts.site_name = 1 then 1 else 0 END) END AS `status` from 
+			(
+			SELECT o.id AS orderId ,o.sort ,o.mobile,p.`come_from` AS comeFrom, p.package_name AS packageName,
+			p.image_url AS imageUrl,p.`step` as step,p.`pins` AS pins,
+			o.`create_date` AS createDate
+			FROM `order` o,`user` u,pic_package p
+			WHERE
+			o.user_id=u.id AND o.package_id = p.package_id ]]>
+			<if test="entity.mobile!= null and '' != entity.mobile">
+				and o.mobile=#{entity.mobile}
+			</if>
+			<if test="entity.pins!= null and '' != entity.pins">
+				and p.`pins`=#{entity.pins}
+			</if>
+			<if test="entity.comeFrom!= null">
+				and p.`come_from`=#{entity.comeFrom}
+			</if>
+				ORDER BY o.sort ,o.`update_date` DESC limit  ${page.begin},${page.limit} 
+				) t LEFT JOIN `t_secret` ts ON t.orderId = ts.`order_id`
+				LEFT JOIN  `t_while`  w ON t.mobile = w.mobile
+	</select>
+
+	<!-- API分页数量 -->
+	<select id="findPageByApiCount" parameterType="Map" resultType="int">
+		SELECT count(1) FROM `order` o,`user` u,pic_package p
+		WHERE
+		o.user_id=u.id AND o.package_id = p.package_id
+		<if test="entity.mobile!= null and '' != entity.mobile">
+			and o.mobile=#{entity.mobile}
+		</if>
+		<if test="entity.pins!= null and '' != entity.pins">
+				and p.`pins`=#{entity.pins}
+			</if>
+			<if test="entity.comeFrom!= null">
+				and p.`come_from`=#{entity.comeFrom}
+			</if>
+	</select>
+
+	<!-- 获取订单详情 -->
+	<select id="getOrderDetail" parameterType="Map"
+		resultType="com.artcweb.bean.Order">
+		SELECT t.*,ts.`status` FROM 
+		(
+			SELECT u.id AS id,o.id AS orderId ,o.`mobile`,o.sort ,p.package_name AS packageName,
+			p.`come_from` AS comeFrom,
+			p.image_url AS imageUrl ,p.step ,o.current_step AS
+			currentStep,p.pins AS pins,
+			o.`create_date` AS createDate
+			FROM `order` o,`user` u,pic_package p
+			WHERE
+			o.user_id=u.id AND o.package_id = p.package_id
+			<if test="mobile != null and '' != mobile">
+				and o.mobile=#{mobile}
+			</if>
+			<if test="orderId !=null and '' != orderId">
+				and o.id=#{orderId}
+			</if>
+			LIMIT 1
+	) t LEFT JOIN `t_secret` ts  ON t.orderId= ts.`order_id` 
+	</select>
+	
+	<!-- 更新当前执行步骤 -->
+	<update id="updateCurrentStep" parameterType="Map">
+		update `order`
+		set current_step=#{currentStep}
+		,update_date=now()
+		where
+		id=#{orderId}
+	</update>
+	
+	<!-- 检查订单 -->
+	<select id="checkExistOreder" parameterType="Map" resultType="Integer">
+			SELECT count(1)
+			FROM `order` o,`user` u,pic_package p
+			WHERE o.user_id=u.id AND o.package_id = p.package_id
+		<if test="null != userId and '' != userId">
+			AND o.user_id = #{userId}
+		</if>
+		<if test="null != packageId and '' != packageId">
+			AND o.package_id=#{packageId}
+		</if>
+		<if test="null != packageName and '' != packageName">
+			AND p.package_name=#{packageName}
+		</if>
+		<if test="null != orderId and '' != orderId">
+			<![CDATA[and o.id <> #{orderId} ]]>
+		</if>
+	</select>
+	
+	
+  <select id="getPackageName" parameterType="Map" resultType="com.artcweb.bean.Order">
+		<![CDATA[
+		SELECT u.id AS id,o.id AS orderId ,u.`user_name` AS userName,o.sort ,o.mobile,p.package_name
+		AS packageName,
+		p.image_url AS imageUrl ,p.min_image_url AS minImageUrl ,p.step ,o.current_step AS
+		currentStep,o.template AS template
+		FROM `order` o,`user` u,pic_package p
+		WHERE
+		o.user_id=u.id AND o.package_id = p.package_id
+		AND p.package_name LIKE '%-%']]>
+		<if test="userId!= null and '' != userId">
+			and u.id=#{userId}
+		</if>
+		<if test="id != null and '' != id">
+			and o.id=#{id}
+		</if>
+		ORDER BY o.id DESC LIMIT 1
+	</select>
+
+</mapper> 

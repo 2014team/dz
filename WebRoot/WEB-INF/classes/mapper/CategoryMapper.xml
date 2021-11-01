@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.CategoryDao">
+
+	<resultMap type="com.artcweb.bean.Category" id="result">
+		<result property="id" column="id" />
+		<result property="categoryName" column="category_name" />
+		<result property="sort" column="sort" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+	
+	<insert id="save" parameterType="com.artcweb.bean.Category" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO t_category(category_name,sort,create_date,update_date)
+      VALUE (#{categoryName},#{sort},now(),now())
+     </insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		`t_category`
+		where id=#{id}
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		`t_category`
+		where
+		FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="com.artcweb.bean.Secret">
+		update `t_category`
+		set
+		category_name=#{categoryName},
+		sort=#{sort},
+		update_date = now()
+		where
+		id=#{id}
+	</update>
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		select * from
+		`t_category`
+		where id = #{id}
+		order by id limit 1
+	</select>
+	
+	
+	<select id="select" parameterType="Map" resultMap="result">
+		SELECT * FROM t_category t
+		ORDER by id desc
+	</select>
+	
+	<!-- 查询 -->
+	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.CategoryDto">
+		SELECT t.id as id,
+		t.category_name as categoryName,
+		t.sort as sort,
+		t.create_date as createDate,
+		t.update_date as updateDate
+		 FROM t_category t
+		<where>
+			<if test="null != entity and  null != entity.categoryName and '' != entity.categoryName">
+					t.category_name = #{entity.categoryName}
+			</if>
+		</where>
+		ORDER by t.sort asc,t.id desc limit ${page.begin},${page.limit} 
+	</select>
+	
+	<select id="findByPageCount" parameterType="Map" resultType="int">
+		SELECT count(1) FROM `t_category` t
+		<where>
+			<if test="null != entity and null != entity.categoryName and '' != entity.categoryName">
+					t.category_name = #{entity.categoryName}
+			</if>
+		</where>
+	</select>
+	
+	
+
+</mapper> 

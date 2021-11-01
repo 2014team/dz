@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.WeixinDao">
+
+	<resultMap type="com.artcweb.bean.Weixin" id="result">
+		<result property="id" column="id" />
+		<result property="openid" column="openid" />
+		<result property="session_key" column="session_key" />
+		<result property="errcode" column="errcode" />
+		<result property="errmsg" column="errmsg" />
+		<result property="userId" column="userId" />
+		<result property="mobile" column="mobile" />
+		<result property="bindFlag" column="bind_flag" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+	
+	<insert id="save" parameterType="com.artcweb.bean.Weixin" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO `t_weixin` (openid,session_key,errcode,errmsg,userId,mobile,bind_flag,create_date,update_date)
+           values (#{openid},#{session_key},#{errcode},#{errmsg},#{userId},#{mobile},#{bindFlag},now(),now())
+     </insert>
+     
+     <select id="getByMap" parameterType="Map" resultMap="result">
+		select * from
+		`t_weixin`
+		<where>
+			<if test="null != openid and '' != openid">
+				openid = #{openid}	
+			</if>
+		</where>
+		order by id limit 1
+	</select>
+	
+
+	<!-- 更新 -->
+	<update id="update" parameterType="com.artcweb.bean.Weixin">
+		update `t_weixin`
+		set
+		mobile=#{mobile},
+		userId=#{userId},
+		bind_flag=#{bindFlag},
+		update_date = now()
+		where
+		id=#{id}
+	</update>
+
+</mapper> 

@@ -1,0 +1,478 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.NailOrderDao">
+
+
+	<resultMap type="com.artcweb.bean.NailOrder" id="result">
+		<result property="id" column="id" />
+		<result property="username" column="username" />
+		<result property="mobile" column="mobile" />
+		<result property="currentStep" column="current_step" />
+		<result property="imageUrl" column="image_url" />
+		<result property="resultImageUrl" column="result_image_url" />
+		<result property="comefrom" column="comefrom" />
+		<result property="nailConfigId" column="nail_config_id" />
+		<result property="nailPictureFrameId" column="nail_pictureframe_Id" />
+		<result property="width" column="width" />
+		<result property="height" column="height" />
+		<result property="step" column="step" />
+		<result property="nailDrawingStockId" column="nail_drawing_stock_id" />
+		<result property="checkoutFlag" column="checkout_flag" />
+		<result property="thirdFlag" column="third_flag" />
+		<result property="nailCountDetail" column="nail_count_detail" />
+		<result property="imageName" column="image_name" />
+		<result property="nailPictureFrameStockId" column="nail_pictureframe_stock_id" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+	
+	<insert id="save" parameterType="com.artcweb.bean.NailOrder" useGeneratedKeys="true" keyProperty="id">
+      INSERT INTO t_nail_order(username,mobile,step,current_step,image_url,result_image_url,comefrom,nail_config_id,nail_count_detail,width,height,nail_pictureframe_Id,image_name,third_flag,nail_drawing_stock_id,checkout_flag,nail_pictureframe_stock_id,create_date,update_date)
+      VALUE (#{username},#{mobile},#{step},#{currentStep},#{imageUrl},#{resultImageUrl},#{comefrom},#{nailConfigId},#{nailCountDetail},#{width},#{height},#{nailPictureFrameId},#{imageName},#{thirdFlag},#{nailDrawingStockId},#{checkoutFlag},#{nailPictureFrameStockId},now(),now())
+     </insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		`t_nail_order`
+		where id=#{id}
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		`t_nail_order`
+		where
+		FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<select id="getByBatch" parameterType="String" resultType="com.artcweb.bean.NailOrder">
+		select id as id,checkout_flag AS checkoutFlag,third_flag as thirdFlag ,nail_count_detail AS nailCountDetail,comefrom as comefrom,
+		checkout_flag as checkoutFlag, nail_config_id as nailConfigId,
+		image_url as imageUrl,
+		nail_pictureframe_Id as nailPictureframeId,
+		nail_pictureframe_stock_id as nailPictureFrameStockId,
+		nail_drawing_stock_id as nailDrawingStockId from
+		`t_nail_order`
+		where
+		FIND_IN_SET (id,#{id})
+	</select>
+
+	
+	<!-- 更新 -->
+	<update id="update" parameterType="com.artcweb.bean.NailOrder">
+		update `t_nail_order`
+		set
+		username=#{username},
+		mobile=#{mobile},
+		step=#{step},
+		current_step=#{currentStep},
+		image_url=#{imageUrl},
+		result_image_url=#{resultImageUrl},
+		image_name=#{imageName},
+		comefrom=#{comefrom},
+		nail_config_id=#{nailConfigId},
+		nail_pictureframe_Id=#{nailPictureFrameId},
+		nail_count_detail=#{nailCountDetail},
+		height=#{height},
+		width=#{width},
+		third_flag=#{thirdFlag},
+		nail_drawing_stock_id=#{nailDrawingStockId},
+		nail_pictureframe_stock_id=#{nailPictureFrameStockId},
+		checkout_flag=#{checkoutFlag},
+		update_date = now()
+		where
+		id=#{id}
+	</update>
+	
+	<!-- 更新 -->
+	<update id="updateCheckoutFlag" parameterType="Map">
+		update `t_nail_order`
+		set
+		checkout_flag=#{checkoutFlag}
+		where
+		FIND_IN_SET (id,#{id})
+	</update>
+	
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		SELECT t.id AS id
+		,t.username AS username
+		,t.mobile AS mobile
+		,t.step AS step
+		,t.current_step AS currentStep
+		,t.image_url AS imageUrl
+		,t.result_image_url AS resultImageUrl
+		,t.image_name AS imageName
+		,t.comefrom AS comefrom
+		,t.nail_config_id AS nailConfigId
+		,t.nail_pictureframe_Id AS nailPictureFrameId
+		,t.nail_count_detail AS nailCountDetail
+		,t.height AS height
+		,t.width AS width
+		,t.third_flag AS thirdFlag
+		,t.create_date AS createDate
+		,t.update_date AS updateDate
+		,t.nail_drawing_stock_id AS nailDrawingStockId
+		,t.nail_pictureframe_stock_id AS nailPictureFrameStockId
+		,t.checkout_flag AS checkoutFlag
+		,nf.nail_type AS nailType
+		,tnp.color_name   AS colorName
+		 FROM t_nail_order t LEFT JOIN t_nail_config nf ON t.nail_config_id = nf.id
+		 LEFT JOIN  t_nail_pictureframe tnp ON t.nail_pictureframe_Id = tnp.id
+		where t.id = #{id}
+		order by t.id limit 1
+	</select>
+	
+	<!-- 查找 -->
+	<select id="getNailOrder" parameterType="Map" resultType="com.artcweb.dto.NailOrderDto">
+		SELECT t.id AS id
+		,t.username AS username
+		,t.mobile AS mobile
+		,t.step AS step
+		,t.current_step AS currentStep
+		,t.image_url AS imageUrl
+		,t.image_name AS imageName
+		,t.comefrom AS comefrom
+		,t.nail_config_id AS nailConfigId
+		,t.nail_pictureframe_Id AS nailPictureFrameId
+		,t.nail_count_detail AS nailCountDetail
+		,t.height AS height
+		,t.width AS width
+		,t.nail_pictureframe_stock_id AS nailPictureFrameStockId
+		,t.create_date AS createDate
+		,t.update_date AS updateDate
+		,ifnull(t.third_flag,0)  AS thirdFlag
+		,nf.nail_type AS nailType
+		,tnp.color_name   AS colorName
+		 FROM t_nail_order t LEFT JOIN t_nail_config nf ON t.nail_config_id = nf.id
+		 LEFT JOIN  t_nail_pictureframe tnp ON t.nail_pictureframe_Id = tnp.id
+		where t.id = #{id}
+		order by t.id limit 1
+	</select>
+	
+	<select id="checkExist" parameterType="Map" resultType="com.artcweb.bean.NailOrder">
+		select id as id,image_url as imageUrl
+		 from
+		`t_nail_order`
+		<where>
+			<if test="null != id  and '' != id">
+					<![CDATA[id = #{id}]]>
+			</if>
+			<if test="null != imageUrl  and '' != imageUrl">
+					and image_url = #{imageUrl}
+			</if>
+			<if test="null != imageName  and '' != imageName">
+					and image_name = #{imageName}
+			</if>
+			<if test="null != username  and '' != username">
+					and username = #{username}
+			</if>
+			<if test="null != thirdFlag  and '' != thirdFlag">
+					and third_flag = #{thirdFlag}
+			</if>
+			<if test="null != comefrom">
+					and comefrom = #{comefrom}
+			</if>
+		</where>
+		order by id limit 1
+	</select>
+	
+	<select id="getById" parameterType="Integer" resultType="com.artcweb.dto.NailOrderDto">
+		
+		SELECT t.id AS id
+		,t.username AS username
+		,t.mobile AS mobile
+		<!-- ,t.step AS step -->
+		,t.current_step AS currentStep
+		,t.image_url AS imageUrl
+		,t.image_name AS imageName
+		,t.comefrom AS comefrom
+		,t.nail_config_id AS nailConfigId
+		,t.nail_pictureframe_Id AS nailPictureFrameId
+		<!-- ,t.nail_count_detail AS nailCountDetail -->
+		,t.height AS height
+		,t.width AS width
+		,ifnull(t.third_flag,0)  AS thirdFlag
+		,t.create_date AS createDate
+		,t.update_date AS updateDate
+		,nf.nail_type AS nailType
+		,tnp.color_name   AS colorName
+		,t.nail_drawing_stock_id as nailDrawingStockId
+		,t.nail_pictureframe_stock_id as nailPictureFrameStockId
+		,t.checkout_flag as checkoutFlag
+		,tds.style AS style
+		,tps.color_name as sizeName
+		 FROM t_nail_order t LEFT JOIN t_nail_config nf ON t.nail_config_id = nf.id
+		 LEFT JOIN  t_nail_pictureframe tnp ON t.nail_pictureframe_Id = tnp.id
+		 LEFT JOIN t_nail_drawing_stock tds ON t.nail_drawing_stock_id = tds.id
+		 LEFT JOIN t_nail_pictureframe_stock tps on t.nail_pictureframe_stock_id = tps.id
+		where t.id = #{id}
+		order by t.id limit 1
+	</select>
+	
+	
+	<select id="selectByMap" parameterType="Map" resultType="com.artcweb.dto.NailOrderDto">
+		SELECT t.id
+			   ,t.nail_count_detail AS  nailCountDetail
+			  ,t.nail_config_id AS nailConfigId
+			   FROM t_nail_order t
+			  <where>
+				  	 <if test="null != entity and null != entity.nailConfigId and '' != entity.nailConfigId">
+				   		 t.nail_config_id = #{entity.nailConfigId}
+				   </if>
+				  	 <if test="null != entity and null != entity.nailPictureFrameId and '' != entity.nailPictureFrameId">
+				   		and t.nail_pictureframe_Id = #{entity.nailPictureFrameId}
+				   </if>
+				  	 <if test="null != entity and null != entity.nailPictureFrameStockId and '' != entity.nailPictureFrameStockId">
+				   		and t.nail_pictureframe_stock_id = #{entity.nailPictureFrameStockId}
+				   </if>
+				   <if test="null != entity and  null != entity.createDateStr and '' != entity.createDateStr">
+					<![CDATA[  
+					and t.create_date >= #{entity.beginDate} and  t.create_date <= #{entity.endDate} 
+					]]>
+					</if>
+				   <if test="null != entity and null != entity.array and '' != entity.array">
+					<![CDATA[  
+					and FIND_IN_SET (id,#{entity.array})
+					]]>
+					</if>
+					<if test="null != entity and  null != entity.checkoutFlag and -1 != entity.checkoutFlag">
+					and t.checkout_flag = #{entity.checkoutFlag}
+			</if>
+			  </where>
+		ORDER BY id DESC
+	</select>
+	
+	<select id="select" parameterType="Map" resultMap="result">
+		SELECT * FROM t_nail_order t
+		ORDER by id desc
+	</select>
+	
+	<!-- 查询 -->
+	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.NailOrderDto">
+		SELECT t.id as id,
+		t.username as username,
+		t.mobile as mobile,
+		<!--t.step as step,
+		 t.current_step as currentStep,  -->
+		t.image_url as imageUrl,
+		t.image_name as imageName,
+		t.comefrom as comefrom,
+		t.nail_config_id as nailConfigId,
+		t.nail_pictureframe_Id as nailPictureFrameId,
+		<!-- t.nail_count_detail as nailCountDetail,-->
+		t.width as width,
+		t.height as height, 
+		nf.nail_type as nailType,
+		ifnull(t.third_flag,0) as thirdFlag,
+		tnp.color_name   as colorName,
+		t.create_date as createDate,
+		t.update_date as updateDate,
+		t.nail_drawing_stock_id AS nailDrawingStockId,
+		t.nail_pictureframe_stock_id AS nailPictureFrameStockId,
+		t.checkout_flag AS checkoutFlag,
+		tds.style AS style,
+		tps.color_name as sizeName
+		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
+		 left join  t_nail_pictureframe tnp on t.nail_pictureframe_Id = tnp.id
+		  LEFT JOIN t_nail_drawing_stock tds ON t.nail_drawing_stock_id = tds.id
+		    LEFT JOIN t_nail_pictureframe_stock tps on t.nail_pictureframe_stock_id = tps.id
+		<where>
+		
+			<choose>
+				<when test="null != entity and ((null != entity.username and '' != entity.username)||(null != entity.imageName and '' != entity.imageName)||(null != entity.mobile and '' != entity.mobile))">
+					<if test="null != entity and  null != entity.username and '' != entity.username">
+						t.username  like '%${entity.username}%'
+					</if>
+					<if test="null != entity and  null != entity.imageName and '' != entity.imageName">
+							and t.image_name  like '%${entity.imageName}%'
+					</if>
+					<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
+							and t.mobile like '%${entity.mobile}%'
+					</if>
+				</when>
+				<otherwise>
+					<if test="null != entity and  ((null != entity.searchValue and '' != entity.searchValue) and (null != entity.searchKey ||'' == entity.searchKey))">
+						and 
+						(t.username like '%${entity.searchValue}%' or t.image_name  like '%${entity.searchValue}%' or t.mobile like '%${entity.searchValue}%')
+						
+					</if>
+				</otherwise>
+			</choose>
+			
+			<if test="null != entity and  null != entity.checkoutFlag and -1 != entity.checkoutFlag">
+					and t.checkout_flag = #{entity.checkoutFlag}
+			</if>
+			<if test="null != entity and  null != entity.comefrom and '' != entity.comefrom">
+					and t.comefrom = #{entity.comefrom}
+			</if>
+			<if test="null != entity and  null != entity.nailConfigId and '' != entity.nailConfigId">
+					and t.nail_config_id = #{entity.nailConfigId}
+			</if>
+			<if test="null != entity and  null != entity.nailPictureFrameId and '' != entity.nailPictureFrameId">
+					and t.nail_pictureframe_Id = #{entity.nailPictureFrameId}
+			</if>
+			<if test="null != entity and  null != entity.nailDrawingStockId and '' != entity.nailDrawingStockId">
+					and t.nail_drawing_stock_id = #{entity.nailDrawingStockId}
+			</if>
+			<if test="null != entity and  null != entity.nailPictureFrameStockId and '' != entity.nailPictureFrameStockId">
+					and t.nail_pictureframe_stock_id = #{entity.nailPictureFrameStockId}
+			</if>
+			<if test="null != entity and  null != entity.width and '' != entity.width">
+					and t.width = #{entity.width}
+			</if>
+			<if test="null != entity and  null != entity.height and '' != entity.height">
+					and t.height = #{entity.height}
+			</if>
+			<if test="null != entity and  null != entity.createDateStr and '' != entity.createDateStr">
+					<![CDATA[  
+					and t.create_date >= #{entity.beginDate} and  t.create_date <= #{entity.endDate} 
+					]]>
+			</if>
+		</where>
+		ORDER by t.id desc limit ${page.begin},${page.limit} 
+	</select>
+	
+	<select id="findByPageCount" parameterType="Map" resultType="int">
+		SELECT count(1) FROM `t_nail_order` t
+		<where>
+			<choose>
+				<when test="null != entity and ((null != entity.username and '' != entity.username)||(null != entity.imageName and '' != entity.imageName)||(null != entity.mobile and '' != entity.mobile))">
+					<if test="null != entity and  null != entity.username and '' != entity.username">
+						t.username  like '%${entity.username}%'
+					</if>
+					<if test="null != entity and  null != entity.imageName and '' != entity.imageName">
+							and t.image_name  like '%${entity.imageName}%'
+					</if>
+					<if test="null != entity and  null != entity.mobile and '' != entity.mobile">
+							and t.mobile like '%${entity.mobile}%'
+					</if>
+				</when>
+				<otherwise>
+					<if test="null != entity and  ((null != entity.searchValue and '' != entity.searchValue) and (null != entity.searchKey ||'' == entity.searchKey))">
+						and 
+						(t.username like '%${entity.searchValue}%' or t.image_name  like '%${entity.searchValue}%' or t.mobile like '%${entity.searchValue}%')
+						
+					</if>
+				</otherwise>
+			</choose>
+			<if test="null != entity and  null != entity.checkoutFlag and -1 != entity.checkoutFlag">
+					and t.checkout_flag = #{entity.checkoutFlag}
+			</if>
+			<if test="null != entity and  null != entity.comefrom and '' != entity.comefrom">
+					and t.comefrom = #{entity.comefrom}
+			</if>
+			<if test="null != entity and  null != entity.nailConfigId and '' != entity.nailConfigId">
+					and t.nail_config_id = #{entity.nailConfigId}
+			</if>
+			<if test="null != entity and  null != entity.nailPictureFrameId and '' != entity.nailPictureFrameId">
+					and t.nail_pictureframe_Id = #{entity.nailPictureFrameId}
+			</if>
+			<if test="null != entity and  null != entity.nailDrawingStockId and '' != entity.nailDrawingStockId">
+					and t.nail_drawing_stock_id = #{entity.nailDrawingStockId}
+			</if>
+				<if test="null != entity and  null != entity.nailPictureFrameStockId and '' != entity.nailPictureFrameStockId">
+					and t.nail_pictureframe_stock_id = #{entity.nailPictureFrameStockId}
+			</if>
+			<if test="null != entity and  null != entity.width and '' != entity.width">
+					and t.width = #{entity.width}
+			</if>
+			<if test="null != entity and  null != entity.height and '' != entity.height">
+					and t.height = #{entity.height}
+			</if>
+			<if test="null != entity and  null != entity.createDateStr and '' != entity.createDateStr">
+					<![CDATA[  
+					and t.create_date >= #{entity.beginDate} and  t.create_date <= #{entity.endDate} 
+					]]>
+				</if>
+		</where>
+	</select>
+	
+	
+	
+	<select id="apiSelect" parameterType="Map" resultType="com.artcweb.dto.NailOrderDto">
+		SELECT t.id as id,
+		t.username as username,
+		t.mobile as mobile,
+		<!-- t.step as step, -->
+		 ifnull(t.current_step ,'') as currentStep,  
+		t.image_url as imageUrl,
+		t.result_image_url as resultImageUrl,
+		t.image_name as imageName,
+		t.comefrom as comefrom,
+		t.nail_config_id as nailConfigId,
+		t.nail_pictureframe_Id as nailPictureFrameId,
+		t.nail_pictureframe_stock_id as nailPictureFrameStockId,
+	 	t.nail_count_detail as nailCountDetail,
+		t.width as width,
+		t.height as height, 
+		ifnull(nf.nail_type,'') as nailType,
+		ifnull(tnp.color_name,'')   as colorName,
+		ifnull(tns.site_name,'')   as siteName,
+		CASE WHEN (LENGTH(w.mobile) > 0)  THEN 1 ELSE (CASE WHEN tns.`status` =1 and tns.site_name = 2 then 1 else 0 END) END AS  status,
+		t.create_date as createDate,
+		t.update_date as updateDate
+		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
+		 left join  t_nail_pictureframe tnp on t.nail_pictureframe_Id = tnp.id
+		  left join  t_secret tns on t.id = tns.order_id
+		  LEFT JOIN  `t_while`  w ON t.mobile = w.mobile
+		<where>
+			<if test="null != keyword and '' != keyword">
+					t.image_name  = #{keyword}
+				 OR t.mobile = #{keyword}
+			</if>
+		</where>
+		ORDER by t.id desc
+	</select>
+	
+	<select id="apiGet" parameterType="Map" resultType="com.artcweb.dto.NailOrderDto">
+		SELECT t.id as id,
+		t.username as username,
+		t.mobile as mobile,
+		t.step as step,
+		ifnull(t.current_step ,'') as currentStep,  
+		t.image_url as imageUrl,
+		t.result_image_url as resultImageUrl,
+		t.image_name as imageName,
+		t.comefrom as comefrom,
+		t.nail_config_id as nailConfigId,
+		t.nail_pictureframe_Id as nailPictureFrameId,
+		t.nail_pictureframe_stock_id as nailPictureFrameStockId,
+	 	t.nail_count_detail as nailCountDetail,
+		t.width as width,
+		t.height as height, 
+		nf.nail_type as nailType,
+		tnp.color_name   as colorName,
+		ifnull(tns.status,0) as status,
+		t.create_date as createDate,
+		t.update_date as updateDate
+		 FROM t_nail_order t left join t_nail_config nf on t.nail_config_id = nf.id
+		 left join  t_nail_pictureframe tnp on t.nail_pictureframe_Id = tnp.id
+		 left join  t_secret tns on t.id = tns.order_id
+		<where>
+			<if test="null != keyword and '' != keyword">
+					t.mobile  = #{keyword}
+				 OR t.image_name = #{keyword}
+			</if>
+			<if test="null != id and '' != id">
+					t.id = #{id}
+			</if>
+		</where>
+		ORDER by t.id desc
+	</select>
+	
+	<update id="apiUpdateCurrentStep" parameterType="Map">
+		update `t_nail_order`
+		set current_step=#{currentStep}
+		,update_date=now()
+		where
+		id=#{id}
+	</update>
+	
+	
+
+</mapper> 

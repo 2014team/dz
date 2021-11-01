@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.UserDao">
+
+	<resultMap type="com.artcweb.bean.User" id="result">
+		<result property="id" column="id" />
+		<result property="userName" column="user_name" />
+		<result property="sort" column="sort" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+
+	<!--保存 -->
+	<insert id="save" parameterType="com.artcweb.bean.User" useGeneratedKeys="true" keyProperty="id">
+		insert into
+		user(user_name,sort,create_date,update_date)
+		values(#{userName},#{sort},now(),now())
+	</insert>
+
+	<!--删除 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		user
+		where id=#{id}
+	</delete>
+
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch" parameterType="String">
+		delete from
+		user
+		where FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<select id="selectByBatch" parameterType="String" resultMap="result">
+		select * from
+		user
+		where FIND_IN_SET (id,#{id})
+	</select>
+
+
+	<!-- 修改 -->
+	<update id="update" parameterType="com.artcweb.bean.User">
+		update user
+		set
+		user_name=#{userName}
+		,sort=#{sort}
+		,update_date=now()
+		where id=#{id}
+	</update>
+
+	<!-- 查找 -->
+	<select id="get" parameterType="Integer" resultMap="result">
+		select * from
+		user
+		where id = #{id}
+		limit 1
+	</select>
+	
+	<!-- 查找 -->
+	<select id="select" parameterType="Map" resultMap="result">
+		select * from user
+		where 1 = 1
+		<if test="null != userName and '' != userName">
+			and user_name = #{userName}
+		</if>
+	</select>
+	
+	<select id="getByMap" parameterType="Map" resultMap="result">
+		select * from user
+		where 1 = 1
+		<if test="null != userName and '' != userName">
+			and user_name = #{userName}
+		</if>
+		limit 1
+	</select>
+	
+	
+	<!-- 更新唯一性验证 -->
+	<select id="checkUnique" parameterType="Map" resultMap="result">
+		select * from
+		user
+		where 1 = 1
+		<if test="null != userName and '' != userName">
+			and user_name = #{userName}
+		</if>
+		<if test="null != id and '' != id">
+		<![CDATA[	and id <>  #{id} ]]>
+		</if>
+	</select>
+
+
+	<!-- 分页查找 -->
+	<select id="findByPage" parameterType="Map" resultMap="result">
+		select * 
+		from user
+		<where>
+			<if test="null != entity.userName and '' != entity.userName">
+				 user_name  like '%${entity.userName}%'
+			</if>
+		</where>
+		 order by sort ,update_date desc limit ${page.begin},${page.limit};
+	</select>
+
+	<!-- 分页数量 -->
+	<select id="findByPageCount" parameterType="Map" resultType="int">
+		select count(1) user from
+		user
+		<where>
+			<if test="null != entity.userName and '' != entity.userName">
+				 user_name  like '%${entity.userName}%'
+			</if>
+		</where>
+	</select>
+
+
+
+</mapper> 

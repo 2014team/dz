@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.artcweb.dao.NailDrawingStockDao">
+	
+	<!-- resultMap -->
+	<resultMap type="com.artcweb.bean.NailDrawingStock" id="resultMap">
+		<result property="id" column="id" />
+		<result property="style" column="style" />
+		<result property="printSize" column="print_size" />
+		<result property="frameSize" column="frame_size" />
+		<result property="status" column="status" />
+		<result property="number" column="number" />
+		<result property="createDate" column="create_date" />
+		<result property="updateDate" column="update_date" />
+	</resultMap>
+
+	<!-- 保存 -->
+	<insert id="save" parameterType="com.artcweb.bean.NailDrawingStock" useGeneratedKeys="true" keyProperty="id">
+		insert into t_nail_drawing_stock (
+			style
+			,print_size
+			,frame_size
+			,status
+			,number
+			,create_date
+			,update_date
+		)
+		 values
+		 (
+			#{style}
+			,#{printSize}
+			,#{frameSize}
+			,#{status}
+			,#{number}
+			,now()	
+			,now()	
+		)
+	</insert>
+	
+	<!-- 删除-->
+	<delete id="delete" parameterType="Integer">
+		delete from t_nail_drawing_stock where id = #{id};
+	</delete>
+	
+	<!-- 批量删除 -->
+	<delete id="deleteByBatch"  parameterType="String">
+		delete from
+		t_nail_drawing_stock
+		where FIND_IN_SET (id,#{id})
+	</delete>
+	
+	<!-- 修改-->
+	<update id="update" parameterType="com.artcweb.bean.NailDrawingStock" >
+		update t_nail_drawing_stock 
+			set update_Date = now()
+				,style = #{style}
+				,print_size = #{printSize}
+				,frame_size = #{frameSize}
+				,status = #{status}
+				,number = #{number}
+		where id = #{id}
+	</update>
+	
+	<!-- 根据id获取对象-->
+ 	<select id="get" parameterType="Integer" resultMap="resultMap">
+ 		select 
+				id
+				,style
+				,print_size
+				,frame_size
+				,status
+				,number
+				,create_date
+				,update_date
+		 from t_nail_drawing_stock where id = #{id} 
+		 order by id ,create_date desc limit 1;
+ 	</select>
+ 	
+ 	<!-- 通过Map单个查找-->
+	<select id="getOneByMap" parameterType="Map" resultMap="resultMap">
+		select 
+				id
+				,style
+				,print_size
+				,frame_size
+				,status
+				,number
+				,create_date
+				,update_date
+		 from
+		t_nail_drawing_stock
+		<where>
+ 			<if test="null != style and ''!= style">
+			style = #{style}
+			</if>
+			<if test="null != printSize and ''!= printSize">
+			and print_size = #{printSize}
+			</if> 
+			<if test="null != frameSize and ''!= frameSize">
+			and frame_size = #{frameSize}
+			</if> 
+			<if test="null != status ">
+			and status = #{status}
+			</if> 
+			<if test="null != number ">
+			and number = #{number}
+			</if> 
+			<if test="null != createDate and ''!= createDate">
+			and create_date = #{createDate}
+			</if> 
+			<if test="null != updateDate and ''!= updateDate">
+			and update_date = #{updateDate}
+			</if> 
+		</where>
+		order by id ,create_date desc limit 1;
+	</select>
+	
+	<!-- 列表查询 -->
+	<select id="select" parameterType="Map" resultMap="resultMap">
+ 		select 
+				id
+				,style
+				,print_size
+				,frame_size
+				,status
+				,number
+				,create_date
+				,update_date
+ 		 from t_nail_drawing_stock
+ 		<where>
+ 			<if test="null != style and ''!= style">
+			style = #{style}
+			</if>
+			<if test="null != printSize and ''!= printSize">
+			and print_size = #{printSize}
+			</if> 
+			<if test="null != frameSize and ''!= frameSize">
+			and frame_size = #{frameSize}
+			</if> 
+			<if test="null != status ">
+			and status = #{status}
+			</if> 
+			<if test="null != number ">
+			and number = #{number}
+			</if> 
+			<if test="null != createDate and ''!= createDate">
+			and create_date = #{createDate}
+			</if> 
+			<if test="null != updateDate and ''!= updateDate">
+			and update_date = #{updateDate}
+			</if> 
+ 		</where>
+ 		order by id ,create_date desc;
+ 	</select>
+ 	
+ 	<!-- 分页查找 -->
+	<select id="selectByPage" parameterType="Map" resultType="com.artcweb.dto.NailDrawingStockDto">
+		select 
+				t.id as id
+				,t.style as style
+				,t.print_size as printSize
+				,t.frame_size as frameSize
+				,t.status as status
+				,t.number as number
+				,t.create_date as createDate
+				,t.update_date as updateDate
+ 		 from t_nail_drawing_stock as t
+ 		<where>
+ 			<if test="null != entity.id ">
+				id = #{nailDrawingStockVo.id} 
+			</if>	
+			<if test="null != entity.style and ''!= entity.style">
+				and style = #{entity.style}
+			</if> 
+			<if test="null != entity.printSize and ''!= entity.printSize">
+				and print_size = #{entity.printSize}
+			</if> 
+			<if test="null != entity.frameSize and ''!= entity.frameSize">
+				and frame_size = #{entity.frameSize}
+			</if> 
+			<if test="null != entity.status ">
+				and status = #{entity.status}
+			</if> 
+			<if test="null != entity.number ">
+				and number = #{entity.number}
+			</if> 
+			<if test="null != entity.createDate and ''!= entity.createDate">
+				and create_date = #{entity.createDate}
+			</if> 
+			<if test="null != entity.updateDate and ''!= entity.updateDate">
+				and update_date = #{entity.updateDate}
+			</if> 
+ 		</where>
+ 		order by t.id ,t.create_date desc   
+ 		<if test="null != page and '' != page and null != page.begin and null !=page.limit ">
+ 		 limit ${page.begin} , ${page.limit};
+ 		 </if>
+	</select>
+	
+	<!-- 分页查找数量 -->
+	<select id="selectByPageCount" parameterType="Map" resultType="Integer">
+		select count(1)  from t_nail_drawing_stock as t
+ 		<where>
+ 			<if test="null != entity.id ">
+				t.id = #{nailDrawingStockVo.id} 
+			</if>	
+			<if test="null != entity.style and ''!= entity.style">
+				and t.style = #{entity.style}
+			</if> 
+			<if test="null != entity.printSize and ''!= entity.printSize">
+				and t.print_size = #{entity.printSize}
+			</if> 
+			<if test="null != entity.frameSize and ''!= entity.frameSize">
+				and t.frame_size = #{entity.frameSize}
+			</if> 
+			<if test="null != entity.status ">
+				and t.status = #{entity.status}
+			</if> 
+			<if test="null != entity.number ">
+				and t.number = #{entity.number}
+			</if> 
+			<if test="null != entity.createDate and ''!= entity.createDate">
+				and t.create_date = #{entity.createDate}
+			</if> 
+			<if test="null != entity.updateDate and ''!= entity.updateDate">
+				and t.update_date = #{entity.updateDate}
+			</if> 
+ 		</where>
+ 		order by id ,t.create_date desc ;
+	</select>
+
+</mapper>
