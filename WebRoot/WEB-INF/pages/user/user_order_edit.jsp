@@ -51,7 +51,7 @@
 				<div class="layui-input-inline">
 					<input type="text" id="mobile" name="mobile"
 						value="${order.mobile }"
-						lay-verify="required|number|phone" autocomplete="off" maxlength="15"
+						lay-verify="required|number|phone" autocomplete="off" maxlength="11"
 						class="layui-input">
 				</div>
 				<div class="layui-form-mid layui-word-aux">数字</div>
@@ -256,14 +256,22 @@
 		   //选完文件后不自动上传
 		  upload.render({
 		    elem: '#additional_id'
-		    ,auto: false
+		    ,auto: true
+		    ,url:'/admin/center/order/pins'
 			,accept: 'file'
+			,size: 1024 * 2
 		    ,exts: 'txt' 
 		    ,done: function(res){
+		    debugger
 		      console.log(res)
+		      if(res && res.infos){
+		      	$("#pins").val(res.infos.num_pins)
+		      }	
+		    
 		    }
 		   ,choose: function(obj){
 		     obj.preview(function(index, file, result){
+		     debugger
 		      	stepFile = file
 		      	if(stepFile){
 		      		$("#additional_label").html(stepFile.name);

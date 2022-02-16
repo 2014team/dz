@@ -1,6 +1,8 @@
 
 package com.artcweb.controller;
 
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +26,8 @@ import com.artcweb.constant.ComeFromConstant;
 import com.artcweb.service.OrderService;
 import com.artcweb.service.PicPackageService;
 import com.artcweb.service.UserService;
+
+import net.sf.json.JSONObject;
 
 @Controller
 @RequestMapping("/admin/center/order")
@@ -148,6 +152,35 @@ public class OrderController {
 			result = orderService.saveNewTemplate(entity, file, request);
 		}
 		return result;
+	}
+	
+	
+	/**
+	* @Title: getPins
+	* @Description: 获取钉子数量
+	* @author zhuzq
+	* @date  2022年2月16日 下午4:02:46
+	* @param entity
+	* @param file
+	* @param request
+	* @return
+	*/
+	@ResponseBody
+	@RequestMapping(value = "/pins")
+	public Object getPins(Order entity, MultipartFile file,HttpServletRequest request) {
+		
+		String step  = null;
+		try {
+			 step = new String(file.getBytes(),"UTF-8");
+			 if(null != step){
+				 JSONObject jsonObject = JSONObject.fromObject( step ); 
+			 }
+		}catch (Exception e) {
+			//e.printStackTrace();
+			return "{\"code\": 0,\"msg\": \"\"}";
+		}
+		
+		return step;
 	}
 
 	/**
