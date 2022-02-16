@@ -67,6 +67,8 @@ public class OrderController {
 		List<PicPackage> packageList = picPackageService.selectByMap(paramMap);
 		request.setAttribute("packageList", packageList);
 		return "/order/order_edit";
+		
+		
 	}
 	
 
