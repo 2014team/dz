@@ -570,8 +570,8 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 	}
 		 
 
-	private List<Map<String, Object>> getNailCount(List<NailCount> nailCountList,NailOrderDto entity) {
 		 List<Map<String, Object>>  result = null;
+		 private List<Map<String, Object>> getNailCount(List<NailCount> nailCountList,NailOrderDto entity) {
 		 if(null  != nailCountList && nailCountList.size() > 0){
 			 result = new ArrayList<Map<String, Object>>(); 
 			 String imageUrl = entity.getImageUrl();
@@ -604,8 +604,8 @@ public class NailOrderServiceImpl extends BaseServiceImpl<NailOrder, Integer> im
 					 map = null;
 				 }
 				 
-				 if(result.size() < 25){
-					 for(int i = 0; i< (25-result.size()); i++){
+				 if(result.size() < 26){
+					 for(int i = 0; i< (26-result.size()); i++){
 						 map = new HashMap<String, Object>();
 						 map.put("indexId", "");
 						 map.put("nailNumber", "");

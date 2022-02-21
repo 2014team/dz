@@ -141,7 +141,7 @@ public class ImageServiceImpl implements ImageService {
 		// // 图片处理
 		Integer scaleWidth = 50;
 		Integer scaleHeight = 50;
-		thumbnail(filePathAndName, scaleWidth, scaleHeight,ImageSuffixNameEnum.JPG);
+		ImageUtil.thumbnail(filePathAndName, scaleWidth, scaleHeight,ImageSuffixNameEnum.JPG);
 		return uploadPath + newFileName;
 	}
 	
@@ -178,50 +178,9 @@ public class ImageServiceImpl implements ImageService {
 		}
 		
 		// // 图片处理
-		thumbnail(filePathAndName, scaleWidth, scaleHeight,suffix);
+		ImageUtil.thumbnail(filePathAndName, scaleWidth, scaleHeight,suffix);
 		return uploadPath + newFileName;
 	}
 
-	private void thumbnail(String filePathAndName, Integer scaleWidth, Integer scaleHeight,ImageSuffixNameEnum suffix) {
-		try {
-			Thumbnails.of(filePathAndName).size(scaleWidth, scaleHeight).toFile(filePathAndName);
-		} catch (IOException e) {
-			logger.error("-----读取图片发生异常:{}-----" + e.getMessage());
-			logger.info("-----尝试cmyk转化-----");
-			File cmykJPEGFile = new File(filePathAndName);
-			try {
-				BufferedImage image = ImageIO.read(cmykJPEGFile);
-				ImageOutputStream output = ImageIO.createImageOutputStream(cmykJPEGFile);
-				if (!ImageIO.write(image, suffix.getDisplayName(), output)) {
-					logger.info("-----cmyk转化异常:{}-----");
-				}
-				Thumbnails.of(image).scale(0.4f).toFile(filePathAndName);
-				logger.info("-----cmyk转化成功-----");
-			} catch (IOException e1) {
-				logger.info("-----cmyk转化异常:-----" + e1.getMessage());
-			}
-		}
-	}
-
-	public void thumbnail(String filePathAndName, double size) {
-		try {
-			Thumbnails.of(filePathAndName).scale(size).toFile(filePathAndName);
-		} catch (IOException e) {
-			logger.error("-----读取图片发生异常:{}-----" + e.getMessage());
-			logger.info("-----尝试cmyk转化-----");
-			File cmykJPEGFile = new File(filePathAndName);
-			try {
-				BufferedImage image = ImageIO.read(cmykJPEGFile);
-				ImageOutputStream output = ImageIO.createImageOutputStream(cmykJPEGFile);
-				if (!ImageIO.write(image, "jpg", output)) {
-					logger.info("-----cmyk转化异常:{}-----");
-				}
-				Thumbnails.of(image).scale(0.4f).toFile(filePathAndName);
-				logger.info("-----cmyk转化成功-----");
-			} catch (IOException e1) {
-				logger.info("-----cmyk转化异常:-----" + e1.getMessage());
-			}
-		}
-	}
-
+	
 }

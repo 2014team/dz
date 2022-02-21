@@ -37,6 +37,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.artcweb.dto.NailOrderDto;
+import com.artcweb.enums.ImageSuffixNameEnum;
+
+import jdk.nashorn.internal.runtime.regexp.joni.constants.AnchorType;
 
 
 public class ExcelUtil {
@@ -464,7 +467,7 @@ public class ExcelUtil {
 		
 		RichTextString fenzhuanghe = new HSSFRichTextString("分装盒"+"\u25A1");
 
-		
+		RichTextString peijianbao = new HSSFRichTextString("配件包"+"\u25A1");
 		
 		
 		
@@ -550,9 +553,13 @@ public class ExcelUtil {
 						String imageUrl = entity.getImageUrl();
 						if(StringUtils.isNotEmpty(imageUrl)){
 							imageUrl = request.getSession().getServletContext().getRealPath("/") + imageUrl; 
-							 BufferedImage  bufferImg = ImageIO.read(new File(imageUrl));
+							BufferedImage  bufferImg = ImageIO.read(new File(imageUrl));
+							 
 							 out = new ByteArrayOutputStream();
 							 String fileExt =  UploadUtil.getFileExt1(imageUrl);
+							 
+							 
+							 
 							 ImageIO.write(bufferImg, fileExt, out);
 							 byte[] imageByte =  out.toByteArray();
 							//调用Drawing对象进行绘画操作
@@ -567,7 +574,7 @@ public class ExcelUtil {
 				                 //  row1  第1个单元格的行号     
 				                 //  col2 第2个单元格的列号     
 				                 //  row2 第2个单元格的行号    
-								 anchor = new XSSFClientAnchor(0, 0, 700, 250, (short) 0, i, (short) 1, 12);
+								 anchor = new XSSFClientAnchor(0, 0, 0, 0, (short) 0, i, (short) 1, 12);
 								//product.getBarcodeImg()是一个byte[]
 								//根据anchor和图片的byte[]来进行创建
 								drawingPatriarch.createPicture(anchor, workbook.addPicture(imageByte, XSSFWorkbook.PICTURE_TYPE_JPEG));
@@ -613,6 +620,7 @@ public class ExcelUtil {
 		for (int i = 0; i < rows.size(); i++) {
 			Row dataRow = sheet.createRow(columnNames.length+1+ i);
 			if(i ==0){
+				
 				sheet.addMergedRegion(new CellRangeAddress(1, 11, 0, 0)); // 合并大标题行
 			}
 			// 买家名称
@@ -624,42 +632,45 @@ public class ExcelUtil {
 			}
 			
 			// 图钉类型
-			if(rows.size() >= 17){
+			if(rows.size() >= 16){
 				if(i ==14){
-					CellRangeAddress cra = new CellRangeAddress(14, 17, 0, 0);
+					CellRangeAddress cra = new CellRangeAddress(14, 16, 0, 0);
 					sheet.addMergedRegion(cra); // 合并大标题行
 				}
 			}
 			// 画框颜色
-			if(rows.size() >= 21){
-				if(i ==18){
-					CellRangeAddress cra = new CellRangeAddress(18, 21, 0, 0);
+			if(rows.size() >= 19){
+				if(i ==17){
+					CellRangeAddress cra = new CellRangeAddress(17, 19, 0, 0);
 					sheet.addMergedRegion(cra); // 合并大标题行
 				}
 			}
+			// 分装盒
+			if(rows.size() >= 22){
+				if(i ==20){
+					CellRangeAddress cra = new CellRangeAddress(20, 22, 0, 0);
+					sheet.addMergedRegion(cra); // 合并大标题行
+				}
+			}
+			// 配件包
 			if(rows.size() >= 25){
-				if(i ==22){
-					CellRangeAddress cra = new CellRangeAddress(22, 25, 0, 0);
+				if(i ==23){
+					CellRangeAddress cra = new CellRangeAddress(23, 25, 0, 0);
 					sheet.addMergedRegion(cra); // 合并大标题行
 				}
 			}
 			
-			// 买家名称合并
-			/*if(rows.size() >= 19){
-				if(i ==18){
-					CellRangeAddress cra = new CellRangeAddress(18, 19, 0, 0);
-					sheet.addMergedRegion(cra); // 合并大标题行
-				}
-			}*/
 			
 			// 备注说明合并
-			if(rows.size() >= 26){
-				if(i ==23){
-					CellRangeAddress cra = new CellRangeAddress(26, rows.size()+2, 0, 0);
-					sheet.addMergedRegion(cra); // 合并大标题行
-				}
+			if(i ==rows.size()-1){//最后一行
+				
+				int addRow = (rows.size() ) + 2; // 2行标题
+				
+				CellRangeAddress cra = new CellRangeAddress(26, addRow, 0, 0);
+				sheet.addMergedRegion(cra); // 合并大标题行
 			}
-			
+		
+		
 			// 设置最后一行行高
 			if(i ==rows.size()-1){
 				dataRow.setHeight((short)(4 * 256));
@@ -669,6 +680,9 @@ public class ExcelUtil {
 			for (int j = 0; j <names.length; j++) {
 				Cell dataCell = dataRow.createCell(j);
 				dataCell.setCellStyle(dataStyle);
+				
+			
+				
 				// 第一和第二列处理
 				if(j == 0 || j == 1 || j == 2 || j == 4){
 					dataCell.setCellStyle(headerStyle_b);
@@ -696,7 +710,7 @@ public class ExcelUtil {
 					dataCell.setCellStyle(dataStyle_ck);
 				} 
 				// 相框颜色
-				if((i == 15 &&j == 0) ){
+				if((i == 14 &&j == 0) ){
 					dataCell.setCellValue(colorName);
 					dataCell.setCellStyle(dataStyle_ck);
 				}
@@ -706,10 +720,18 @@ public class ExcelUtil {
 				}*/
 				
 				// 分装盒
-				if((i == 19 &&j == 0) ){
+				if((i == 17 &&j == 0) ){
 					dataCell.setCellValue(fenzhuanghe);
-					dataCell.setCellStyle(dataStyle_fzh);
+					dataCell.setCellStyle(dataStyle_ck);
 				}
+				
+				// 配件包
+				if((i == 20 &&j == 0) ){
+					dataCell.setCellValue(peijianbao);
+					dataCell.setCellStyle(dataStyle_ck);
+				}
+				
+				// 说明
 				if((i == 23 &&j == 0) ){
 					String describe="请亲在第一时间内核对包数； 使用手机号解锁清单上的图纸； 有疑问及时联系客服";
 					dataCell.setCellValue(describe);

@@ -12,6 +12,7 @@ import java.util.Arrays;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
+import javax.imageio.stream.ImageOutputStream;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -20,6 +21,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.artcweb.constant.SiteConstant;
 import com.artcweb.constant.UploadConstant;
+import com.artcweb.enums.ImageSuffixNameEnum;
+
+import net.coobird.thumbnailator.Thumbnails;
 
 public class ImageUtil {
 	private static org.slf4j.Logger logger = LoggerFactory.getLogger(ImageUtil.class);
@@ -230,6 +234,49 @@ public class ImageUtil {
 		
 		return null;
 		
+	}
+
+	
+	public static void thumbnail(String filePathAndName, Integer scaleWidth, Integer scaleHeight,ImageSuffixNameEnum suffix) {
+		try {
+			Thumbnails.of(filePathAndName).size(scaleWidth, scaleHeight).toFile(filePathAndName);
+		} catch (IOException e) {
+			logger.error("-----读取图片发生异常:{}-----" + e.getMessage());
+			logger.info("-----尝试cmyk转化-----");
+			File cmykJPEGFile = new File(filePathAndName);
+			try {
+				BufferedImage image = ImageIO.read(cmykJPEGFile);
+				ImageOutputStream output = ImageIO.createImageOutputStream(cmykJPEGFile);
+				if (!ImageIO.write(image, suffix.getDisplayName(), output)) {
+					logger.info("-----cmyk转化异常:{}-----");
+				}
+				Thumbnails.of(image).scale(0.4f).toFile(filePathAndName);
+				logger.info("-----cmyk转化成功-----");
+			} catch (IOException e1) {
+				logger.info("-----cmyk转化异常:-----" + e1.getMessage());
+			}
+		}
+	}
+
+	public static void thumbnail(String filePathAndName, double size) {
+		try {
+			Thumbnails.of(filePathAndName).scale(size).toFile(filePathAndName);
+		} catch (IOException e) {
+			logger.error("-----读取图片发生异常:{}-----" + e.getMessage());
+			logger.info("-----尝试cmyk转化-----");
+			File cmykJPEGFile = new File(filePathAndName);
+			try {
+				BufferedImage image = ImageIO.read(cmykJPEGFile);
+				ImageOutputStream output = ImageIO.createImageOutputStream(cmykJPEGFile);
+				if (!ImageIO.write(image, "jpg", output)) {
+					logger.info("-----cmyk转化异常:{}-----");
+				}
+				Thumbnails.of(image).scale(0.4f).toFile(filePathAndName);
+				logger.info("-----cmyk转化成功-----");
+			} catch (IOException e1) {
+				logger.info("-----cmyk转化异常:-----" + e1.getMessage());
+			}
+		}
 	}
 
 
