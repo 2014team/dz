@@ -623,43 +623,17 @@ public class ExcelUtil {
 				
 				sheet.addMergedRegion(new CellRangeAddress(1, 11, 0, 0)); // 合并大标题行
 			}
-			// 买家名称
-			if(rows.size() >= 13){
-				if(i ==12){
-					CellRangeAddress cra = new CellRangeAddress(12, 13, 0, 0);
-					sheet.addMergedRegion(cra); // 合并大标题行
-				}
-			}
 			
-			// 图钉类型
-			if(rows.size() >= 16){
-				if(i ==14){
-					CellRangeAddress cra = new CellRangeAddress(14, 16, 0, 0);
+			if(rows.size() >=25 && (i == 12 || i == 14 || i == 17 || i == 20 || i == 23)){
+				if(i ==12){// 买家名称
+					CellRangeAddress cra = new CellRangeAddress(i, i+1, 0, 0);
 					sheet.addMergedRegion(cra); // 合并大标题行
+				}else{// 图钉类型、图钉类型、画框颜色、 分装盒、配件包
+					CellRangeAddress cra = new CellRangeAddress(i, i+2, 0, 0);
+					sheet.addMergedRegion(cra); // 合并大标题行
+					
 				}
 			}
-			// 画框颜色
-			if(rows.size() >= 19){
-				if(i ==17){
-					CellRangeAddress cra = new CellRangeAddress(17, 19, 0, 0);
-					sheet.addMergedRegion(cra); // 合并大标题行
-				}
-			}
-			// 分装盒
-			if(rows.size() >= 22){
-				if(i ==20){
-					CellRangeAddress cra = new CellRangeAddress(20, 22, 0, 0);
-					sheet.addMergedRegion(cra); // 合并大标题行
-				}
-			}
-			// 配件包
-			if(rows.size() >= 25){
-				if(i ==23){
-					CellRangeAddress cra = new CellRangeAddress(23, 25, 0, 0);
-					sheet.addMergedRegion(cra); // 合并大标题行
-				}
-			}
-			
 			
 			// 备注说明合并
 			if(i ==rows.size()-1){//最后一行
